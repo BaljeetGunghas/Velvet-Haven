@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/Theme/theme-provider";
+import Header from "@/components/Header/Header";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import Footer from "@/components/Footer/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +34,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="lights">
+    <html lang="hi">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable}`}
+        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} dark:bg-black dark:text-white bg-white text-black`}
       >
-        {children}
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <TooltipProvider>
+            <Header />
+            {children}
+            <Footer />
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
