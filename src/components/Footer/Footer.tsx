@@ -14,12 +14,10 @@ const Footer = () => {
         <div className=" w-1/2 max-sm:w-full">
           <Image src={logo} alt="logo" className="size-28" />
           <span className="text-base font-normal text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-            facilisi. Vestibulum ante ipsum primis in faucibus orci luctus et
-            ultrices posuere cubilia Curae.
+          At Velvet-Haven, your satisfaction is our top priority. Thank you for choosing us for your stay. Stay connected to receive the latest updates, exclusive offers, and more. We look forward to welcoming you again soon!
           </span>
         </div>
-        <div className="flex gap-32 max-sm:w-full">
+        <div className="flex gap-32 max-sm:w-full max-md:gap-12">
           <div  className=" max-sm:w-full max-sm:flex max-sm:flex-col ">
             <h3 className="text-white text-xl font-semibold mb-12">Service</h3>
             <ul className="text-white text-base font-normal flex flex-col gap-5">
@@ -52,7 +50,7 @@ const Footer = () => {
           </div>
           <div className=" max-sm:w-full max-sm:flex max-sm:flex-col max-sm:items-end ">
             <h3 className="text-white text-xl font-semibold mb-12">Social</h3>
-            <ul className="text-white text-base font-normal flex gap-5 max-sm:flex-col">
+            <ul className="text-white text-base font-normal flex gap-5 max-sm:flex-col max-md:flex-col">
               <Link href={""} target="_blank" className="bg-white dark:bg-bannerbg  rounded-full size-10 grid place-items-center">
                 <Image src={facebook} alt="facebook" className="dark:filter dark:invert dark:brightness-0 size-6" />
               </Link>
@@ -70,13 +68,13 @@ const Footer = () => {
         </div>
       </div>
       <hr className="my-6" />
-      <div className="flex justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3">
-        <div className="flex gap-5 items-center">
-          <Link href={''} className="text-base font-medium ">Privacy Policy </Link>
-          <Link href={''} className="text-base font-medium ">Terms of use </Link>
+      <div className="flex justify-between  max-sm:flex-col max-sm:items-center max-sm:gap-3">
+        <div className="flex gap-5 items-center ">
+          <Link href={''} className="text-base text-white font-medium ">Privacy Policy </Link>
+          <Link href={''} className="text-base font-medium  text-white">Terms of use </Link>
         </div>
 
-        <span className="text-base font-medium">© Velvet Haven. All Rights Reserved </span>
+        <span className="text-base font-medium text-white">© 2025 Velvet-Haven. All rights reserved. </span>
       </div>
     </div>
   );
