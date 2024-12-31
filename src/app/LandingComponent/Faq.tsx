@@ -69,10 +69,8 @@ const Faq = () => {
     <div className="relative p-mainPading pt-2 max-sm:h-full max-sm:p-5 max-sm:gap-5">
       <h2 className="text-xl font-medium text-secondrybackground ">Faq</h2>
       <h3 className="text-4xl my-2 font-semibold">Frequently ask qustions</h3>
-
-      <div className="bg-lightGray">
-        <AccordionComponent faqData={hotelFAQs} />
-      </div>
+      <br />
+      <AccordionComponent faqData={hotelFAQs} />
     </div>
   );
 };

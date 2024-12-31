@@ -22,7 +22,7 @@ import {
           <AccordionItem
             key={faq.id}
             value={`item-${faq.id}`}
-            className="bg-gray-100 dark:bg-foreground p-1 rounded-lg shadow px-3 dark:border-0"
+            className="dark:bg-bannerbg p-1 rounded-lg shadow px-3 dark:border-0"
           >
             <AccordionTrigger className="text-base font-medium dark:text-white">
               {faq.question}

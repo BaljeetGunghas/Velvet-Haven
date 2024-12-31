@@ -23,9 +23,9 @@ const Header = () => {
   ];
   return (
     <>
-      <header className="bg-primaryblue dark:bg-foreground">
+      <header className="bg-primaryblue dark:bg-foreground fixed inset-0 z-40 h-16">
         <div className=" w-12/12 mx-auto p-3 px-mainPading max-sm:px-4 flex justify-between items-center">
-          <div className="flex items-center gap-20">
+          <div className="flex items-center gap-20 md:gap-10">
             <Link href={"/"}>
               {" "}
               <Image

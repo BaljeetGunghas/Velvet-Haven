@@ -8,17 +8,17 @@
   --secondrybackground: #7CB7FF;
   --foreground: #171717;
   --dard-text-color: #68cf14;
+  --bannerbg: #1E1E1E;
+  --lightGray: #F8F8F8;
   --font-poppins: 'Poppins', sans-serif;
   --mainPadding: 4rem;
   --secondryPadding: 4rem;
-  --bannerbg: #1E1E1E;
-  --lightGray: '#F8F8F8';
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #003B95;
     --foreground: #06061b;
+    --background: #003B95;
   }
 }
 
