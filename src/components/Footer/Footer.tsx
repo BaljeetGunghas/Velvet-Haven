@@ -10,8 +10,8 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <div className="relative bg-primaryblue dark:bg-black dark:border-t p-mainPading max-sm:h-full max-sm:p-5 max-sm:gap-5">
-      <div className="flex h-full justify-between">
-        <div className=" w-1/2">
+      <div className="flex h-full justify-between max-sm:flex-col max-sm:gap-12">
+        <div className=" w-1/2 max-sm:w-full">
           <Image src={logo} alt="logo" className="size-28" />
           <span className="text-base font-normal text-white">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
@@ -19,8 +19,8 @@ const Footer = () => {
             ultrices posuere cubilia Curae.
           </span>
         </div>
-        <div className="flex gap-32">
-          <div>
+        <div className="flex gap-32 max-sm:w-full">
+          <div  className=" max-sm:w-full max-sm:flex max-sm:flex-col ">
             <h3 className="text-white text-xl font-semibold mb-12">Service</h3>
             <ul className="text-white text-base font-normal flex flex-col gap-5">
               <li>
@@ -43,11 +43,16 @@ const Footer = () => {
                   Location
                 </Link>
               </li>
+              <li>
+                <Link href={""} className="text-base font-semibold">
+                  Our Team
+                </Link>
+              </li>
             </ul>
           </div>
-          <div>
+          <div className=" max-sm:w-full max-sm:flex max-sm:flex-col max-sm:items-end ">
             <h3 className="text-white text-xl font-semibold mb-12">Social</h3>
-            <ul className="text-white text-base font-normal flex gap-5">
+            <ul className="text-white text-base font-normal flex gap-5 max-sm:flex-col">
               <Link href={""} target="_blank" className="bg-white dark:bg-bannerbg  rounded-full size-10 grid place-items-center">
                 <Image src={facebook} alt="facebook" className="dark:filter dark:invert dark:brightness-0 size-6" />
               </Link>
@@ -63,6 +68,15 @@ const Footer = () => {
             </ul>
           </div>
         </div>
+      </div>
+      <hr className="my-6" />
+      <div className="flex justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3">
+        <div className="flex gap-5 items-center">
+          <Link href={''} className="text-base font-medium ">Privacy Policy </Link>
+          <Link href={''} className="text-base font-medium ">Terms of use </Link>
+        </div>
+
+        <span className="text-base font-medium">© Velvet Haven. All Rights Reserved </span>
       </div>
     </div>
   );
