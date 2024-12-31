@@ -1,12 +1,15 @@
-
+import LandingBanner from "@/components/Banner/LandingBanner";
+import OurServeces from "./LandingComponent/OurServeces";
+import TopDestinationHotel from "./LandingComponent/TopDestinationHotel";
+import Faq from "./LandingComponent/Faq";
 
 export default function Home() {
   return (
     <>
-      <h1 className="text-3xl font-semibold text-center">Hello, Tailwind!</h1>
-      <p className="text-center">
-        This is a Tailwind CSS example in a Next.js app.
-      </p>
+      <LandingBanner />
+      <OurServeces />
+      <TopDestinationHotel />
+      <Faq />
     </>
   );
 }
