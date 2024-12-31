@@ -1,12 +1,19 @@
+"use client";
+
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import logo from "@/asset/logo.svg";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
-
+import ModalLayout from "../ModelLayout/Modellayout";
+import LoginRegistrationModel from "../LoginRegModel/LoginRegistrationModel";
 
 const Header = () => {
+  const [isRegistrationModelOpen, setIsRegistrationModelOpen] =
+    useState<boolean>(false);
+
   const headerLinks = [
     { label: "Home", href: "/" },
     { label: "About", href: "/About" },
@@ -45,10 +52,17 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <ModeToggle />
 
-            <Button className=" bg-white dark:text-black">Sign in</Button>
+            <Button className=" bg-white dark:text-black" onClick={()=>setIsRegistrationModelOpen(true)}>Sign in</Button>
           </div>
         </div>
       </header>
+
+      <ModalLayout
+        isOpen={isRegistrationModelOpen}
+        onClose={setIsRegistrationModelOpen}
+      >
+       <LoginRegistrationModel />
+      </ModalLayout>
     </>
   );
 };
