@@ -17,7 +17,7 @@ const ModalLayout = ({ children, isOpen, onClose }: ModalLayoutProps) => {
       onClick={() => onClose(false)}
     >
       <div
-        className="relative bg-white dark:bg-gray-800  shadow-lg p-3 w-full max-w-5xl h-4/5 top-8 max-sm:h-fit max-sm:top-0 md:h-fit"
+        className="relative bg-white dark:bg-gray-800  shadow-lg p-3 max-sm:px-1 w-full max-w-5xl max-sm:w-11/12 h-4/5 top-8 max-sm:h-fit max-sm:top-0 md:h-fit"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
       >
         <button

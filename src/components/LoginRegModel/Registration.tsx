@@ -35,13 +35,13 @@ const Registration = ({ onChange }: ComponentProps) => {
         </span>
       </span>
 
-      <div className="flex flex-col w-4/5 gap-3 max-sm:w-full max-sm:px-10">
+      <div className="flex flex-col w-4/5 gap-3 max-sm:w-full max-sm:px-5">
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium">Name</label>
           <input
             type="text"
             placeholder="Jeson statham"
-            className="bg-gray-100 p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal"
+            className="bg-gray-100 p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -49,7 +49,7 @@ const Registration = ({ onChange }: ComponentProps) => {
           <input
             type="email"
             placeholder="Jasonexmple@gmail.com"
-            className="bg-gray-100 p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal"
+            className="bg-gray-100 p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
           />
         </div>
         <div className="flex flex-col gap-1 relative">
@@ -57,7 +57,7 @@ const Registration = ({ onChange }: ComponentProps) => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="xxxxxxxxxxxxxx"
-            className="bg-gray-100 text p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal"
+            className="bg-gray-100 text p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
           />
 
           {showPassword ? (
@@ -95,7 +95,7 @@ const Registration = ({ onChange }: ComponentProps) => {
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="xxxxxxxxxxxxxx"
-            className="bg-gray-100 text p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal"
+            className="bg-gray-100 text p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
           />
 
           {showConfirmPassword ? (
