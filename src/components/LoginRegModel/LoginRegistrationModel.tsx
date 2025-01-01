@@ -16,7 +16,7 @@ const LoginRegistrationModel = () => {
         !isLoginShow ? "items-start" : "items-center"
       }`}
     >
-      <div className="w-7/12 h-full max-sm:w-full max-sm:h-[300px]">
+      <div className="w-7/12 h-full max-sm:w-full max-sm:h-[200px]">
         <Image
           src={registrationBanner}
           alt="registrationBanner"
@@ -30,7 +30,7 @@ const LoginRegistrationModel = () => {
           lazyRoot="lazy-loading"
         />
       </div>
-      <div className="w-1/2 h-full pt-8 max-sm:w-full max-sm:pt-5 max-md:pt-24">
+      <div className="w-1/2 h-full pt-8 max-sm:w-full max-sm:pt-5 max max-md:pt-24">
         {isLoginShow ? (
           <Login onChange={setIsLoginShow} />
         ) : (

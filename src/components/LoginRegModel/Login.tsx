@@ -25,7 +25,7 @@ const Login = ({ onChange }: ComponentProps) => {
         Welcome to Velvet Haven <br />
         Sign in to continue{" "}
       </h1>
-      <span className=" text-sm font-normal max-sm:w-full max-sm:text-center max-sm:px-10 block my-3 ">
+      <span className=" text-sm font-normal max-sm:w-full max-sm:text-center max-sm:px-5 block my-3 ">
         Dont’t have an account ?{" "}
         <span
           className=" text-secondrybackground cursor-pointer max-sm:w-full text-center"
@@ -36,13 +36,13 @@ const Login = ({ onChange }: ComponentProps) => {
         <br />
         it takes less then a minute
       </span>
-      <div className="flex flex-col w-4/5 gap-3 max-sm:w-full max-sm:px-10">
+      <div className="flex flex-col w-4/5 gap-3 max-sm:w-full max-sm:px-5">
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium">Email</label>
           <input
             type="text"
             placeholder="Jasonexmple@gmail.com"
-            className="bg-gray-100 p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal"
+            className="bg-gray-100 p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
           />
         </div>
         <div className="flex flex-col gap-1 relative">
@@ -50,7 +50,7 @@ const Login = ({ onChange }: ComponentProps) => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="xxxxxxxxxxxxxx"
-            className="bg-gray-100 text p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal"
+            className="bg-gray-100 text p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
           />
 
           {showPassword ? (
