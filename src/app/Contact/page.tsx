@@ -1,9 +1,14 @@
-import React from 'react'
+"use client";
+
+import React from "react";
+import { Counter } from "./Counter";
 
 const page = () => {
   return (
-    <div>Contact us</div>
-  )
-}
+    <div className="container mx-auto flex h-72 bg-slate-300 justify-center items-center">
+      <Counter />
+    </div>
+  );
+};
 
-export default page
+export default page;

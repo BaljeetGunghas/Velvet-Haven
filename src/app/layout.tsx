@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/Theme/theme-provider";
 import Header from "@/components/Header/Header";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import Footer from "@/components/Footer/Footer";
+import { StoreProvider } from "./store/storeProvider";
+import { ToastContainer } from 'react-toastify';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +27,8 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Book Your Luxury Stay at Velvet-Haven - India’s Premier Hotel",
-  description: "Indulge in a luxury hotel experience at Velvet-Haven. Book now for world-class accommodations, exceptional dining, and exclusive services in the heart of India.",
+  description:
+    "Indulge in a luxury hotel experience at Velvet-Haven. Book now for world-class accommodations, exceptional dining, and exclusive services in the heart of India.",
 };
 
 export default function RootLayout({
@@ -38,13 +41,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} dark:bg-black dark:text-white bg-white text-black`}
       >
-        <ThemeProvider attribute="class" disableTransitionOnChange>
-          <TooltipProvider>
-            <Header />
-            {children}
-            <Footer />
-          </TooltipProvider>
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <TooltipProvider>
+              <Header />
+              <ToastContainer />
+              {children}
+              <Footer />
+            </TooltipProvider>
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );
