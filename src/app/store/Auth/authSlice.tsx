@@ -1,3 +1,5 @@
+"use client";
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -14,10 +16,13 @@ interface AuthState {
   loading: boolean;
   error: string | null;
 }
+const isBrowser = typeof window !== "undefined";
 
-const storedUser: string | null = localStorage.getItem("user");
-const storedToken = localStorage.getItem("authToken");
+const getStoredUser = isBrowser ? localStorage.getItem("user") : null;
+const storedUser: string | null = getStoredUser || null;
+const storedToken = isBrowser ? localStorage.getItem("authToken") : null;
 const parseData = storedUser ? JSON.parse(storedUser) : null;
+
 
 const initialState: AuthState = {
   user: parseData
