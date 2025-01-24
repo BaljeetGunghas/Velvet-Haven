@@ -1,3 +1,6 @@
+"use client";
+
+
 import LandingBanner from "@/components/Banner/LandingBanner";
 import OurServeces from "./LandingComponent/OurServeces";
 import TopDestinationHotel from "./LandingComponent/TopDestinationHotel";

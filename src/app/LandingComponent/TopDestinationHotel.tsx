@@ -6,6 +6,7 @@ import Mumbai from "@/asset/destination/Mumbai.svg";
 import Image from "next/image";
 import Arrow from "@/asset/icon/Arrow.svg";
 import { Button } from "@/components/ui/button";
+import { toast } from 'react-toastify';
 
 const TopDestinationHotel = () => {
   const topDetinationsDetails = [
@@ -46,6 +47,7 @@ const TopDestinationHotel = () => {
       <Image
         src={Arrow}
         alt={Arrow}
+        onClick={() => toast.success("Wow so easy!")}
         className="bg-primaryblue dark:bg-foreground p-1 rounded-full absolute top-16 right-16 max-sm:top-4 max-sm:right-6 max-sm:size-8 w-6 h-6 object-cover cursor-pointer "
       />
       <h3 className="text-4xl my-2 font-semibold">

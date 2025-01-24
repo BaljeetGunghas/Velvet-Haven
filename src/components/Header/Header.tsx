@@ -1,18 +1,23 @@
 "use client";
 
-
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "@/asset/logo.svg";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "../ModeToggle";
 import ModalLayout from "../ModelLayout/Modellayout";
 import LoginRegistrationModel from "../LoginRegModel/LoginRegistrationModel";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import AvatarDropdown from "./AvtarDropDown";
 
 const Header = () => {
   const [isRegistrationModelOpen, setIsRegistrationModelOpen] =
     useState<boolean>(false);
+  const { isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const headerLinks = [
     { label: "Home", href: "/" },
@@ -21,6 +26,13 @@ const Header = () => {
     { label: "Location", href: "/Location" },
     { label: "Dining", href: "/Dining" },
   ];
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setIsRegistrationModelOpen(false);
+    }
+  }, [isAuthenticated]);
+
   return (
     <>
       <header className="bg-primaryblue dark:bg-foreground fixed inset-0 z-40 h-16">
@@ -52,7 +64,16 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <ModeToggle />
 
-            <Button className=" bg-white dark:text-black" onClick={()=>setIsRegistrationModelOpen(true)}>Sign in</Button>
+            {!isAuthenticated ? (
+              <Button
+                className=" bg-white dark:text-black"
+                onClick={() => setIsRegistrationModelOpen(true)}
+              >
+                Sign in
+              </Button>
+            ) : (
+              <AvatarDropdown />
+            )}
           </div>
         </div>
       </header>
@@ -61,7 +82,7 @@ const Header = () => {
         isOpen={isRegistrationModelOpen}
         onClose={setIsRegistrationModelOpen}
       >
-       <LoginRegistrationModel />
+        <LoginRegistrationModel />
       </ModalLayout>
     </>
   );
