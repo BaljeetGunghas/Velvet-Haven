@@ -14,15 +14,14 @@ import { login } from "@/app/store/Auth/authSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { toastOptions } from "../Toast/Index";
+import Error from "../Error/Error";
 interface ComponentProps {
   onChange: (val: boolean) => void;
 }
 
 const Login = ({ onChange }: ComponentProps) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { loading, error } = useSelector((state: RootState) => state.auth);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const formik = useFormik({
@@ -92,7 +91,7 @@ const Login = ({ onChange }: ComponentProps) => {
               className="bg-gray-100 p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
             />
             {formik.touched.email && formik.errors.email && (
-              <p className="text-red-700 text-xs">{formik.errors.email}</p>
+              <Error error={formik.errors.email} />
             )}
           </div>
           <div className="flex flex-col gap-1 relative">
@@ -107,7 +106,7 @@ const Login = ({ onChange }: ComponentProps) => {
               className="bg-gray-100 text p-2 bg-lightGray focus:bg-transparent rounded-lg  text-sm font-normal dark:text-black focus:dark:text-white"
             />
             {formik.touched.password && formik.errors.password && (
-              <p className="text-red-700 text-xs ">{formik.errors.password}</p>
+              <Error error={formik.errors.password} />
             )}
             {showPassword ? (
               <svg
