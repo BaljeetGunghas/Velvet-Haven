@@ -77,7 +77,7 @@ const Footer = () => {
         <span className="text-base font-medium text-white">© 2025 Velvet-Haven. All rights reserved. </span>
       </div>
       <div className="text-center text-xs text-white absolute right-16 bottom-0">
-          ver_01022025
+          ver_01022025v2
       </div>
     </div>
   );
