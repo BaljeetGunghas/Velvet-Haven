@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <div className="relative bg-primaryblue dark:bg-black dark:border-t p-mainPading max-sm:h-full max-sm:p-5 max-sm:gap-5">
+    <div className="relative bg-primaryblue dark:bg-foreground dark:border-t p-mainPading max-sm:h-full max-sm:p-5 max-sm:gap-5">
       <div className="flex h-full justify-between max-sm:flex-col max-sm:gap-12">
         <div className=" w-1/2 max-sm:w-full">
           <Image src={logo} alt="logo" className="size-28" />
@@ -75,6 +75,9 @@ const Footer = () => {
         </div>
 
         <span className="text-base font-medium text-white">© 2025 Velvet-Haven. All rights reserved. </span>
+      </div>
+      <div className="text-center text-xs text-white absolute right-16 bottom-0">
+          ver_01022025
       </div>
     </div>
   );
