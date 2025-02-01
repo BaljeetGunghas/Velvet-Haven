@@ -6,7 +6,7 @@ import Header from "@/components/Header/Header";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import Footer from "@/components/Footer/Footer";
 import { StoreProvider } from "./store/storeProvider";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +36,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="hi">
       <body
@@ -45,7 +47,18 @@ export default function RootLayout({
           <ThemeProvider attribute="class" disableTransitionOnChange>
             <TooltipProvider>
               <Header />
-              <ToastContainer />
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
               {children}
               <Footer />
             </TooltipProvider>

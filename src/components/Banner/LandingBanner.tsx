@@ -5,7 +5,7 @@ import LandingSearchForm from "../Form/LandingSearchForm";
 
 const LandingBanner = () => {
   return (
-    <div className=" w-full min-h-[450px] bg-bannerbg flex overflow-hidden relative -z-0 max-sm:h-[620px] max-md:h-[550px] mt-16">
+    <div className=" w-full min-h-[450px] bg-bannerbg flex  relative -z-0 max-sm:h-[620px] max-md:h-[550px] mt-16">
       <div className=" flex gap-4 flex-col pt-secondryPadding pl-mainPading max-sm:p-8 ">
         <h1 className=" text-white font-semibold text-6xl max-sm:text-4xl">
         Experience Luxury at Velvet-Haven
