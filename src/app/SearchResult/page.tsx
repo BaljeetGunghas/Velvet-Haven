@@ -36,12 +36,12 @@ const dummyHotels = [
 ];
 
 const SearchResult = () => {
-  const [hotels, setHotels] = useState(dummyHotels);
+//   const [hotels, setHotels] = useState(dummyHotels);
   const [searchQuery, setSearchQuery] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   
-  const filteredHotels = hotels.filter((hotel) => {
+  const filteredHotels = dummyHotels.filter((hotel) => {
     const matchesSearch = hotel.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesPrice = (!minPrice || hotel.price >= parseInt(minPrice)) && (!maxPrice || hotel.price <= parseInt(maxPrice));
     return matchesSearch && matchesPrice;

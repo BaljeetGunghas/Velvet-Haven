@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import user from "@/asset/dummy/user1.jpg";
 import { Input } from "@/components/ui/input";
-import { CalendarComponent } from "@/components/Calendar/Calendar";
+// import { CalendarComponent } from "@/components/Calendar/Calendar";
 import { SingleSelect } from "@/components/Select/SingleSelect";
 import { UserRoleIF, UserStatusIF } from "@/Types/enums";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ interface ComponentProps {
 const EditProfile = ({ setState }: ComponentProps) => {
   const [image, setImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState("No file chosen");
-  const [date, setDate] = useState<Date>();
+//   const [date, setDate] = useState<Date>();
   const [userRole, setUserRole] = useState<string>("");
   const [userStatus, setUserStatus] = useState<string>("");
 
@@ -108,7 +108,7 @@ const EditProfile = ({ setState }: ComponentProps) => {
           <label className=" text-sm font-semibold text-black dark:text-white ">
             Date of birth{" "}
           </label>
-          <CalendarComponent date={date} setDate={setDate} />
+          {/* <CalendarComponent date={date} setDate={setDate} /> */}
         </div>
         <SingleSelect
           value={userRole}
