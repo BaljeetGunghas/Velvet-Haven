@@ -19,8 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Options } from "../Select/SingleSelect";
-import { DatePickerWithRange } from "../Calendar/DatePicker";
-import { DateRange } from "react-day-picker";
+// import { DatePickerWithRange, DateRange } from "../Calendar/DatePicker";
 import ModalLayout from "../ModelLayout/Modellayout";
 import SelectPersonAndRoom from "../SelectPersonAndRoom/SelectPersonAndRoom";
 import { useRouter } from "next/navigation";
@@ -51,7 +50,7 @@ const cityOptions = [
 const LandingSearchForm = () => {
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState<string>("");
-  const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+  // const [date, setDate] = React.useState<DateRange | undefined>(undefined);
   const [isSelectPersonAndRoomModelOpen, setisSelectPersonAndRoomModelOpen] =
     useState<boolean>(false);
   const [rooms, setRooms] = useState(1);
@@ -109,7 +108,7 @@ const LandingSearchForm = () => {
           {/* <span className=" font-medium text-base">Check in date</span>
         <span className=" font-medium text-base">-</span>
         <span className=" font-medium text-base">Check Out date </span> */}
-          <DatePickerWithRange date={date} setDate={setDate} />
+          {/* <DatePickerWithRange date={date} setDate={setDate} /> */}
         </div>
         <div
           onClick={() => setisSelectPersonAndRoomModelOpen(true)}

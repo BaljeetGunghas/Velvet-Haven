@@ -45,6 +45,7 @@ export default function Home() {
   
           // Show an alert with the city name
           alert(city || "Location not found");
+          alert(cityname || "Location not found");
 
         },
         (error) => {
