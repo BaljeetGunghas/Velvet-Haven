@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface Options {
+export interface Options {
   value: string;
   label: string;
 }

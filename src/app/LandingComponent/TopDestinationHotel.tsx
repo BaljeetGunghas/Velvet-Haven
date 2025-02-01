@@ -65,6 +65,7 @@ const TopDestinationHotel = () => {
                 src={d.image}
                 alt={d.name}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
 
               {/* Overlay */}
