@@ -7,8 +7,6 @@ import iconuser from "@/asset/icon/icon_user.svg";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-// import { SingleSelect } from "../Select/SingleSelect";
-
 import {
   Select,
   SelectContent,
@@ -23,6 +21,8 @@ import { Options } from "../Select/SingleSelect";
 import ModalLayout from "../ModelLayout/Modellayout";
 import SelectPersonAndRoom from "../SelectPersonAndRoom/SelectPersonAndRoom";
 import { useRouter } from "next/navigation";
+import DatePickerWithRange from "../Calendar/DatePicker";
+import { Range } from "react-date-range";
 
 const cityOptions = [
   { value: "1", label: "New Delhi" },
@@ -46,11 +46,16 @@ const cityOptions = [
   { value: "19", label: "Vadodara" },
   { value: "20", label: "Ghaziabad" },
 ];
+const defaultDateRange: Range = {
+  startDate: undefined,
+  endDate: undefined,
+  key: "selection",
+};
 
 const LandingSearchForm = () => {
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState<string>("");
-  // const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+  const [date, setDate] = useState<Range>(defaultDateRange);
   const [isSelectPersonAndRoomModelOpen, setisSelectPersonAndRoomModelOpen] =
     useState<boolean>(false);
   const [rooms, setRooms] = useState(1);
@@ -108,7 +113,10 @@ const LandingSearchForm = () => {
           {/* <span className=" font-medium text-base">Check in date</span>
         <span className=" font-medium text-base">-</span>
         <span className=" font-medium text-base">Check Out date </span> */}
-          {/* <DatePickerWithRange date={date} setDate={setDate} /> */}
+          <DatePickerWithRange
+            dateRange={date}
+            setDate={setDate}
+          />
         </div>
         <div
           onClick={() => setisSelectPersonAndRoomModelOpen(true)}
@@ -138,7 +146,7 @@ const LandingSearchForm = () => {
           onClick={handleSearchHotel}
           className=" bg-white dark:bg-bannerbg text-primaryblue dark:text-white text-base font-semibold h-full px-8 py-[18px] dark:shadow-xl dark:hover:bg-foreground duration-2000 max-sm:w-full max-sm:py-[22px] max-md:w-full "
         >
-          {isHotelSearchingLoading ? "Serching..." :"Search"}
+          {isHotelSearchingLoading ? "Serching..." : "Search"}
         </Button>
       </div>
 
@@ -153,7 +161,8 @@ const LandingSearchForm = () => {
           setRooms={setRooms}
           setAdults={setAdults}
           setChildren={setChildren}
-          onConfirm={() => setisSelectPersonAndRoomModelOpen(false)}
+          isOpen={isSelectPersonAndRoomModelOpen}
+          onClose={setisSelectPersonAndRoomModelOpen}
         />
       </ModalLayout>
     </>

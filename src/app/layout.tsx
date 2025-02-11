@@ -36,10 +36,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
-    <html lang="hi">
+    <html lang="en ||hi">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} dark:bg-black dark:text-white bg-white text-black`}
       >
@@ -49,7 +47,7 @@ export default function RootLayout({
               <Header />
               <ToastContainer
                 position="top-right"
-                autoClose={5000}
+                autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop
                 closeOnClick

@@ -13,6 +13,10 @@
   --font-poppins: 'Poppins', sans-serif;
   --mainPadding: 4rem;
   --secondryPadding: 4rem;
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: #007bff;
+  --rdp-background-color: #e9ecef;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,5 +31,3 @@ body {
   background: var(--background);
   font-family: var(--font-poppins), sans-serif;
 }
-
-
