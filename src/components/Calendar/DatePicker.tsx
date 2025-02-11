@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -21,6 +21,24 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   dateRange,
   setDate,
 }) => {
+
+
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 🛠 Ensure this runs only on the client side
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    handleResize(); // Check on mount
+    window.addEventListener("resize", handleResize); // Listen to resize events
+
+    return () => window.removeEventListener("resize", handleResize); // Cleanup
+  }, []);
+
+
   const handleSelect = (ranges: RangeKeyDict) => {
     const { startDate, endDate } = ranges.selection;
     setDate({
@@ -67,8 +85,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           }
           onChange={handleSelect}
           moveRangeOnFirstSelection={false}
-          months={window.innerWidth < 640 ? 1 : 2} // Responsive: 1 month for mobile, 2 for larger screens
-          direction={window.innerWidth < 640 ? "vertical" : "horizontal"} // Vertical for mobile, horizontal for larger screens
+          months={isMobile ? 1 : 2} // ✅ Responsive: 1 month for mobile, 2 for larger screens
+      direction={isMobile ? "vertical" : "horizontal"} // ✅ Vertical for mobile, horizontal for larger screens
           preventSnapRefocus
           minDate={new Date()}
           className="w-full relative z-50"
