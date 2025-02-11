@@ -108,6 +108,16 @@ const ViewProfile = () => {
             Created At{" "}
           </label>
           <p className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3">
+            {dayjs(userProfileData?.createdAt)
+              .locale("en")
+              .format("DD-MMM-YYYY HH:mm:ss")}
+          </p>
+        </div>
+        <div className="flex gap-1 flex-col ">
+          <label className=" text-sm font-semibold text-black dark:text-white ">
+            Updated At{" "}
+          </label>
+          <p className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3">
             {dayjs(userProfileData?.updatedAt)
               .locale("en")
               .format("DD-MMM-YYYY HH:mm:ss")}

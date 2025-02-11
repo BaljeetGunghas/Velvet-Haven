@@ -7,10 +7,14 @@ import Faq from "./LandingComponent/Faq";
 import Testimonial from "./LandingComponent/Testimonial";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { authHeader } from "./Auth/AuthHeader/authHeader";
+import { RootState } from "./store/store";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const [cityname, setCityname] = useState<string | null>(null);
-
+  const { user } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     // Ask for location permission on component mount
     if (navigator.geolocation) {
@@ -36,10 +40,24 @@ export default function Home() {
             data.address.state;
 
           setCityname(city || "Location not found");
-          // Show an alert with the city name
-          // alert(city||cityname || "Location not found");
-          console.log(cityname);
-          
+          if (user?.id) {
+            const payload = {
+              city: city || cityname,
+              state: data.address.state,
+              country: data.address.country,
+            };
+            const responseUpdateProfile = await axios.put(
+              `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/profile/update`,
+              payload,
+              {
+                headers: authHeader(),
+              }
+            );
+            const responseData = responseUpdateProfile.data;
+            if (responseData.output === 1) {
+              console.log(responseData.message);
+            }
+          }
         },
         (error) => {
           // Handle location permission error
@@ -55,6 +73,7 @@ export default function Home() {
     }
   }, []);
 
+  
   return (
     <>
       <LandingBanner />

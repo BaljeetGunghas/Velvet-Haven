@@ -17,6 +17,7 @@ import { toastOptions } from "../Toast/Index";
 import Error from "../Error/Error";
 import ButtonLoading from "../Loading/ButtonLoading";
 import { userProfile } from "@/app/store/Profile/userProfileSlice";
+import { useRouter } from "next/navigation";
 interface ComponentProps {
   onChange: (val: boolean) => void;
 }
@@ -25,6 +26,7 @@ const Login = ({ onChange }: ComponentProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -46,10 +48,14 @@ const Login = ({ onChange }: ComponentProps) => {
       if (isUserRegisteredData.output === 1) {
         const response = await dispatch(login(values));
         if (response.meta.requestStatus === "fulfilled") {
+          const userDataResponse = response.payload as UserLoginResponse;
           toast.success("Login success");
-          if ((response.payload as UserLoginResponse)?._id) {
+          if (userDataResponse?._id) {
+            if(userDataResponse.role === "host"){
+              router.push("/Admin");
+            }
             dispatch(
-              userProfile({ _id: (response.payload as UserLoginResponse)._id })
+              userProfile({ _id: userDataResponse._id })
             );
           }
         }

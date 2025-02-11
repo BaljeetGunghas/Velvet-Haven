@@ -1,6 +1,5 @@
 "use client";
 
-
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import { RootState, AppDispatch } from "@/app/store/store";
 import { logout } from "@/app/store/Auth/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { parseCookies } from "nookies";
 
 const userAvatar = "@/asset/useravatar.svg";
 
@@ -16,9 +16,11 @@ const AvatarDropdown = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const cookies = parseCookies();
+  const userRole = cookies.userRole;
 
   const handleLogout = () => {
-    router.push('/');
+    router.push("/");
     dispatch(logout());
   };
 
@@ -56,6 +58,16 @@ const AvatarDropdown = () => {
                   View Profile
                 </Link>
               </li>
+              {userRole === "host" && (
+                <li>
+                  <Link
+                    href="/Admin"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Admin
+                  </Link>
+                </li>
+              )}
               <li>
                 <button
                   onClick={handleLogout}
