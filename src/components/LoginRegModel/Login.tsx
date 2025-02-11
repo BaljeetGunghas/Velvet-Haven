@@ -10,11 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/app/store/store";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { login } from "@/app/store/Auth/authSlice";
+import { login, UserLoginResponse } from "@/app/store/Auth/authSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { toastOptions } from "../Toast/Index";
 import Error from "../Error/Error";
+import ButtonLoading from "../Loading/ButtonLoading";
+import { userProfile } from "@/app/store/Profile/userProfileSlice";
 interface ComponentProps {
   onChange: (val: boolean) => void;
 }
@@ -42,7 +44,15 @@ const Login = ({ onChange }: ComponentProps) => {
       );
       const isUserRegisteredData = isUserRegistered.data;
       if (isUserRegisteredData.output === 1) {
-        await dispatch(login(values));
+        const response = await dispatch(login(values));
+        if (response.meta.requestStatus === "fulfilled") {
+          toast.success("Login success");
+          if ((response.payload as UserLoginResponse)?._id) {
+            dispatch(
+              userProfile({ _id: (response.payload as UserLoginResponse)._id })
+            );
+          }
+        }
       } else {
         return toast.success(isUserRegisteredData.message, toastOptions);
       }
@@ -157,7 +167,7 @@ const Login = ({ onChange }: ComponentProps) => {
             className="bg-primaryblue w-full rounded-lg py-6 text-white"
             type="submit"
           >
-            {loading ? "Sign in..." : "Sign in"}
+            {loading ? <ButtonLoading /> : "Sign in"}
           </Button>
           <Button className="bg-#F8F8F8 w-full rounded-lg py-6 text-base font-semibold mt-2 max-sm:mb-5 dark:bg-foreground">
             <Image src={google} alt="google" className="size-4" /> Sign-in with
