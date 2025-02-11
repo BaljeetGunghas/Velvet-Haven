@@ -32,7 +32,6 @@ export const CalendarComponent = ({ date, setDate }: ComponentProps) => {
           variant="outline"
           className={cn(
             "w-full bg-gray-100 flex items-center gap-2 justify-start text-left font-normal text-gray-900",
-            !date && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="w-5 h-5 text-gray-500" />
@@ -51,7 +50,7 @@ export const CalendarComponent = ({ date, setDate }: ComponentProps) => {
             showMonthDropdown
             dropdownMode="select"
             dateFormat="MMMM dd, yyyy"
-            className="w-full px-3 py-2 border rounded-md bg-white dark:bg-foreground"
+            className="w-full px-3 py-2 border rounded-md dark:bg-foreground"
           />
         </PopoverContent>
       </div>

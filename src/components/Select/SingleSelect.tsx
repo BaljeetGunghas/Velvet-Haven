@@ -1,5 +1,6 @@
-import * as React from "react";
+"use client";
 
+import React, { useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -28,12 +29,27 @@ export const SingleSelect = ({
   option,
   label,
 }: ComponentProps) => {
+  const [selectedValue, setSelectedValue] = React.useState<string | undefined>(
+    value
+  );
+
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
+
+  const handleValueChange = (e: string) => {
+    if (e) {
+      setSelectedValue(e);
+      setValue(e);
+    }
+  };
+
   return (
     <div className="flex gap-1 flex-col ">
       <label className=" text-sm font-semibold text-black dark:text-white ">
         {label}{" "}
       </label>
-      <Select value={value} onValueChange={(e) => setValue(e)}>
+      <Select value={selectedValue} onValueChange={(e) => handleValueChange(e)}>
         <SelectTrigger className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3">
           <SelectValue placeholder="Select Option" />
         </SelectTrigger>

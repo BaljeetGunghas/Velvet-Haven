@@ -1,14 +1,32 @@
 "use client";
 
 import Image from "next/image";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import hotelResp from "@/asset/hotel-resp.jpg";
 import { EditButton } from "@/components/EditButton/EditButton";
 import ViewProfile from "./Component/ViewProfile";
 import EditProfile from "./Component/EditProfile";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store/store";
+import { userProfile } from "@/app/store/Profile/userProfileSlice";
 
 const Page: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { userDetails } = useSelector(
+    (state: RootState) => state.userProfile
+  );
   const [isEditEnable, setIsEditEnable] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user) {
+      if (user?.id && !userDetails) {
+        dispatch(userProfile({ _id: user.id }));
+      }
+    }
+  }, [user]);
+
   return (
     <div className="container mx-auto flex gap-5 justify-between w-10/12 py-20 ">
       <div className="hidden sm:block w-1/3 rounded-md h-full overflow-hidden relative">

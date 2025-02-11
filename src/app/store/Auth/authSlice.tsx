@@ -3,6 +3,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { destroyCookie, parseCookies, setCookie } from "nookies"; // Import nookies for handling cookies
 
 interface User {
   id: string;
@@ -20,9 +21,10 @@ const isBrowser = typeof window !== "undefined";
 
 const getStoredUser = isBrowser ? localStorage.getItem("user") : null;
 const storedUser: string | null = getStoredUser || null;
-const storedToken = isBrowser ? localStorage.getItem("authToken") : null;
+const cookies = parseCookies();
+const token = cookies.authToken; // Get token from cookies
+const storedToken = isBrowser ? token : null;
 const parseData = storedUser ? JSON.parse(storedUser) : null;
-
 
 const initialState: AuthState = {
   user: parseData
@@ -33,7 +35,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-interface UserLoginResponse {
+export interface UserLoginResponse {
   _id: string;
   name: string | null;
   email: string;
@@ -104,8 +106,14 @@ export const login = createAsyncThunk<
     const { jsonResponse, token } = response.data as LoginResponse;
 
     // Store token in localStorage
-    localStorage.setItem("authToken", token);
+    // localStorage.setItem("authToken", token);
     localStorage.setItem("user", JSON.stringify(jsonResponse));
+
+    setCookie(null, "authToken", token, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "Strict",
+    });
 
     return jsonResponse;
   } catch (error: unknown) {
@@ -123,6 +131,7 @@ export const logout = createAsyncThunk<null, void, { rejectValue: ApiError }>(
     try {
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
+      destroyCookie(null, "authToken");
       return null;
     } catch (error: unknown) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
