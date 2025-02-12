@@ -8,6 +8,7 @@ import { RootState } from "@/app/store/store";
 import { useSelector } from "react-redux";
 import { UserProfileData } from "@/app/store/Profile/userProfileSlice";
 import dayjs from "dayjs";
+import EmailVerify from "@/components/EmailVerify/EmailVerify";
 
 const ViewProfile = () => {
   const { error, userDetails } = useSelector(
@@ -17,6 +18,8 @@ const ViewProfile = () => {
   const [isAccountVerified, setIsAccountVerified] = React.useState<boolean>(
     userDetails?.isVerified ? !userDetails?.isVerified : false
   );
+  const [isAccountVerifiedModelOpen, setIsAccountVerifiedModelOpen] =
+    React.useState<boolean>(false);
 
   const [userProfileData, setUserProfileData] =
     React.useState<UserProfileData | null>(null);
@@ -24,7 +27,7 @@ const ViewProfile = () => {
   useEffect(() => {
     if (userDetails) {
       setUserProfileData(userDetails);
-      setIsAccountVerified(userDetails.isVerified );
+      setIsAccountVerified(userDetails.isVerified);
     }
   }, [userDetails]);
 
@@ -50,9 +53,12 @@ const ViewProfile = () => {
         <div className="w-full sm:w-10/12 mx-auto bg-yellow-200 text-yellow-900 py-2 mt-2 px-2 sm:px-6 relative flex items-center justify-start sm:justify-center">
           <p className="text-sm font-semibold">
             Your account is not verified.{" "}
-            <a href="/verify" className="text-blue-600 underline">
+            <span
+              onClick={() => setIsAccountVerifiedModelOpen(true)}
+              className="text-blue-600 cursor-pointer underline"
+            >
               Verify Now
-            </a>
+            </span>
           </p>
 
           <button
@@ -133,6 +139,11 @@ const ViewProfile = () => {
           </p>
         </div>
       </div>
+
+      {isAccountVerifiedModelOpen &&<EmailVerify
+        isOpen={isAccountVerifiedModelOpen}
+        onClose={setIsAccountVerifiedModelOpen}
+      />}
     </div>
   );
 };

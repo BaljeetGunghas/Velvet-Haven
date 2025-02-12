@@ -13,7 +13,7 @@ const withAdminAuth = <P extends object>(WrappedComponent: ComponentType<P>) => 
 
     useEffect(() => {
       if (!userRole || userRole !== "host") {
-        router.replace("/403");
+        router.replace("/404");
       }
     }, [userRole, router]);
 

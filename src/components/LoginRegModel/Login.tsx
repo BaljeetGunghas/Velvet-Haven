@@ -52,7 +52,7 @@ const Login = ({ onChange }: ComponentProps) => {
           toast.success("Login success");
           if (userDataResponse?._id) {
             if(userDataResponse.role === "host"){
-              router.push("/Admin");
+              router.push("/Admin/dashboard");
             }
             dispatch(
               userProfile({ _id: userDataResponse._id })

@@ -2,11 +2,11 @@
 
 import withAdminAuth from "./withAdminAuth";
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ children }: { children: React.ReactNode }) => {
+
+
   return (
-    <div className="container mx-auto flex h-72 bg-slate-300 justify-center items-center">
-      <h1>Welcome, Admin</h1>
-    </div>
+      <main className="flex-1 p-6 bg-gray-100 dark:bg-bannerbg">{children}</main>
   );
 };
 
