@@ -4,6 +4,7 @@ import { authHeader } from "@/app/Auth/AuthHeader/authHeader";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { setCookie } from "nookies";
 
 export interface UserProfileData {
   _id: string;
@@ -59,7 +60,11 @@ export const userProfile = createAsyncThunk<
       headers: authHeader(),
     });
     const responseData = response.data;
-
+    setCookie(null, "userRole", responseData.jsonResponse.role, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "Strict",
+    });
     return responseData as UserProfileResponse;
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
