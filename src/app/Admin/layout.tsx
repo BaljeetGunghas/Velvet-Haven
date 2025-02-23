@@ -25,7 +25,7 @@ export default function AdminLayout({
 
   useEffect(() => {
     const handleResize = () => {
-      setSidebarOpen(window.innerWidth < 640);
+      setSidebarOpen(window.innerWidth >= 640);
     };
 
     handleResize(); // Check on mount
