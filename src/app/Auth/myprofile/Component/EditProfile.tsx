@@ -28,7 +28,8 @@ const EditProfile = ({ setState }: ComponentProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
   const { userDetails } = useSelector((state: RootState) => state.userProfile);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState("No file chosen");
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [userRole, setUserRole] = useState<string>("");
@@ -39,34 +40,21 @@ const EditProfile = ({ setState }: ComponentProps) => {
     if (userDetails) {
       setUserRole(userDetails.role);
       setUserStatus(userDetails.status);
-      
       if (userDetails.date_of_birth)
         setDate(new Date(userDetails.date_of_birth));
-
-      if (userDetails.profile_picture) {
-        setImage(userDetails.profile_picture);
-      }
-
-      if (userDetails.name) {
-        formik.setFieldValue("name", userDetails.name);
-      }
-      if (userDetails.phone_number) {
+      if (userDetails.profile_picture) setImage(`${process.env.NEXT_PUBLIC_IMAGE_URL}/${userDetails.profile_picture}`);
+      if (userDetails.name) formik.setFieldValue("name", userDetails.name);
+      if (userDetails.phone_number)
         formik.setFieldValue("mobile", userDetails.phone_number);
-      }
-
-
     }
   }, [userDetails]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      setFileName(file.name);
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+      setImage(URL.createObjectURL(selectedFile));
     }
   };
 
@@ -82,19 +70,24 @@ const EditProfile = ({ setState }: ComponentProps) => {
     }),
     onSubmit: async (values) => {
       setLoading(true);
-      const payload = {
-        name: values.name,
-        phone_number: values.mobile,
-        date_of_birth: date,
-        role: userRole,
-        status: userStatus,
-      };
+      const formattedDate = date ? date.toISOString().split("T")[0] : null; 
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("phone_number", values.mobile);
+      if (formattedDate) formData.append("date_of_birth", formattedDate?.toString());
+      formData.append("role", userRole);
+      formData.append("status", userStatus);
+      if (file) formData.append("image", file);
+
       try {
         const response = await axios.put(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/profile/update`,
-          payload,
+          formData,
           {
-            headers: authHeader(),
+            headers: {
+              ...authHeader(),
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
         const responseData = response.data;
@@ -102,7 +95,6 @@ const EditProfile = ({ setState }: ComponentProps) => {
           if (user?.id) {
             dispatch(userProfile({ _id: user.id }));
           }
-          setLoading(false);
           setState(false);
           toast.success(responseData.message);
         }
@@ -112,13 +104,12 @@ const EditProfile = ({ setState }: ComponentProps) => {
       setLoading(false);
     },
   });
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="h-full w-full ">
         <div className="h-32  p-2 w-full sm:w-5/6 mx-auto flex gap-3 items-center ">
           <Image
-            src={image ?? userImage}
+            src={image || userImage}
             alt="user"
             className="h-full w-28 rounded-full object-cover"
             loading="lazy"
