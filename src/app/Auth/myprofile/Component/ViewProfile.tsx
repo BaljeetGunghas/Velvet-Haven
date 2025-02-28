@@ -62,7 +62,7 @@ const ViewProfile = () => {
               : userImage
           }
           alt="user"
-          className="h-full mx-auto w-28 rounded-full object-cover"
+          className="h-full mx-auto w-28 rounded-full object-cover shadow-xl"
           loading="lazy"
           width={'200'}
           height={'200'}

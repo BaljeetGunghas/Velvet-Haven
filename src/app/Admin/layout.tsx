@@ -19,6 +19,7 @@ export default function AdminLayout({
   const navItems = [
     { name: "Dashboard", path: "/Admin/dashboard" },
     { name: "Hotel", path: "/Admin/hotel" },
+    { name: "Room", path: "/Admin/room" },
     { name: "Booking", path: "/Admin/booking" },
     { name: "More", path: "/Admin/more" },
   ];
@@ -48,7 +49,7 @@ export default function AdminLayout({
           ransition-all ease-in-out shadow-lg h-full"
           >
             <div className="fixed w-4/5  ">
-              <h2 className="text-xl font-bold mb-4">Admin Panel</h2>
+              <h2 className="text-xl font-bold mb-4">Host Panel</h2>
               <ul>
                 {navItems.map(({ name, path }) => (
                   <li key={path} className="mb-2">

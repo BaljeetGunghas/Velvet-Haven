@@ -158,7 +158,7 @@ export default function HostDashboard() {
             />
           </Link>
         </div>
-        <HotelTable hotelData={dashBoardData?.jsonResponse.hotels ?? null} loading={isDashBoardLoading} />
+        <HotelTable hotelData={dashBoardData?.jsonResponse.hotels ?? null} loading={isDashBoardLoading} handleRefress={getDashBoardResponse} />
       </div>
     </div>
   );

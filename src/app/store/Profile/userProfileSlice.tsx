@@ -65,6 +65,7 @@ export const userProfile = createAsyncThunk<
       maxAge: 60 * 60 * 24 * 7,
       sameSite: "Strict",
     });
+    localStorage.setItem("user", JSON.stringify(responseData.jsonResponse));
     return responseData as UserProfileResponse;
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

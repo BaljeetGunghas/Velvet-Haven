@@ -10,6 +10,7 @@ interface User {
   name: string;
   email: string;
   userRole: string;
+  profile_picture: string | null;
 }
 
 interface AuthState {
@@ -34,6 +35,7 @@ const initialState: AuthState = {
         name: parseData.name,
         email: parseData.email,
         userRole: parseData.role,
+        profile_picture: parseData.profile_picture,
       }
     : null,
   isAuthenticated: !!storedToken,
@@ -179,14 +181,14 @@ export const authSlice = createSlice({
       .addCase(
         signup.fulfilled,
         (state, action: PayloadAction<LoginResponse>) => {
-          console.log(action.payload);
-
+         
           state.loading = false;
           state.user = {
             id: action.payload.jsonResponse._id,
             name: action.payload.jsonResponse.name || "",
             email: action.payload.jsonResponse.email,
             userRole: action.payload.jsonResponse.role,
+            profile_picture: action.payload.jsonResponse.profile_picture,
           };
           state.isAuthenticated = true;
         }
@@ -210,6 +212,7 @@ export const authSlice = createSlice({
             name: action.payload.name || "",
             email: action.payload.email,
             userRole: action.payload.role,
+            profile_picture: action.payload.profile_picture,
           };
           state.isAuthenticated = true;
         }
