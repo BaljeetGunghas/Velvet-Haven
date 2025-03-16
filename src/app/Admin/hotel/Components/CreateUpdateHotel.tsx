@@ -189,12 +189,13 @@ const CreateUpdateHotel: React.FC<Props> = ({
       setHotelDetailsLoading(true);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/delete-image`,
-        { public_id: imageId, hotelId: selectedHotelId, type: "hotel" },
+        { public_id: imageId, _id: selectedHotelId, type: "hotel" },
         {
           headers: authHeader(),
         }
       );
-      const responseData = response.data;
+      const responseData = await response.data;
+
       if (responseData.output === 1) {
         toast.success(responseData.message);
         const newImages = hotelImages?.filter((image) => image !== imageId);
@@ -203,7 +204,8 @@ const CreateUpdateHotel: React.FC<Props> = ({
       } else if (responseData.output === -401) {
         handleLogout();
         return;
-      } else {
+      } else if (responseData.output === 0) {
+        toast.error(responseData.message || "Something went wrong!");
         setHotelDetailsLoading(false);
         return null;
       }
@@ -390,7 +392,8 @@ const CreateUpdateHotel: React.FC<Props> = ({
                   rows={5}
                 />
                 <p className="text-xs my-1 text-gray-500">
-                  Seprate your value with <span className="text-xs">new line</span>
+                  Seprate your value with{" "}
+                  <span className="text-xs">new line</span>
                 </p>
               </div>
               <div className="flex gap-1 flex-col ">
@@ -407,7 +410,8 @@ const CreateUpdateHotel: React.FC<Props> = ({
                   rows={5}
                 />
                 <p className="text-xs my-1 text-gray-500">
-                  Seprate your value with <span className="text-xs">new line</span>
+                  Seprate your value with{" "}
+                  <span className="text-xs">new line</span>
                 </p>
               </div>
               {selectedHotelId && (

@@ -7,6 +7,7 @@ interface ImageUploadProps {
   existingImages?: string[] | null; // Already uploaded images
   onUpload: (files: File[]) => void; // Upload callback
   onDelete?: (imageUrl: string) => void; // Delete callback
+  label?:string;
 }
 
 const MAX_IMAGES = 5;
@@ -15,6 +16,7 @@ const ImageUploader: React.FC<ImageUploadProps> = ({
   existingImages = [],
   onUpload,
   onDelete,
+  label
 }) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
@@ -57,7 +59,7 @@ const ImageUploader: React.FC<ImageUploadProps> = ({
   return (
     <>
       <label className="text-sm font-semibold text-black dark:text-white mb-0">
-        Hotel Images
+        {label ?? "Hotel Images"}
       </label>
       <div className="p-4 border rounded-lg w-full mx-auto bg-white shadow-lg">
         {/* Display Existing & Uploaded Images */}

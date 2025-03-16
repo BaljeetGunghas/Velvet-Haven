@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import RoomTable, { RoomIF } from "../Components/Tabels/RoomTable";
 import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react";
-import CreateUpdateHotel from "../hotel/Components/CreateUpdateHotel";
+import CreateUpdateRoom from "./Components/CreateUpdateRoom";
 
 const AdminRoomPage = () => {
   const [rooms, setRooms] = useState<RoomIF[]>([]);
@@ -69,11 +69,11 @@ const AdminRoomPage = () => {
         <RoomTable
           roomData={rooms ?? null}
           loading={loading}
-        //   handleRefress={fetchRoom}
+          handleRefress={fetchRoom}
         />
       </div>
       {iscreateRoomOpen && (
-        <CreateUpdateHotel
+        <CreateUpdateRoom
           onClose={() => setIsCreateRoomOpen(false)}
           handleRefress={fetchRoom}
         />

@@ -85,7 +85,7 @@ export default function HostDashboard() {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 w-full">
         {[
-          { title: "Total Hotels", value: dashBoardData?.jsonResponse.hotels.length, color: "bg-blue-100" },
+          { title: "Total Hotels", value: dashBoardData?.jsonResponse?.hotelCount ?? 0, color: "bg-blue-100" },
           {
             title: "Total Bookings",
             value: bookings.length,

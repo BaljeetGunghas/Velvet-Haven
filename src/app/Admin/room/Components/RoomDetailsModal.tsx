@@ -3,36 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import ModalLayout from "@/components/ModelLayout/Modellayout";
-
-interface Room {
-  _id: string;
-  hostid: string;
-  hotel_id: {
-    _id: string;
-    name: string;
-  };
-  room_number: number;
-  room_type: string;
-  price_per_night: number;
-  max_occupancy: number;
-  features: string[];
-  floor_number: number;
-  bed_type: string;
-  availability_status: boolean;
-  view_type: string;
-  smoking_allowed: boolean;
-  description: string;
-  rating: number;
-  reviews: string[];
-  check_in_time: string;
-  check_out_time: string;
-  room_images?: string[] | null;
-  createdAt: string;
-  updatedAt: string;
-}
+import { RoomIF } from "../../Components/Tabels/RoomTable";
 
 interface RoomDetailsModalProps {
-  room: Room | null;
+  room: RoomIF | null;
   isOpen: boolean;
   onClose: (val: boolean) => void;
 }
@@ -46,20 +20,22 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
 
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
-      <div className="p-4 space-y-3">
-        {/* Room Number & Type */}
-        <div className="flex justify-between">
-          <p className="text-lg font-bold">Room No: {room.room_number}</p>
-          <p className="text-lg font-semibold text-primary">{room.room_type}</p>
+      <div className="p-4 space-y-4">
+        {/* Header */}
+        <div className="flex justify-between items-center border-b pb-2">
+          <h2 className="text-lg font-bold">Room No: {room.room_number}</h2>
+          <span className="text-lg font-semibold text-primary">
+            {room.room_type}
+          </span>
         </div>
 
         {/* Hotel Name */}
-        <p className="text-sm text-gray-600">
-          <strong>Hotel:</strong> {room.hotel_id.name}
+        <p className="text-sm text-gray-700">
+          <strong>Hotel:</strong> {room.hotel_id?.name || "N/A"}
         </p>
 
-        {/* Price & Occupancy */}
-        <div className="flex justify-between">
+        {/* Pricing & Occupancy */}
+        <div className="grid grid-cols-2 gap-4">
           <p className="text-sm">
             <strong>Price Per Night:</strong> ${room.price_per_night}
           </p>
@@ -71,19 +47,19 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
         {/* Features */}
         <div>
           <p className="text-sm font-semibold">Features:</p>
-          <ul className="list-disc list-inside text-sm text-gray-700">
-            {room.features.length > 0 ? (
-              room.features.map((feature, index) => (
+          {(room?.features?.length ?? 0) > 0 && room?.features?.split("/n") ? (
+            <ul className="list-disc list-inside text-sm text-gray-700">
+              {room?.features?.split("/n")?.map((feature, index) => (
                 <li key={index}>{feature}</li>
-              ))
-            ) : (
-              <li>No features listed</li>
-            )}
-          </ul>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500">No features listed</p>
+          )}
         </div>
 
         {/* Floor & Bed Type */}
-        <div className="flex justify-between">
+        <div className="grid grid-cols-2 gap-4">
           <p className="text-sm">
             <strong>Floor:</strong> {room.floor_number}
           </p>
@@ -93,7 +69,7 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
         </div>
 
         {/* Availability & View */}
-        <div className="flex justify-between">
+        <div className="grid grid-cols-2 gap-4">
           <p
             className={`text-sm font-bold ${
               room.availability_status ? "text-green-600" : "text-red-600"
@@ -102,18 +78,18 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
             {room.availability_status ? "Available" : "Booked"}
           </p>
           <p className="text-sm">
-            <strong>View:</strong> {room.view_type}
+            <strong>View:</strong> {room.view_type || "N/A"}
           </p>
         </div>
 
-        {/* Smoking Allowed */}
+        {/* Smoking Policy */}
         <p className="text-sm">
           <strong>Smoking Allowed:</strong>{" "}
           {room.smoking_allowed ? "Yes" : "No"}
         </p>
 
         {/* Check-in & Check-out Times */}
-        <div className="flex justify-between">
+        <div className="grid grid-cols-2 gap-4">
           <p className="text-sm">
             <strong>Check-in:</strong> {room.check_in_time}
           </p>
@@ -129,19 +105,20 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
         </p>
 
         {/* Room Images */}
-        {room.room_images && room.room_images.length > 0 ? (
+        {room?.room_images && room?.room_images?.length > 0 ? (
           <div>
             <p className="text-sm font-semibold mb-2">Room Images:</p>
-            <div className="flex space-x-2 overflow-x-auto">
+            <div className="grid grid-cols-3 gap-2">
               {room.room_images.map((img, index) => (
-                <Image
-                  key={index}
-                  src={img}
-                  alt={`Room Image ${index}`}
-                  width={100}
-                  height={70}
-                  className="rounded-lg shadow"
-                />
+                <div key={index} className="relative w-full h-24">
+                  <Image
+                    src={img}
+                    alt={`Room Image ${index}`}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg shadow"
+                  />
+                </div>
               ))}
             </div>
           </div>

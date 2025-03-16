@@ -71,6 +71,7 @@ export default function Home() {
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   

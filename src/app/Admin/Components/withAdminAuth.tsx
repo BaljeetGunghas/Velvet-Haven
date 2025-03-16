@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
-import { useEffect, useState, ComponentType } from "react";
+import { useEffect, useState, ComponentType, ReactNode } from "react";
 
-const withAdminAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
-  const WithAuthComponent = (props: P) => {
+const withAdminAuth = <P extends object>(WrappedComponent: ComponentType<P & { children?: ReactNode }>) => {
+  const WithAuthComponent = (props: P & { children?: ReactNode }) => {
     const router = useRouter();
     const cookies = parseCookies();
     const userRole = cookies.userRole;
@@ -21,7 +21,6 @@ const withAdminAuth = <P extends object>(WrappedComponent: ComponentType<P>) => 
       }
     }, [userRole, router]);
 
-    // Prevent rendering before checking authentication
     if (isAuthorized === null) return null;
 
     return isAuthorized ? <WrappedComponent {...props} /> : null;

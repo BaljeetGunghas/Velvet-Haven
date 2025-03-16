@@ -1,6 +1,6 @@
 "use client";
 
-import withAdminAuth from "./withAdminAuth";
+import withAdminAuth from "./Components/withAdminAuth";
 
 function AdminDashboard({ children }: { children: React.ReactNode }) {
   return (

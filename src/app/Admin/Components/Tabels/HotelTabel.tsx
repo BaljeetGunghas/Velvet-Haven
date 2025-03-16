@@ -150,7 +150,26 @@ const HotelTable: React.FC<Props> = ({ hotelData, loading, handleRefress }) => {
                     key={hotel._id}
                     className="border-b last:border-none dark:hover:bg-gray-900 hover:bg-slate-200 text-sm transition duration-300"
                   >
-                    <td className="p-3 font-semibold ">{hotel?.name}</td>
+                    {hotel?.name?.length > 22 ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <td className="p-3 text-xs font-semibold hidden lg:table-cell truncate max-w-[150px]">
+                            {hotel?.name}
+                          </td>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="right"
+                          sideOffset={5}
+                          className="p-2 rounded-xl bg-foreground text-white dark:bg-blue-950 text-xs dark:text-white relative z-100"
+                        >
+                          {hotel?.name}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <td className="p-3 text-xs font-semibold hidden lg:table-cell">
+                        {hotel?.name}
+                      </td>
+                    )}
                     <td className="p-3 hidden md:table-cell text-xs">
                       {hotel?.owner_name}
                     </td>

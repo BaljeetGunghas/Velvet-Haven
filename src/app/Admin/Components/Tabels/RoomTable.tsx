@@ -4,6 +4,12 @@ import React, { useState } from "react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import dayjs from "dayjs";
 import RoomDetailsModal from "../../room/Components/RoomDetailsModal";
+import CreateUpdateRoom from "../../room/Components/CreateUpdateRoom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 
 export interface RoomIF {
   _id: string;
@@ -16,11 +22,10 @@ export interface RoomIF {
   room_type: string;
   price_per_night: number;
   max_occupancy: number;
-  features: string[];
   floor_number: number;
   bed_type: string;
-  availability_status: boolean;
-  view_type: string;
+  availability_status: string;
+  amenities: string;
   smoking_allowed: boolean;
   description: string;
   rating: number;
@@ -35,13 +40,20 @@ export interface RoomIF {
 interface RoomTableProps {
   roomData: RoomIF[] | null;
   loading: boolean;
+  handleRefress: () => void;
 }
 
-const RoomTable: React.FC<RoomTableProps> = ({ roomData, loading }) => {
+const RoomTable: React.FC<RoomTableProps> = ({
+  roomData,
+  loading,
+  handleRefress,
+}) => {
   const [selectedRoom, setSelectedRoom] = useState<RoomIF | null>(null);
   const [showDetailsModel, setShowDetailsModel] = useState<boolean>(false);
+  const [iscreateRoomOpen, setIsCreateRoomOpen] = useState<boolean>(false);
   const onEdit = (room: RoomIF) => {
-    console.log(room);
+    setSelectedRoom(room);
+    setIsCreateRoomOpen(true);
   };
   const onDelete = (room: RoomIF) => {
     console.log(room);
@@ -53,15 +65,16 @@ const RoomTable: React.FC<RoomTableProps> = ({ roomData, loading }) => {
           <table className="w-full border-collapse shadow-lg rounded-lg min-w-[700px]">
             <thead className="bg-primaryblue dark:bg-bannerbg text-white">
               <tr>
-                <th className="p-3 text-left">Room No.</th>
-                <th className="p-3 text-left hidden md:table-cell">Type</th>
-                <th className="p-3 text-left hidden lg:table-cell">Hotel</th>
-                <th className="p-3 text-center">Price</th>
-                <th className="p-3 text-center">Availability</th>
-                <th className="p-3 text-center hidden md:table-cell">
+                <th className="p-2 text-left">R No.</th>
+                <th className="p-2 text-left hidden md:table-cell">Type</th>
+                <th className="p-2 text-left hidden lg:table-cell">Hotel</th>
+                <th className="p-2 text-center">Rating</th>
+                <th className="p-2 text-center">Price</th>
+                <th className="p-2 text-center">Availability</th>
+                <th className="p-2 text-center hidden md:table-cell">
                   Created / Updated
                 </th>
-                <th className="p-3 text-center">Actions</th>
+                <th className="p-2 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -104,20 +117,46 @@ const RoomTable: React.FC<RoomTableProps> = ({ roomData, loading }) => {
                     <td className="p-3 hidden md:table-cell text-xs">
                       {room.room_type}
                     </td>
-                    <td className="p-3 hidden lg:table-cell text-xs">
-                      {room.hotel_id.name}
+                    {room.hotel_id.name?.length > 22 ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <td className="p-3 text-xs font-semibold hidden lg:table-cell truncate max-w-[150px]">
+                            {room.hotel_id.name}
+                          </td>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="right"
+                          sideOffset={5}
+                          className="p-2 rounded-xl bg-foreground text-white dark:bg-blue-950 text-xs dark:text-white relative z-100"
+                        >
+                          {room.hotel_id.name}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <td className="p-3 text-xs font-semibold hidden lg:table-cell">
+                        {room.hotel_id.name}
+                      </td>
+                    )}
+                     <td className="p-3 text-xs text-center">
+                      {room?.rating} ⭐
                     </td>
                     <td className="p-3 text-xs text-center">
-                      ${room.price_per_night}
+                      Rs{room.price_per_night}
                     </td>
                     <td
                       className={`p-3 text-xs text-center font-bold ${
-                        room.availability_status
+                        room.availability_status === "available"
                           ? "text-green-600"
-                          : "text-red-600"
+                          : room.availability_status === "occupied"
+                          ? "text-red-600"
+                          : "text-yellow-600"
                       }`}
                     >
-                      {room.availability_status ? "Available" : "Booked"}
+                      {room.availability_status === "available"
+                        ? "Available"
+                        : room.availability_status === "occupied"
+                        ? "Occupied"
+                        : "Under Maintenance"}
                     </td>
                     <td className="p-3 text-center hidden md:table-cell">
                       <p className="text-xs m-0 text-center">
@@ -165,6 +204,14 @@ const RoomTable: React.FC<RoomTableProps> = ({ roomData, loading }) => {
           room={selectedRoom}
           isOpen={showDetailsModel}
           onClose={setShowDetailsModel}
+        />
+      )}
+
+      {iscreateRoomOpen && selectedRoom?._id && (
+        <CreateUpdateRoom
+          onClose={() => setIsCreateRoomOpen(false)}
+          handleRefress={handleRefress}
+          selectedRoomId={selectedRoom._id}
         />
       )}
     </>

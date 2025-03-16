@@ -47,6 +47,7 @@ const EditProfile = ({ setState }: ComponentProps) => {
       if (userDetails.phone_number)
         formik.setFieldValue("mobile", userDetails.phone_number);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
