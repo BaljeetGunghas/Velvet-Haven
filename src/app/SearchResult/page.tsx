@@ -1,23 +1,33 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import SearchCard from "@/components/Card/SearchCard";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
+import ComponentError from "@/components/Error/ComponentError";
+import SearchFilter from "./Components/SearchFilter";
+import dayjs from "dayjs";
+import { FiFilter } from "react-icons/fi"; // Filter icon
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import ButtonLoading from "@/components/Loading/ButtonLoading";
+import { authHeader } from "../Auth/AuthHeader/authHeader";
+
 
 export interface SearchRoomIF {
   amenities: string[] | null;
   image: string | null;
   _id: string;
+  hotel_id: string;
   room_type: string;
   price_per_night: number;
   max_occupancy: number;
   bed_type: string;
   rating: number;
+  is_shortlisted: boolean;
   check_in_time: string;
   check_out_time: string;
 }
@@ -25,14 +35,15 @@ export interface SearchRoomIF {
 const SearchResult = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(true); // Toggle state for filter
 
   const [rooms, setRooms] = useState<SearchRoomIF[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [page, setPage] = useState<number>(searchParams.get("page") ? parseInt(searchParams.get("page") as string, 10) : 1);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
-  // Extract values from URL params
+
   const initialFilters = {
     city: searchParams.get("city") || "delhi",
     check_in_date: searchParams.get("check_in_date") || "2025-03-19",
@@ -41,30 +52,11 @@ const SearchResult = () => {
     children: searchParams.get("children") || "",
     minPrice: searchParams.get("minPrice") || "",
     maxPrice: searchParams.get("maxPrice") || "",
+    page: searchParams.get("page") || "1",
   };
 
   const [filters, setFilters] = useState(initialFilters);
 
-  // Function to update URL parameters dynamically
-  const updateQueryParams = (updatedFilters: Partial<typeof filters>) => {
-    const params = new URLSearchParams();
-    Object.entries(updatedFilters).forEach(([key, value]) => {
-      if (value) params.set(key, String(value));
-    });
-
-    router.push(`?${params.toString()}`);
-  };
-
-  // Handle input change and update URL params
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPage(1);
-    const { name, value } = e.target;
-    const updatedFilters = { ...filters, [name]: value };
-    setFilters(updatedFilters);
-    updateQueryParams(updatedFilters);
-  };
-
-  // Fetch rooms data
   const fetchRooms = useCallback(async (reset = false) => {
     setLoading(true);
     setError("");
@@ -76,115 +68,135 @@ const SearchResult = () => {
           ? { minPrice: filters.minPrice, maxPrice: filters.maxPrice }
           : {}),
         ...(filters.children ? { children: filters.children } : {}),
-        page,
+        page: reset ? 1 : page,
       };
 
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/search-room`,
-        { params }
-      );
-
-      const availableRooms = response.data?.jsonResponse?.rooms || [];
-      const totalPages = response.data?.jsonResponse?.totalPages || 1;
-
-      setTotalPages(totalPages);
-
-      setRooms((prevRooms) => {
-        if (reset) return availableRooms;
-
-        const uniqueRooms = new Map();
-        [...prevRooms, ...availableRooms].forEach((room) => {
-          uniqueRooms.set(room._id, room);
-        });
-
-        return Array.from(uniqueRooms.values());
+      const queryParams = new URLSearchParams({
+        city: filters.city,
+        check_in_date: dayjs(filters.check_in_date).format("YYYY-MM-DD"),
+        check_out_date: dayjs(filters.check_out_date).format("YYYY-MM-DD"),
       });
 
+      if (filters?.adults) {
+        queryParams.append("adults", filters.adults.toString());
+      }
+
+      if (filters?.children) {
+        queryParams.append("children", filters.children.toString());
+      }
+      queryParams.append("page", reset ? "1" : String(page));
+
+      router.replace(`/SearchResult?${queryParams.toString()}`);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/search-room`,
+        {
+          params,
+          headers: authHeader()
+        },
+      );
+
+      const responseData = response.data;
+      if (responseData.output > 0) {
+        const availableRooms = responseData?.jsonResponse?.rooms || [];
+        const totalPages = responseData?.jsonResponse?.totalPages || 1;
+
+        setTotalPages(totalPages);
+        setPage(responseData.jsonResponse?.currentPage + 1);
+
+        setRooms((prevRooms) => {
+          if (reset) return availableRooms;
+
+          const uniqueRooms = new Map();
+          [...prevRooms, ...availableRooms].forEach((room) => {
+            uniqueRooms.set(room._id, room);
+          });
+
+          return Array.from(uniqueRooms.values());
+        });
+      } else {
+        setRooms([]);
+      }
     } catch (err) {
       console.error("Error fetching rooms:", err);
       setError("Failed to load rooms. Please try again.");
     } finally {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, page]);
 
-
-
   useEffect(() => {
-    // setPage(1)
-    fetchRooms(true); // Fetch new results on filter change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+    fetchRooms(true);
+  }, []);
 
-  // Load more function
   const loadMore = () => {
     if (page <= totalPages) {
-      setPage((prevPage) => prevPage + 1);
       fetchRooms();
     }
   };
 
   return (
-    <div className="container mx-auto p-4 flex flex-col md:flex-row py-20">
-      {/* Filter Section */}
-      <div className="w-full md:w-1/4 p-4 border-b md:border-b-0 md:border-r">
-        <h3 className="text-lg font-semibold mb-2">Filters</h3>
-        <Input name="city" type="text" placeholder="Enter city..." value={filters.city} onChange={handleChange} className="mb-4" />
-        <Input name="check_in_date" type="date" value={filters.check_in_date} onChange={handleChange} className="mb-4" />
-        <Input name="check_in_date" type="date" value={filters.check_in_date} onChange={handleChange} className="mb-4" />
-        <Input name="adults" type="number" placeholder="Adults" value={filters.adults} onChange={handleChange} className="mb-4" />
-        <Input name="children" type="number" placeholder="Children" value={filters.children} onChange={handleChange} className="mb-4" />
-        <Input name="minPrice" type="number" placeholder="Min Price" value={filters.minPrice} onChange={handleChange} className="mb-4" />
-        <Input name="maxPrice" type="number" placeholder="Max Price" value={filters.maxPrice} onChange={handleChange} className="mb-4" />
-        <Button onClick={() => fetchRooms(true)} className="w-full">
-          Search
-        </Button>
-      </div>
+    <>
+      <div className=" container mx-auto  mt-20 ">
+        <h1 className=" mx-auto px-8 font-bold text-2xl text-center">Search Result</h1>
 
-      {/* Room Listings */}
-      <div className="w-full md:w-3/4 p-4">
-        {loading && <p className="text-center">Loading rooms...</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        {rooms.length === 0 && !loading && !error && <p className="text-center">No rooms found.</p>}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rooms.map((room: SearchRoomIF) => (
-            <Card key={room._id} className="p-4 shadow-lg rounded-xl flex flex-col">
-              <Image
-                src={room.image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${room.image}` : "/default-hotel.jpg"}
-                alt={room._id || "Hotel Room"}
-                width={240}
-                height={160}
-                className="w-full h-40 object-cover rounded-lg"
-                loading="lazy"
-              />
-              <CardContent className="text-center">
-                <h3 className="text-lg font-semibold">{room.room_type} - {room.bed_type}</h3>
-                <p className="text-sm text-gray-500">Max: {room.max_occupancy} guests</p>
-                <p className="text-xs text-gray-500">Amenities: {room.amenities?.join(", ") || "None"}</p>
-                <div className="flex justify-center items-center gap-2 mt-2">
-                  <Star className="text-yellow-500" />
-                  <span className="font-medium">{room.rating || "N/A"}</span>
-                </div>
-                <p className="text-lg font-bold">${room.price_per_night} / night</p>
-                <Button onClick={() => router.push(`/room-details/${room._id}`)} className="mt-4">
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Filter Toggle Button (Mobile & Small Screens) */}
+        <div className="container w-full md:w-1/3 justify-between px-8 mt-4 flex">
+          {isFilterOpen && <Button
+            className="flex items-center gap-2 dark:border  px-4 py-2 rounded-md cursor-default"
+          >
+            Filter
+            <FiFilter size={20} />
+          </Button>}
+          {<Button
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            className={`flex items-cente dark:border gap-2  px-4 py-2 rounded-md ${isFilterOpen && 'rounded-full'} `}
+          >
+            {isFilterOpen ? <ArrowLeft size={20} /> : <>
+              Filter
+              <ArrowRight size={20} />
+            </>
+            }
+          </Button>}
         </div>
 
-        {/* Load More Button */}
-        {page <= totalPages && (
-          <div className="text-center mt-6">
-            <Button onClick={loadMore} disabled={loading}>
-              {loading ? "Loading..." : "Load More"}
-            </Button>
+        <div className="container mx-auto p-4 flex flex-col md:flex-row">
+          {/* Filter Section */}
+          <motion.nav
+            initial={{ x: -550 }}
+            animate={{ x: isFilterOpen ? 0 : -550 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            <div className="w-full p-4 h-full border-b md:border-b-0 md:border-r">
+              {/* <h2 className="text-lg font-bold -mt-6 mb-2">Filter</h2> */}
+              {isFilterOpen && <SearchFilter filters={filters} setfilter={setFilters} fetchRooms={(val) => fetchRooms(val)} />}
+            </div>
+          </motion.nav>
+
+          {/* Room Listings */}
+          <div className={` w-full ${!isFilterOpen ? 'md:w-full' : 'md:w-3/4'} px-2`}>
+            {loading && rooms.length === 0 && <LoadingComponent />}
+            {error && <ComponentError error={error} reload={() => { setPage(1); fetchRooms(true); }} />}
+            {rooms.length === 0 && !loading && !error && <p className="text-center">No rooms found.</p>}
+
+            <div className={`grid grid-cols-1 sm:grid-cols-2 ${!isFilterOpen ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6`}>
+              {rooms.map((room: SearchRoomIF) => (
+                <SearchCard key={room._id} room={room} />
+              ))}
+            </div>
+
+            {/* Load More Button */}
+            {page <= totalPages && (
+              <div className="text-center mt-6">
+                <Button onClick={loadMore} disabled={loading} className="bg-primaryblue text-white">
+                  {loading ? <ButtonLoading /> : "Load More"}
+                </Button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      </div >
+    </>
   );
 };
 

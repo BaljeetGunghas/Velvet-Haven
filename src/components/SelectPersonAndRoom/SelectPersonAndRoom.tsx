@@ -48,25 +48,6 @@ const SelectPersonAndRoom: React.FC<SelectPersonAndRoomProps> = ({
         </button>
 
         <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 mx-auto my-5 w-96">
-          {/* Room Selection */}
-          <div className="flex justify-between items-center mb-5">
-            <span className="text-lg font-medium text-gray-700">Rooms</span>
-            <div className="flex items-center gap-3">
-              <button
-                className="w-9 h-9 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-xl hover:bg-gray-300 transition"
-                onClick={() => setRooms((prev) => Math.max(1, prev - 1))}
-              >
-                -
-              </button>
-              <span className="text-lg font-semibold">{rooms}</span>
-              <button
-                className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl hover:bg-blue-700 transition"
-                onClick={() => setRooms((prev) => prev + 1)}
-              >
-                +
-              </button>
-            </div>
-          </div>
 
           {/* Adult Selection */}
           <div className="flex justify-between items-center mb-5">
@@ -104,6 +85,25 @@ const SelectPersonAndRoom: React.FC<SelectPersonAndRoomProps> = ({
               <button
                 className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl hover:bg-blue-700 transition"
                 onClick={() => setChildren((prev) => Math.min(maxChildren, prev + 1))}
+              >
+                +
+              </button>
+            </div>
+          </div>
+          {/* Room Selection */}
+          <div className="flex justify-between items-center mb-5">
+            <span className="text-lg font-medium text-gray-700">Rooms</span>
+            <div className="flex items-center gap-3">
+              <button
+                className="w-9 h-9 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-xl hover:bg-gray-300 transition"
+                onClick={() => setRooms((prev) => Math.max(1, prev - 1))}
+              >
+                -
+              </button>
+              <span className="text-lg font-semibold">{rooms}</span>
+              <button
+                className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl hover:bg-blue-700 transition"
+                onClick={() => setRooms((prev) => prev + 1)}
               >
                 +
               </button>

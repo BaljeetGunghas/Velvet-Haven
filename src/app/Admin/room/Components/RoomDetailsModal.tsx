@@ -17,7 +17,7 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
   onClose,
 }) => {
   if (!room) return null;
-
+  
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className="p-4 space-y-4">
@@ -43,21 +43,6 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
             <strong>Max Occupancy:</strong> {room.max_occupancy} guests
           </p>
         </div>
-
-        {/* Features */}
-        <div>
-          <p className="text-sm font-semibold">Features:</p>
-          {(room?.features?.length ?? 0) > 0 && room?.features?.split("/n") ? (
-            <ul className="list-disc list-inside text-sm text-gray-700">
-              {room?.features?.split("/n")?.map((feature, index) => (
-                <li key={index}>{feature}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-gray-500">No features listed</p>
-          )}
-        </div>
-
         {/* Floor & Bed Type */}
         <div className="grid grid-cols-2 gap-4">
           <p className="text-sm">
@@ -78,7 +63,7 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
             {room.availability_status ? "Available" : "Booked"}
           </p>
           <p className="text-sm">
-            <strong>View:</strong> {room.view_type || "N/A"}
+            <strong>View:</strong> {room.amenities|| "N/A"}
           </p>
         </div>
 
