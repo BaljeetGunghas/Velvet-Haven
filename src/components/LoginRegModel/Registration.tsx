@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { toastOptions } from "../Toast/Index";
 import { toast } from "react-toastify";
 import Error from "../Error/Error";
+import ButtonLoading from "../Loading/ButtonLoading";
 
 interface ComponentProps {
   onChange: (val: boolean) => void;
@@ -23,6 +24,7 @@ const Registration = ({ onChange }: ComponentProps) => {
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
@@ -45,12 +47,14 @@ const Registration = ({ onChange }: ComponentProps) => {
     }),
     onSubmit: async (values) => {
       try {
+        setLoading(true);
         const isUserRegistered = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/isUserRegistered`,
           { email: values.email }
         );
         const isUserRegisteredData = isUserRegistered.data;
         if (isUserRegisteredData.output === 1) {
+          setLoading(false);
           return toast.success(isUserRegisteredData.message, toastOptions);
         } else {
           const payload = {
@@ -61,8 +65,12 @@ const Registration = ({ onChange }: ComponentProps) => {
           const action = await dispatch(signup(payload));
           const signupResponse: LoginResponse = action.payload as LoginResponse;
           if (signupResponse.output === 1) {
+            setLoading(false);
+
             return toast.success(signupResponse.message, toastOptions);
           } else {
+            setLoading(false);
+
             return toast.error(
               "Signup response payload is undefined",
               toastOptions
@@ -70,6 +78,8 @@ const Registration = ({ onChange }: ComponentProps) => {
           }
         }
       } catch (error: unknown) {
+        setLoading(false);
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const typedError = error as any;
         return toast.error(
@@ -226,8 +236,9 @@ const Registration = ({ onChange }: ComponentProps) => {
           <Button
             className="bg-primaryblue w-full rounded-lg py-6 text-white mt-5 max-sm:my-5"
             type="submit"
+            disabled={loading}
           >
-            Create account
+            {loading ? <ButtonLoading /> : "Create account"}
           </Button>
         </div>
       </form>

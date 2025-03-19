@@ -1,26 +1,25 @@
 "use client";
 
-
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/app/store/store";
-import { logout } from "@/app/store/Auth/authSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-const userAvatar = "@/asset/useravatar.svg";
+import { parseCookies } from "nookies";
+import { useHandleLogout } from "../../Hooks/handleLogout";
+// import Image from "next/image";
+
+// const userAvatar = "@/asset/useravatar.svg";
 
 const AvatarDropdown = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { userDetails } = useSelector((state: RootState) => state.userProfile);
+  const handleLogout = useHandleLogout();
 
-  const handleLogout = () => {
-    router.push('/');
-    dispatch(logout());
-  };
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const cookies = parseCookies();
+  const userRole = cookies.userRole;
 
   return (
     <div
@@ -31,7 +30,15 @@ const AvatarDropdown = () => {
       {/* Avatar */}
       <div className="w-10 h-10 bg-slate-400 rounded-full grid place-items-center cursor-pointer">
         <Avatar className="w-10 h-10 bg-slate-400 rounded-full grid place-items-center">
-          <AvatarImage src={userAvatar} alt="User Avatar" />
+          <AvatarImage
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${
+              userDetails?.profile_picture
+                ? userDetails?.profile_picture
+                : user?.profile_picture
+            }`}
+            alt="User Avatar"
+            className="w-10 h-10 rounded-full object-cover "
+          />
           <AvatarFallback>
             {user?.name
               ? user.name
@@ -56,8 +63,18 @@ const AvatarDropdown = () => {
                   View Profile
                 </Link>
               </li>
+              {userRole === "host" && (
+                <li>
+                  <Link
+                    href="/Admin/dashboard"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Admin
+                  </Link>
+                </li>
+              )}
               <li>
-                <button
+              <button
                   onClick={handleLogout}
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >

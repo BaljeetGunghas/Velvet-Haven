@@ -9,6 +9,8 @@ interface User {
   id: string;
   name: string;
   email: string;
+  userRole: string;
+  profile_picture: string | null;
 }
 
 interface AuthState {
@@ -28,7 +30,13 @@ const parseData = storedUser ? JSON.parse(storedUser) : null;
 
 const initialState: AuthState = {
   user: parseData
-    ? { id: parseData._id, name: parseData.name, email: parseData.email }
+    ? {
+        id: parseData._id,
+        name: parseData.name,
+        email: parseData.email,
+        userRole: parseData.role,
+        profile_picture: parseData.profile_picture,
+      }
     : null,
   isAuthenticated: !!storedToken,
   loading: false,
@@ -78,7 +86,16 @@ export const signup = createAsyncThunk<
     const response = await axios.post(`${apiUrl}/user/signup`, data);
     const { jsonResponse, token } = response.data as LoginResponse;
 
-    localStorage.setItem("authToken", token);
+    setCookie(null, "authToken", token, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "Strict",
+    });
+    setCookie(null, "userRole", jsonResponse.role, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "Strict",
+    });
     localStorage.setItem("user", JSON.stringify(jsonResponse));
 
     return response.data;
@@ -105,8 +122,6 @@ export const login = createAsyncThunk<
     const response = await axios.post(`${apiUrl}/user/login`, data);
     const { jsonResponse, token } = response.data as LoginResponse;
 
-    // Store token in localStorage
-    // localStorage.setItem("authToken", token);
     localStorage.setItem("user", JSON.stringify(jsonResponse));
 
     setCookie(null, "authToken", token, {
@@ -114,7 +129,11 @@ export const login = createAsyncThunk<
       maxAge: 60 * 60 * 24 * 7,
       sameSite: "Strict",
     });
-
+    setCookie(null, "userRole", jsonResponse.role, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "Strict",
+    });
     return jsonResponse;
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,9 +148,9 @@ export const logout = createAsyncThunk<null, void, { rejectValue: ApiError }>(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       destroyCookie(null, "authToken");
+      destroyCookie(null, "userRole");
       return null;
     } catch (error: unknown) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -162,13 +181,14 @@ export const authSlice = createSlice({
       .addCase(
         signup.fulfilled,
         (state, action: PayloadAction<LoginResponse>) => {
-          console.log(action.payload);
-
+         
           state.loading = false;
           state.user = {
             id: action.payload.jsonResponse._id,
             name: action.payload.jsonResponse.name || "",
             email: action.payload.jsonResponse.email,
+            userRole: action.payload.jsonResponse.role,
+            profile_picture: action.payload.jsonResponse.profile_picture,
           };
           state.isAuthenticated = true;
         }
@@ -191,6 +211,8 @@ export const authSlice = createSlice({
             id: action.payload._id,
             name: action.payload.name || "",
             email: action.payload.email,
+            userRole: action.payload.role,
+            profile_picture: action.payload.profile_picture,
           };
           state.isAuthenticated = true;
         }

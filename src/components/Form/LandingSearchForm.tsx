@@ -5,7 +5,7 @@ import calendar from "@/asset/icon/calendar.svg";
 import downline from "@/asset/icon/down-line.svg";
 import iconuser from "@/asset/icon/icon_user.svg";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Button } from "../ui/button";
 import {
   Select,
@@ -16,36 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Options } from "../Select/SingleSelect";
-// import { DatePickerWithRange, DateRange } from "../Calendar/DatePicker";
-import ModalLayout from "../ModelLayout/Modellayout";
-import SelectPersonAndRoom from "../SelectPersonAndRoom/SelectPersonAndRoom";
 import { useRouter } from "next/navigation";
 import DatePickerWithRange from "../Calendar/DatePicker";
 import { Range } from "react-date-range";
+import ModalLayout from "../ModelLayout/Modellayout";
+import dynamic from "next/dynamic";
+import dayjs from "dayjs";
+import { FaLocationDot } from "react-icons/fa6";
+import { CityOptions } from "./CityOptions";
 
-const cityOptions = [
-  { value: "1", label: "New Delhi" },
-  { value: "2", label: "Mumbai" },
-  { value: "3", label: "Bangalore" },
-  { value: "4", label: "Hyderabad" },
-  { value: "5", label: "Chennai" },
-  { value: "6", label: "Kolkata" },
-  { value: "7", label: "Pune" },
-  { value: "8", label: "Ahmedabad" },
-  { value: "9", label: "Jaipur" },
-  { value: "10", label: "Surat" },
-  { value: "11", label: "Lucknow" },
-  { value: "12", label: "Kanpur" },
-  { value: "13", label: "Nagpur" },
-  { value: "14", label: "Indore" },
-  { value: "15", label: "Thane" },
-  { value: "16", label: "Bhopal" },
-  { value: "17", label: "Visakhapatnam" },
-  { value: "18", label: "Patna" },
-  { value: "19", label: "Vadodara" },
-  { value: "20", label: "Ghaziabad" },
-];
+// Lazy loading SelectPersonAndRoom for better performance
+const SelectPersonAndRoom = dynamic(() => import("../SelectPersonAndRoom/SelectPersonAndRoom"), { ssr: false });
+
 const defaultDateRange: Range = {
   startDate: undefined,
   endDate: undefined,
@@ -56,113 +38,103 @@ const LandingSearchForm = () => {
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [date, setDate] = useState<Range>(defaultDateRange);
-  const [isSelectPersonAndRoomModelOpen, setisSelectPersonAndRoomModelOpen] =
-    useState<boolean>(false);
-  const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(1);
-  const [Children, setChildren] = useState(0);
-  const [isHotelSearchingLoading, setIsHotelSearchingLoading] =
-    useState<boolean>(false);
+  const [isSelectPersonAndRoomModelOpen, setIsSelectPersonAndRoomModelOpen] = useState<boolean>(false);
+  const [personDetails, setPersonDetails] = useState({ rooms: 1, adults: 1, children: 0 });
+  const [isHotelSearchingLoading, setIsHotelSearchingLoading] = useState<boolean>(false);
 
-  const handleSearchHotel = () => {
+  // Fetch city options only once and prevent unnecessary re-renders
+
+
+
+  const handleSearchHotel = useCallback(() => {
     setIsHotelSearchingLoading(true);
-    setTimeout(() => {
-      setIsHotelSearchingLoading(false);
-    }, 2000);
-    router.push("/SearchResult");
-  };
+
+    const queryParams = new URLSearchParams({
+      city: selectedCity,
+      check_in_date: dayjs(date.startDate).format('YYYY-MM-DD'),
+      check_out_date: dayjs(date.endDate).format('YYYY-MM-DD'),
+    });
+
+    if (personDetails.adults) {
+      queryParams.append("adults", personDetails.adults.toString());
+    }
+
+    if (personDetails.children) {
+      queryParams.append("children", personDetails.children.toString());
+    }
+    queryParams.append("page", "1");
+
+
+    router.push(`/SearchResult?${queryParams.toString()}`);
+  }, [router, selectedCity, date, personDetails]);
+
 
   return (
     <>
-      <div className="bg-primaryblue dark:bg-foreground p-1 flex items-center gap-1 rounded-md max-sm:flex-col max-sm:gap-3 max-sm:p-4 max-sm:bg-white max-sm:bg-opacity-50  max-sm:drop-shadow-xl max-md:gap-2 max-md:p-2 max-md:bg-opacity-50 max-md:bg-white max-md:drop-shadow-xl max-md:flex-col max-md:items-center  max-md:rounded-md">
-        <div className=" bg-white dark:bg-bannerbg flex items-center p-3 pr-4 rounded-md min-w-[200px] max-sm:w-full max-sm:py-5 max-md:w-full">
-          <Image
-            src={BedIcon}
-            alt="bed icon"
-            className="w-8 h-8  dark:rounded-full size-6 dark:filter dark:invert dark:brightness-0 dark:p-1"
-          />
-          {/* <SingleSelect value={selectedCity} setValue={setSelectedCity} option={cityOpitons} label="" /> */}
-          <Select
-            value={selectedCity}
-            onValueChange={(e) => setSelectedCity(e)}
-          >
-            <SelectTrigger className="sm:min-w-48  font-medium text-base  border-none shadow-none outline-none active:outline-none rounded-md p-3">
-              <SelectValue placeholder="Where are you going?" />
-            </SelectTrigger>
-            <SelectContent className="bg-white dark:bg-foreground">
-              <SelectGroup>
-                <SelectLabel>Select Option</SelectLabel>
-                {cityOptions.map((o: Options) => {
-                  return (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
+      <div className="bg-primaryblue dark:bg-foreground p-1 flex items-center gap-1 rounded-md max-sm:flex-col max-sm:gap-3 max-sm:p-4 max-sm:bg-white max-sm:bg-opacity-50 max-sm:drop-shadow-xl">
+        {/* City Selection */}
+        <div className="bg-white dark:bg-bannerbg flex items-center p-3 pr-4 rounded-md min-w-[200px] max-sm:w-full">
+          <Image src={BedIcon} alt="bed icon" className="w-8 h-8 dark:rounded-full size-6 dark:filter dark:invert dark:brightness-0 dark:p-1" />
+          <div className="relative  w-full">
+            <Select value={selectedCity} onValueChange={setSelectedCity}>
+              <SelectTrigger className="sm:min-w-48 font-medium text-sm border-none shadow-none outline-none rounded-md p-3">
+                <SelectValue placeholder="Where are you going?">{selectedCity && CityOptions().find(city => city.value === selectedCity)?.label}</SelectValue>
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-foreground z-50">
+                <SelectGroup>
+                  <SelectLabel>Select City</SelectLabel>
+                  {CityOptions().map((city, i) => (
+                    <SelectItem key={city.value + i} value={city.value} className="hover:bg-gray-200 dark:hover:bg-bannerbg cursor-pointer">
+                      <div className="flex gap-2 items-center p-2">
+                        <FaLocationDot className="text-primaryblue h-5 w-5" />
+                        <div className="flex flex-col">
+                          <p className="text-black dark:text-white font-semibold">{city.label}</p>
+                          <p className="font-normal text-gray-600 dark:text-slate-50">India</p>
+                        </div>
+                      </div>
                     </SelectItem>
-                  );
-                })}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          {/* <span className=" font-medium text-base">Where are you going?</span> */}
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className=" bg-white dark:bg-bannerbg flex items-center p-3 pr-4 rounded-md max-sm:w-full w-fit max-sm:py-5 max-md:w-full">
-          <Image
-            src={calendar}
-            alt="bed icon"
-            className="w-8 h-8  dark:rounded-full size-6 dark:filter dark:invert dark:brightness-0 dark:p-1"
-          />
-          {/* <span className=" font-medium text-base">Check in date</span>
-        <span className=" font-medium text-base">-</span>
-        <span className=" font-medium text-base">Check Out date </span> */}
-          <DatePickerWithRange
-            dateRange={date}
-            setDate={setDate}
-          />
+
+        {/* Date Picker */}
+        <div className="bg-white dark:bg-bannerbg flex items-center p-3 pr-4 rounded-md max-sm:w-full">
+          <Image src={calendar} alt="calendar icon" className="w-8 h-8 dark:rounded-full size-6 dark:filter dark:invert dark:brightness-0 dark:p-1" />
+          <DatePickerWithRange dateRange={date} setDate={setDate} />
         </div>
+
+        {/* Person & Room Selection */}
         <div
-          onClick={() => setisSelectPersonAndRoomModelOpen(true)}
-          className="relative bg-white dark:bg-bannerbg flex items-center gap-2 p-3 pr-4 rounded-md max-sm:w-full max-sm:pr-2 max-md:w-full"
+          onClick={() => setIsSelectPersonAndRoomModelOpen(true)}
+          className="relative bg-white dark:bg-bannerbg flex items-center gap-1 p-3 pr-4 rounded-md max-sm:w-full cursor-pointer"
         >
-          <Image
-            src={iconuser}
-            alt="bed icon"
-            className="w-8 h-8  dark:rounded-full size-6 dark:filter dark:invert dark:brightness-0 dark:p-1"
-          />
-          <span className=" font-medium text-base inline-block mx-1">
-            2 adults{" "}
-          </span>
-          <span className=" font-medium text-base inline-block mx-1">
-            0 children
-          </span>
-          <span className=" font-medium text-base inline-block mx-1">
-            1 room{" "}
-          </span>
-          <Image
-            src={downline}
-            alt="bed icon"
-            className="w-5 h-5 ml-14 max-sm:mr-0 max-sm:ml-16 dark:filter dark:invert dark:brightness-0 max-md:mr-4 max-md:ml-32 "
-          />
+          <Image src={iconuser} alt="user icon" className="w-8 h-8 dark:rounded-full size-6 dark:filter dark:invert dark:brightness-0 dark:p-1" />
+          <span className="font-medium text-sm mx-1">{personDetails.adults} adults</span>
+          <span className="font-medium text-sm mx-1">{personDetails.children} children</span>
+          <span className="font-medium text-sm mx-1">{personDetails.rooms} room</span>
+          <Image src={downline} alt="dropdown icon" className="w-5 h-5 ml-14 max-sm:ml-16 dark:filter dark:invert dark:brightness-0" />
         </div>
+
+        {/* Search Button */}
         <Button
           onClick={handleSearchHotel}
-          className=" bg-white dark:bg-bannerbg text-primaryblue dark:text-white text-base font-semibold h-full px-8 py-[18px] dark:shadow-xl dark:hover:bg-foreground duration-2000 max-sm:w-full max-sm:py-[22px] max-md:w-full "
+          disabled={(!selectedCity || !date) ? true : false}
+          className="bg-white dark:bg-bannerbg disabled:bg-white disabled:opacity-1 disabled:cursor-not-allowed disabled:text-gray-300 text-primaryblue dark:text-white text-sm font-semibold h-full px-8 py-[18px] dark:shadow-xl dark:hover:bg-foreground max-sm:w-full"
         >
-          {isHotelSearchingLoading ? "Serching..." : "Search"}
+          {isHotelSearchingLoading ? "Searching..." : "Search"}
         </Button>
-      </div>
+      </div >
 
-      <ModalLayout
-        isOpen={isSelectPersonAndRoomModelOpen}
-        onClose={setisSelectPersonAndRoomModelOpen}
-      >
+      {/* Modal for Person & Room Selection */}
+      <ModalLayout isOpen={isSelectPersonAndRoomModelOpen} onClose={setIsSelectPersonAndRoomModelOpen} >
         <SelectPersonAndRoom
-          rooms={rooms}
-          adults={adults}
-          Children={Children}
-          setRooms={setRooms}
-          setAdults={setAdults}
-          setChildren={setChildren}
+          personDetails={personDetails}
+          setPersonDetails={setPersonDetails}
           isOpen={isSelectPersonAndRoomModelOpen}
-          onClose={setisSelectPersonAndRoomModelOpen}
+          onClose={setIsSelectPersonAndRoomModelOpen}
         />
       </ModalLayout>
     </>

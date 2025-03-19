@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 
 export interface Options {
-  value: string;
+  value: string | number;
   label: string;
 }
 
@@ -58,7 +58,7 @@ export const SingleSelect = ({
             <SelectLabel>Select Option</SelectLabel>
             {option.map((o: Options) => {
               return (
-                <SelectItem key={o.value} value={o.value}>
+                <SelectItem key={o.value} value={String(o.value)}>
                   {o.label}
                 </SelectItem>
               );
