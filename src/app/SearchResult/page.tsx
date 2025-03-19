@@ -137,49 +137,46 @@ const SearchResult = () => {
 
   return (
     <>
-      <div className=" container mx-auto  mt-20 ">
-        <h1 className=" mx-auto px-8 font-bold text-2xl text-center">Search Result</h1>
+      <div className="container mx-auto mt-20">
+        <h1 className="mx-auto px-8 font-bold text-2xl text-center">Search Result</h1>
 
         {/* Filter Toggle Button (Mobile & Small Screens) */}
-        <div className="container w-full md:w-1/3 justify-between px-8 mt-4 flex">
-          {isFilterOpen && <Button
-            className="flex items-center gap-2 dark:border  px-4 py-2 rounded-md cursor-default"
-          >
-            Filter
-            <FiFilter size={20} />
-          </Button>}
-          {<Button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`flex items-cente dark:border gap-2  px-4 py-2 rounded-md ${isFilterOpen && 'rounded-full'} `}
-          >
-            {isFilterOpen ? <ArrowLeft size={20} /> : <>
+        <div className="container w-full md:w-1/4 justify-between px-8 pr-0 mt-4 flex">
+          {isFilterOpen && (
+            <Button className="flex items-center gap-2 dark:border px-4 py-2 rounded-md cursor-default">
               Filter
-              <ArrowRight size={20} />
-            </>
-            }
-          </Button>}
+              <FiFilter size={20} />
+            </Button>
+          )}
+          <Button
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            className={`flex items-center dark:border gap-2 px-4 py-2 rounded-md ${isFilterOpen && "rounded-full"}`}
+          >
+            {isFilterOpen ? <ArrowLeft size={20} /> : <>Filter <ArrowRight size={20} /></>}
+          </Button>
         </div>
 
         <div className="container mx-auto p-4 flex flex-col md:flex-row">
           {/* Filter Section */}
-          <motion.nav
+          {isFilterOpen && <motion.nav
             initial={{ x: -550 }}
             animate={{ x: isFilterOpen ? 0 : -550 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
+            className={`w-full md:w-1/4 p-4 border-b md:border-b-0 md:border-r bg-white`}
           >
-            <div className="w-full p-4 h-full border-b md:border-b-0 md:border-r">
-              {/* <h2 className="text-lg font-bold -mt-6 mb-2">Filter</h2> */}
-              {isFilterOpen && <SearchFilter filters={filters} setfilter={setFilters} fetchRooms={(val) => fetchRooms(val)} />}
+            <div className="h-fit sticky top-20 overflow-y-auto  bg-white">
+              <SearchFilter filters={filters} setfilter={setFilters} fetchRooms={(val) => fetchRooms(val)} />
             </div>
           </motion.nav>
+          }
 
           {/* Room Listings */}
-          <div className={` w-full ${!isFilterOpen ? 'md:w-full' : 'md:w-3/4'} px-2`}>
+          <div className={`w-full ${!isFilterOpen ? "md:w-full" : "md:w-3/4"} px-2`}>
             {loading && rooms.length === 0 && <LoadingComponent />}
             {error && <ComponentError error={error} reload={() => { setPage(1); fetchRooms(true); }} />}
             {rooms.length === 0 && !loading && !error && <p className="text-center">No rooms found.</p>}
 
-            <div className={`grid grid-cols-1 sm:grid-cols-2 ${!isFilterOpen ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6`}>
+            <div className={`grid grid-cols-1 sm:grid-cols-2 ${!isFilterOpen ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-6`}>
               {rooms.map((room: SearchRoomIF) => (
                 <SearchCard key={room._id} room={room} />
               ))}
@@ -195,7 +192,8 @@ const SearchResult = () => {
             )}
           </div>
         </div>
-      </div >
+      </div>
+
     </>
   );
 };
