@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import AdminDashboard from "./page";
+// import AdminDashboard from "./page";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { PiGreaterThanDuotone, PiLessThanDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
 
 export default function AdminLayout({
-  children,
+  // children,
 }: {
   children: React.ReactNode;
 }) {
@@ -87,7 +87,7 @@ export default function AdminLayout({
           isSidebarOpen ? "60" : "0"
         }`}
       >
-        <AdminDashboard>{children}</AdminDashboard>
+        {/* <AdminDashboard>{children}</AdminDashboard> */}
       </div>
     </div>
   );

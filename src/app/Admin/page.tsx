@@ -1,11 +1,11 @@
 "use client";
 
-import withAdminAuth from "./Components/withAdminAuth";
+// import withAdminAuth from "./Components/withAdminAuth";
 
-function AdminDashboard({ children }: { children: React.ReactNode }) {
+function AdminDashboard() {
   return (
-    <main className="flex-1 p-6  dark:bg-bannerbg">{children}</main>
+    <main className="flex-1 p-6  dark:bg-bannerbg">{"hello"}</main>
   );
 }
 
-export default withAdminAuth(AdminDashboard);
+export default AdminDashboard;
