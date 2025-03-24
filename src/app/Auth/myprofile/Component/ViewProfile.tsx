@@ -18,7 +18,6 @@ const ViewProfile = () => {
   const { error, userDetails } = useSelector(
     (state: RootState) => state.userProfile
   );
-
   const [isMounted, setIsMounted] = useState(false);
   const [isAccountVerifiedModelOpen, setIsAccountVerifiedModelOpen] =
     useState(false);
@@ -44,7 +43,7 @@ const ViewProfile = () => {
   };
 
   if (error) {
-    throw new Error("Error");
+    throw new Error(error);
   }
 
   // 🚨 Prevent SSR mismatch

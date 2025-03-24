@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-// import AdminDashboard from "./page";
+import AdminDashboard, { AdminProps } from "./page";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,8 @@ import { PiGreaterThanDuotone, PiLessThanDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
 
 export default function AdminLayout({
-  // children,
-}: {
-  children: React.ReactNode;
-}) {
+  children,
+}: AdminProps) {
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
@@ -55,9 +53,8 @@ export default function AdminLayout({
                   <li key={path} className="mb-2">
                     <Link
                       href={path}
-                      className={`block p-2 rounded ${
-                        pathname === path ? "bg-gray-700" : "hover:bg-gray-600"
-                      }`}
+                      className={`block p-2 rounded ${pathname === path ? "bg-gray-700" : "hover:bg-gray-600"
+                        }`}
                     >
                       {name}
                     </Link>
@@ -72,9 +69,8 @@ export default function AdminLayout({
       <Button
         variant={"secondary"}
         onClick={() => setSidebarOpen(!isSidebarOpen)}
-        className={`fixed bg-white dark:bg-foreground top-16 px-3 shadow-lg rounded-full z-10 ${
-          isSidebarOpen ? " md left-56" : "left-4"
-        } transition-all duration-300`}
+        className={`fixed bg-white dark:bg-foreground top-16 px-3 shadow-lg rounded-full z-10 ${isSidebarOpen ? " md left-56" : "left-4"
+          } transition-all duration-300`}
       >
         {isSidebarOpen ? <PiLessThanDuotone /> : <PiGreaterThanDuotone />}
       </Button>
@@ -83,9 +79,8 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <div
-        className={`flex-1 transition-all duration-300 ml-${
-          isSidebarOpen ? "60" : "0"
-        }`}
+        className={`flex-1 transition-all duration-300 ml-${isSidebarOpen ? "60" : "0"
+          }`}
       >
         {/* <AdminDashboard>{children}</AdminDashboard> */}
       </div>
