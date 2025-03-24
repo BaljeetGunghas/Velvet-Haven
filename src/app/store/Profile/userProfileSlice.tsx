@@ -60,13 +60,17 @@ export const userProfile = createAsyncThunk<
       headers: authHeader(),
     });
     const responseData = response.data;
-    setCookie(null, "userRole", responseData.jsonResponse.role, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-      sameSite: "Strict",
-    });
-    localStorage.setItem("user", JSON.stringify(responseData.jsonResponse));
-    return responseData as UserProfileResponse;
+    if (responseData.output === 1) {
+      setCookie(null, "userRole", responseData?.jsonResponse?.role, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+        sameSite: "Strict",
+      });
+      localStorage.setItem("user", JSON.stringify(responseData.jsonResponse));
+      return responseData as UserProfileResponse;
+    }else{
+      return rejectWithValue(responseData);
+    }
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const typedError = error as any;

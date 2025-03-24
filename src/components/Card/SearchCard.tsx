@@ -14,7 +14,7 @@ import { RootState } from "@/app/store/store";
 import ModalLayout from "../ModelLayout/Modellayout";
 import LoginRegistrationModel from "../LoginRegModel/LoginRegistrationModel";
 import { FaStarHalfAlt } from "react-icons/fa";
-import noImage from "@/asset/no-pictures.png";
+import noImage from "@/asset/no-image.jpg";
 import axios from "axios";
 import { authHeader } from "@/app/Auth/AuthHeader/authHeader";
 import { toast } from "react-toastify";
@@ -67,14 +67,14 @@ const SearchCard: React.FC<ComponentProps> = ({
                         className={`w-full h-48 object-contain shadow-sm ${room.image && 'object-cover'}`}
                         loading="lazy"
                     />
-                    <Link href={`/room-details/${room._id}`} className="absolute bottom-3 right-3 bg-white p-1 rounded-full shadow-md">
+                    <Link href={`/Room-details?room_id=${room._id}`} className="absolute bottom-3 right-3 bg-white p-1 rounded-full shadow-md">
                         <IoIosArrowRoundForward className="w-5 h-5 text-black font-semibold" />
                     </Link>
                 </div>
 
                 {/* Content */}
                 <CardContent className="py-4 px-2 relative">
-                    <p className="text-xl font-bold dark:text-white">₹{room.price_per_night}</p>
+                    <p className="text-xl font-bold dark:text-white">₹ {room.price_per_night}</p>
                     <div className="flex justify-between items-center">
                         <p className="text-md font-semibold mt-1 dark:text-white capitalize m-0">{room.room_type}</p>
                         <div className="flex gap-1">
@@ -96,7 +96,7 @@ const SearchCard: React.FC<ComponentProps> = ({
                     {/* Amenities Section */}
                     <div className="mt-3 flex flex-wrap gap-2 text-sm text-gray-600">
                         {room.amenities?.slice(0, 5)?.map((amenity) => (
-                            <div key={amenity} className="flex items-center gap-1 rounded-md dark:text-white ">
+                            <div key={amenity} className="flex items-center text-xs gap-1 rounded-md dark:text-white ">
                                 {amenitiesIcons[amenity as keyof typeof amenitiesIcons] || "🔹"} {/* Default icon if not found */}
                                 <span className="capitalize text-xs">{amenity.replace(/_/g, " ")}</span>
                             </div>

@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
-import { useEffect, useState, ComponentType, ReactNode } from "react";
+import { useEffect, useState, ComponentType, PropsWithChildren } from "react";
 
-const withAdminAuth = <P extends object>(WrappedComponent: ComponentType<P & { children?: ReactNode }>) => {
-  const WithAuthComponent = (props: P & { children?: ReactNode }) => {
+const withAdminAuth = <P extends object>(
+  WrappedComponent: ComponentType<P>
+) => {
+  const WithAuthComponent = (props: PropsWithChildren<P>) => {
     const router = useRouter();
     const cookies = parseCookies();
     const userRole = cookies.userRole;
