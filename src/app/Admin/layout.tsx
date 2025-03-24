@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import AdminDashboard, { AdminProps } from "./page";
+// import AdminDashboard, { AdminProps } from "./page";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PiGreaterThanDuotone, PiLessThanDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
 
-export default function AdminLayout({
-  children,
-}: AdminProps) {
+// export default function AdminLayout({
+//   children,
+// }: AdminProps) {
+export default function AdminLayout() {
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
