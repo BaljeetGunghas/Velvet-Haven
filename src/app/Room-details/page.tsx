@@ -58,6 +58,7 @@ interface RoomDetails {
     check_in_time: string;
     check_out_time: string;
     room_images: string[];
+    reviews: string[];
     createdAt: string;
     updatedAt: string;
     amenities: string[];
@@ -184,6 +185,36 @@ const RoomDetailsPage = () => {
         return <p className="text-center text-gray-500">No room details available.</p>;
     }
 
+
+    const handleReviewSubmit = async (rating: number, comment: string) => {
+        if (!user?.id) {
+            setIsRegistrationModelOpen(true);
+            return;
+        }
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/add-room-review`,
+            {
+                "hotelId": hotelDetails?.hotelId,
+                "roomId": roomDetails?._id,
+                "rating": rating,
+                "comment": comment
+            },
+            {
+                headers: authHeader()
+            }
+        )
+        const responseData = response.data;
+        if (responseData.output === 1) {
+            setData((prev) => ({
+                ...prev,
+                roomReviews: [responseData.jsonResponse, ...prev.roomReviews]
+            }));
+            return toast.success(responseData.message);
+        } else {
+            return toast.error(responseData.message || "Failed to submit review")
+        }
+    }
+
+
     return (
         <>
             <div className="container mx-auto w-10/12 py-20">
@@ -210,51 +241,51 @@ const RoomDetailsPage = () => {
                                         );
                                     })}
                                 </div>
-                                <p className="text-xs text-gray-500 dark:text-gray-200">Based on {roomReviews?.length} reviews</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-200">Based on {roomDetails.reviews.length} reviews</p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-4 my-4 text-gray-700">
                             {/* Room Number */}
-                            <div className="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-purple-100 text-purple-600 text-lg">
+                            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">🏨</span>
-                                <p className="text-xs font-semibold">Room {roomDetails.room_number}</p>
+                                <p className="text-xs dark:text-white font-semibold">Room {roomDetails.room_number}</p>
                             </div>
 
                             {/* Bed Type */}
-                            <div className="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-blue-100 text-blue-600 text-lg">
+                            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">🛏️</span>
-                                <p className="text-xs font-semibold">{roomDetails.bed_type}</p>
+                                <p className="text-xs dark:text-white font-semibold">{roomDetails.bed_type}</p>
                             </div>
 
                             {/* Room Type */}
-                            <div className="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-green-100 text-green-600 text-lg">
+                            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">🏠</span>
-                                <p className="text-xs font-semibold">{roomDetails.room_type}</p>
+                                <p className="text-xs dark:text-white font-semibold">{roomDetails.room_type}</p>
                             </div>
 
                             {/* Max Occupancy */}
-                            <div className="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-yellow-100 text-yellow-600 text-lg">
+                            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">🛁</span>
-                                <p className="text-xs font-semibold">{roomDetails.max_occupancy} guests</p>
+                                <p className="text-xs dark:text-white font-semibold">{roomDetails.max_occupancy} guests</p>
                             </div>
 
                             {/* Floor Number */}
-                            <div className="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-red-100 text-red-600 text-lg">
+                            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">📏</span>
-                                <p className="text-xs font-semibold">{roomDetails.floor_number} Floor</p>
+                                <p className="text-xs dark:text-white font-semibold">{roomDetails.floor_number} Floor</p>
                             </div>
 
                             {/* Check-in Time */}
-                            <div className="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-green-200 text-green-700 text-lg">
+                            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">🕒</span>
-                                <p className="text-xs font-semibold">{roomDetails.check_in_time}</p>
+                                <p className="text-xs dark:text-white font-semibold">{roomDetails.check_in_time}</p>
                             </div>
 
                             {/* Check-out Time */}
-                            <div className="flex flex-col items-center justify-center w-24 h-24 rounded-full bg-red-200 text-red-700 text-lg">
+                            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">🚪</span>
-                                <p className="text-xs font-semibold">{roomDetails.check_out_time}</p>
+                                <p className="text-xs dark:text-white font-semibold">{roomDetails.check_out_time}</p>
                             </div>
                         </div>
 
@@ -290,7 +321,7 @@ const RoomDetailsPage = () => {
                                 : (
                                     <div className="flex flex-col items-center justify-center  text-lg">
                                         <span className="text-xl">🔹</span>
-                                        <p className="text-xs font-semibold">No Amenities</p>
+                                        <p className="text-xs dark:text-white font-semibold">No Amenities</p>
                                     </div>
                                 )
                             }
@@ -363,20 +394,22 @@ const RoomDetailsPage = () => {
                         {/* Left: Reviews List */}
                         <div className=" overflow-y-auto space-y-3 w-full md:w-2/3">
                             <div className="space-y-4">
-                                <h2 className="text-xl font-semibold text-gray-800">Customer Reviews</h2>
+                                <h2 className="text-xl font-semibold dark:text-white text-gray-800">Customer Reviews</h2>
                                 {roomReviews?.length > 0 ? (
                                     roomReviews.map((review: RoomReview) => (
                                         <ReviewCard key={review._id} review={review} />
                                     ))
                                 ) : (
-                                    <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+                                    <div className='flex flex-col items-center justify-center w-full h-40 border border-gray-200 rounded-lg'>
+                                    <p className="text-gray-500 text-sm">No reviews yet. Be the first to review!</p>
+                                    </div>
                                 )}
                             </div>
                         </div>
 
                         {/* Right: Add Review */}
-                        <div className='w-full md:w-1/3 '>
-                            <StarRating />
+                        <div className='w-full md:w-1/3 mt-0 md:mt-10 '>
+                            <StarRating handleSubmit={handleReviewSubmit } />
                         </div>
                     </div>
 
