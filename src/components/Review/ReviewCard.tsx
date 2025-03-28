@@ -52,7 +52,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review }) => {
 
     return (
         <>
-            <div className="p-4 border rounded-lg shadow-sm bg-white relative">
+            <div className="p-4 border rounded-lg shadow-sm bg-white dark:bg-bannerbg relative">
                 {/* User Info */}
                 <div className="flex items-center gap-3">
                     <Image
@@ -65,8 +65,8 @@ const ReviewCard: FC<ReviewCardProps> = ({ review }) => {
                         className="w-10 h-10 rounded-full object-cover"
                     />
                     <div>
-                        <p className="text-sm font-medium text-gray-800">{review.user_id.name}</p>
-                        <p className="text-xs text-gray-500">{new Date(review.created_at).toDateString()}</p>
+                        <p className="text-sm font-semibold capitalize dark:text-white text-gray-800">{review.user_id.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-stone-400">{new Date(review.created_at).toDateString()}</p>
                     </div>
                 </div>
 
@@ -84,10 +84,10 @@ const ReviewCard: FC<ReviewCardProps> = ({ review }) => {
                 </div>
 
                 {/* Comment */}
-                <p className="mt-2 text-gray-700">{review.comment}</p>
+                <p className="mt-2 text-xs text-gray-700 dark:text-slate-200">{review.comment}</p>
 
                 {/* Like & Dislike Buttons */}
-                <div className="flex items-center gap-4 mt-3 text-gray-500 absolute top-3 right-3">
+                <div className="flex items-center gap-4 mt-3 text-gray-500 dark:text-white absolute top-3 right-3">
                     <button
                         onClick={() => handleLikeDislike("like")}
                         className={`flex items-center gap-1 hover:text-blue-600 ${userAction === "like" && "text-blue-600"}`}

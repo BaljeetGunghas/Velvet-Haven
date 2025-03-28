@@ -34,14 +34,14 @@ const Gallery: FC<ComponentProps> = ({ images }) => {
                     height={400}
                     src={images?.length > 0 ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}` : noImage}
                     alt="First Room Image"
-                    className="rounded-2xl w-full h-40 md:h-72 object-cover cursor-pointer"
+                    className={`rounded-2xl w-full h-40 ${images?.length > 0 ? 'md:h-72' : 'md:h-auto'}  object-cover cursor-pointer`}
                     loading="lazy"
-                    onClick={() =>images?.length > 0 && openModal(0)}
+                    onClick={() => images?.length > 0 && openModal(0)}
                 />
 
                 {/* Middle Images - Scrollable Row on Mobile */}
                 {images?.length > 2 && (
-                    <div className="flex gap-2 overflow-x-auto py-1 scrollbar-hide">
+                    <div className="flex gap-2 overflow-x-auto py-1 justify-center scrollbar-hide">
                         {images.slice(1, -1).map((img, index) => (
                             <Image
                                 key={index}
