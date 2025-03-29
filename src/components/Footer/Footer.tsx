@@ -22,27 +22,27 @@ const Footer = () => {
             <h3 className="text-white text-xl font-semibold mb-12">Service</h3>
             <ul className="text-white text-base font-normal flex flex-col gap-5">
               <li>
-                <Link href={""} className="text-base font-semibold">
+                <Link href={"/"} className="text-base font-semibold">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href={""} className="text-base font-semibold">
+                <Link href={"/About"} className="text-base font-semibold">
                   About
                 </Link>
               </li>
               <li>
-                <Link href={""} className="text-base font-semibold">
+                <Link href={"/Contactus"} className="text-base font-semibold">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href={""} className="text-base font-semibold">
+                <Link href={"/Location"} className="text-base font-semibold">
                   Location
                 </Link>
               </li>
               <li>
-                <Link href={""} className="text-base font-semibold">
+                <Link href={"/Our_team"} className="text-base font-semibold">
                   Our Team
                 </Link>
               </li>

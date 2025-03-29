@@ -54,7 +54,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         <Button
           variant="outline"
           className={cn(
-            "w-full sm:w-[300px] px-3 py-2 justify-start text-left font-normal rounded-md border-none outline-none shadow-none",
+            "w-full sm:w-[300px] px-3 py-2 justify-start text-left font-normal rounded-md border-none outline-none shadow-none overflow-hidden",
             !dateRange?.startDate && "text-muted-foreground"
           )}
         >

@@ -21,6 +21,8 @@ import Link from 'next/link';
 import StarRating from '@/components/Review/Rating';
 import ReviewCard from '@/components/Review/ReviewCard';
 import noImage from "@/asset/no-image.jpg";
+import BookingForm from '@/components/Payment/BookingForm';
+import ComponentError from '@/components/Error/ComponentError';
 
 interface User {
     _id: string;
@@ -42,7 +44,7 @@ export interface RoomReview {
     isDisliked: boolean;
 }
 
-interface RoomDetails {
+export interface RoomDetails {
     _id: string;
     hostid: string;
     hotel_id: string;
@@ -114,7 +116,7 @@ const RoomDetailsPage = () => {
 
     const fetchRoomDetails = useCallback(async () => {
         if (!roomId) return;
-
+        setLoading(true)
         try {
             const response = await axios.post<RoomResponse>(
                 `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/get-specific-room-fulldetails`,
@@ -174,11 +176,17 @@ const RoomDetailsPage = () => {
 
 
     if (loading) {
-        return <LoadingComponent />;
+        return (
+            <div className="container mx-auto mt-20 h-screen flex items-center justify-center">
+                <LoadingComponent />
+            </div>
+        )
     }
 
     if (error) {
-        return <p className="text-center text-red-500">{error}</p>;
+        return <div className="container mx-auto mt-20 h-[60%] md:h-screen flex items-center justify-center">
+            <ComponentError error={error} reload={() => { fetchRoomDetails() }} />
+        </div>
     }
 
     if (!roomDetails) {
@@ -223,10 +231,10 @@ const RoomDetailsPage = () => {
                     <div className="md:w-1/2 relative ">
                         <h1 className="text-3xl font-bold">{hotelDetails?.hotel_name || "Room Details"}</h1>
                         <p className="text-gray-500 dark:text-slate-200">{hotelDetails?.hotelAddress || "Address not available"}</p>
-                        <Button onClick={handleSaveRoomCart} className="absolute top-3 right-3 bg-white p-3 rounded-full ">
-                            <FaHeart className={`w-4 h-4 ${isRoomShortlisted ? "text-red-600" : "text-black"} `} />
+                        <Button onClick={handleSaveRoomCart} className="absolute top-3 right-3 bg-white p-1 w-10 h-10 rounded-full ">
+                            <FaHeart className={` ${isRoomShortlisted ? "text-red-600" : "text-black"} `} />
                         </Button>
-                        <div className='flex justify-between items-start mt-4 w-full'>
+                        <div className='flex justify-between items-start mt-10 w-full'>
                             <h2 className="text-xl md:text-2xl font-semibold m-0">₹ {roomDetails?.price_per_night} per night</h2>
                             <div className="flex flex-col items-center gap-1 md:w-auto">
                                 <div className="flex items-center gap-1 text-lg md:text-xl">
@@ -245,7 +253,7 @@ const RoomDetailsPage = () => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-4 my-4 text-gray-700">
+                        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-10 text-gray-700">
                             {/* Room Number */}
                             <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full text-lg">
                                 <span className="text-xl">🏨</span>
@@ -295,7 +303,7 @@ const RoomDetailsPage = () => {
                             initial={{ height: "4rem", opacity: 0.8 }}
                             animate={{ height: showFullDescription ? "auto" : "6rem", opacity: 1 }}
                             transition={{ duration: 0.4, ease: "easeInOut" }}
-                            className="overflow-hidden"
+                            className="overflow-hidden mt-10"
                         >
                             <h3 className="font-semibold text-lg ">Description</h3>
                             <p className="text-gray-600 text-sm mt-2 dark:text-white font-normal">{roomDetails.description}</p>
@@ -310,7 +318,7 @@ const RoomDetailsPage = () => {
                         }
 
                         {/* Amenities */}
-                        <h3 className="font-semibold text-lg mt-6">Amenities</h3>
+                        <h3 className="font-semibold text-lg mt-10">Amenities</h3>
                         <div className="grid grid-cols-2 gap-3 text-gray-700 mt-2">
                             {roomDetails?.amenities?.length > 0 ? roomDetails?.amenities?.map((amenity) => (
                                 <div key={amenity} className="flex flex-col border p-4 text-2xl items-center gap-1 rounded-xl dark:text-white">
@@ -336,44 +344,39 @@ const RoomDetailsPage = () => {
 
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6">
-                    {/* Book Room Button */}
-                    <div className="mt-10 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex gap-4 justify-start">
-                        <Image
-                            src={hotelDetails?.hotelImage ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${hotelDetails?.hotelImage}` : noImage}
-                            alt="hotel"
-                            className=" w-20 h-20 rounded-full object-cover shadow-xl"
-                            loading="lazy"
-                            width={'200'}
-                            height={'200'}
-                        />
-                        <div className='flex flex-col'>
-                            <h2 className="text-xl font-semibold text-gray-700 dark:text-white">{hotelDetails?.hotel_name}</h2>
-                            <p className='text-xs '>{hotelDetails?.hotelAddress}</p>
-                            <div className="flex gap-1">
-                                {Array.from({ length: 5 }).map((_, index) => {
-                                    const ratingValue = hotelDetails?.hotelRating || 0;
-                                    return index + 1 <= Math.floor(ratingValue) ? (
-                                        <FaStar key={index} className="text-yellow-400" />
-                                    ) : index < ratingValue && ratingValue % 1 !== 0 ? (
-                                        <FaStarHalfAlt key={index} className="text-yellow-400" />
-                                    ) : (
-                                        <FaRegStar key={index} className="text-gray-400" />
-                                    );
-                                })}
-                            </div>
-                            <Link href={''} className='text-blue-500 underline px-0'>View Hotel Details</Link>
-                        </div>
-                    </div>
-                    <Button className="px-6 py-2 uppercase text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold shadow-md transition">
-                        book this now
-                    </Button>
+                <BookingForm room={roomDetails} />
 
+                <div className="mt-10 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex gap-4 justify-start">
+                    <Image
+                        src={hotelDetails?.hotelImage ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${hotelDetails?.hotelImage}` : noImage}
+                        alt="hotel"
+                        className=" w-20 h-20 rounded-full object-cover shadow-xl"
+                        loading="lazy"
+                        width={'200'}
+                        height={'200'}
+                    />
+                    <div className='flex flex-col'>
+                        <h2 className="text-xl font-semibold text-gray-700 dark:text-white">{hotelDetails?.hotel_name}</h2>
+                        <p className='text-xs '>{hotelDetails?.hotelAddress}</p>
+                        <div className="flex gap-1">
+                            {Array.from({ length: 5 }).map((_, index) => {
+                                const ratingValue = hotelDetails?.hotelRating || 0;
+                                return index + 1 <= Math.floor(ratingValue) ? (
+                                    <FaStar key={index} className="text-yellow-400" />
+                                ) : index < ratingValue && ratingValue % 1 !== 0 ? (
+                                    <FaStarHalfAlt key={index} className="text-yellow-400" />
+                                ) : (
+                                    <FaRegStar key={index} className="text-gray-400" />
+                                );
+                            })}
+                        </div>
+                        <Link href={''} className='text-blue-500 underline px-0'>View Hotel Details</Link>
+                    </div>
                 </div>
 
                 <div className='mt-10 w-full'>
                     <h3 className="flex gap-4 items-center font-semibold text-lg mt-6">Review <span className='text-lg bg-primaryblue rounded-md p-1 text-white'
-                    >{roomDetails.rating}/5</span>
+                    >{roomDetails.rating}/<span className='text-sm'>5</span> </span>
                         <div className="flex items-center gap-1 text-lg md:text-xl">
 
                             {Array.from({ length: 5 }).map((_, index) => {
@@ -401,7 +404,7 @@ const RoomDetailsPage = () => {
                                     ))
                                 ) : (
                                     <div className='flex flex-col items-center justify-center w-full h-40 border border-gray-200 rounded-lg'>
-                                    <p className="text-gray-500 text-sm">No reviews yet. Be the first to review!</p>
+                                        <p className="text-gray-500 text-sm">No reviews yet. Be the first to review!</p>
                                     </div>
                                 )}
                             </div>
@@ -409,7 +412,7 @@ const RoomDetailsPage = () => {
 
                         {/* Right: Add Review */}
                         <div className='w-full md:w-1/3 mt-0 md:mt-10 '>
-                            <StarRating handleSubmit={handleReviewSubmit } />
+                            <StarRating handleSubmit={handleReviewSubmit} />
                         </div>
                     </div>
 
