@@ -1,8 +1,10 @@
 "use client";
 
 import React, { FC } from "react";
-import errorimage from "@/asset/icon/error.svg";
+import errorimage from "@/asset/error.svg";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+
 
 interface ComponentProps {
     error: string;
@@ -11,15 +13,16 @@ interface ComponentProps {
 
 const ComponentError: FC<ComponentProps> = ({ error, reload }) => {
     return (
-        <div className="flex gap-2 items-center">
-            <Image height={12} width={12} src={errorimage} alt="error" />
-            <span className="text-xs text-red-800 font-semibold m-0">{error}</span>
-            <button
+        <div className="flex flex-col gap-2 items-center justify-start">
+            <Image height={72} width={72} className="h-72 w-72" src={errorimage} alt="error" />
+            <h2 className="text-black dark:text-white font-semibold text-xl">Something Went Wrong</h2>
+            <span className="text-xs text-[#7B899D] font-semibold m-0">{error}</span>
+            <Button
                 onClick={reload}
-                className="px-2 py-1 text-xs bg-red-500 text-white rounded-md hover:bg-red-600"
+                className="text-sm text-primaryblue dark:text-white border border-primaryblue dark:border-white my-3 rounded-md"
             >
-                Retry
-            </button>
+                Try Again
+            </Button>
         </div>
     );
 };

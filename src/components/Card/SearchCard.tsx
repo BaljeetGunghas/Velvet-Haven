@@ -19,7 +19,7 @@ import axios from "axios";
 import { authHeader } from "@/app/Auth/AuthHeader/authHeader";
 import { toast } from "react-toastify";
 interface ComponentProps {
-    room: SearchRoomIF
+    room: SearchRoomIF | null;
 }
 
 const SearchCard: React.FC<ComponentProps> = ({
@@ -30,14 +30,14 @@ const SearchCard: React.FC<ComponentProps> = ({
     const { user } = useSelector(
         (state: RootState) => state.auth
     );
-    const [isRoomShortlisted, setIsRoomShortlisted] = useState<boolean>(room.is_shortlisted);
+    const [isRoomShortlisted, setIsRoomShortlisted] = useState<boolean>(room?.is_shortlisted || false);
     const handleSaveRoomCart = async () => {
         if (user?.id) {
             setIsRoomShortlisted((pre) => !pre)
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/update-room-shortlist`,
                 {
-                    "hotel_id": room.hotel_id,
-                    "room_id": room._id,
+                    "hotel_id": room?.hotel_id,
+                    "room_id": room?._id,
                 },
                 {
                     headers: authHeader()
@@ -60,26 +60,26 @@ const SearchCard: React.FC<ComponentProps> = ({
                 {/* Image */}
                 <div className="relative">
                     <Image
-                        src={room.image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${room.image}` : noImage}
-                        alt={room._id || "Hotel Room"}
+                        src={room?.image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${room?.image}` : noImage}
+                        alt={room?._id || "Hotel Room"}
                         width={320}
                         height={150}
-                        className={`w-full h-48 object-contain shadow-sm ${room.image && 'object-cover'}`}
+                        className={`w-full h-48 object-contain shadow-sm ${room?.image && 'object-cover'}`}
                         loading="lazy"
                     />
-                    <Link href={`/Room-details?room_id=${room._id}`} className="absolute bottom-3 right-3 bg-white p-1 rounded-full shadow-md">
+                    <Link href={`/Room-details?room_id=${room?._id}`} className="absolute bottom-3 right-3 bg-white p-1 rounded-full shadow-md">
                         <IoIosArrowRoundForward className="w-5 h-5 text-black font-semibold" />
                     </Link>
                 </div>
 
                 {/* Content */}
                 <CardContent className="py-4 px-2 relative">
-                    <p className="text-xl font-bold dark:text-white">₹ {room.price_per_night}</p>
+                    <p className="text-xl font-bold dark:text-white">₹ {room?.price_per_night}</p>
                     <div className="flex justify-between items-center">
-                        <p className="text-md font-semibold mt-1 dark:text-white capitalize m-0">{room.room_type}</p>
+                        <p className="text-md font-semibold mt-1 dark:text-white capitalize m-0">{room?.room_type}</p>
                         <div className="flex gap-1">
                             {Array.from({ length: 5 }).map((_, index) => {
-                                const ratingValue = room.rating || 0;
+                                const ratingValue = room?.rating || 0;
                                 if (index + 1 <= Math.floor(ratingValue)) {
                                     return <FaStar key={index} className="text-yellow-400" />;
                                 } else if (index < ratingValue && ratingValue % 1 !== 0) {
@@ -95,7 +95,7 @@ const SearchCard: React.FC<ComponentProps> = ({
                     </button>
                     {/* Amenities Section */}
                     <div className="mt-3 flex flex-wrap gap-2 text-sm text-gray-600">
-                        {room.amenities?.slice(0, 5)?.map((amenity) => (
+                        {room?.amenities?.slice(0, 5)?.map((amenity) => (
                             <div key={amenity} className="flex items-center text-xs gap-1 rounded-md dark:text-white ">
                                 {amenitiesIcons[amenity as keyof typeof amenitiesIcons] || "🔹"} {/* Default icon if not found */}
                                 <span className="capitalize text-xs">{amenity.replace(/_/g, " ")}</span>

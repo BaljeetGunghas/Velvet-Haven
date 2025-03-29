@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import ButtonLoading from "@/components/Loading/ButtonLoading";
 import { authHeader } from "../Auth/AuthHeader/authHeader";
+import NoResultFound from "@/components/NoResultfound/NoResultFound";
 
 
 export interface SearchRoomIF {
@@ -184,7 +185,7 @@ const SearchResultContent = () => {
         <div className={`w-full ${!isFilterOpen ? "md:w-full" : "md:w-3/4"} px-2`}>
           {loading && rooms.length === 0 && <LoadingComponent />}
           {error && <ComponentError error={error} reload={() => { setPage(1); fetchRooms(true); }} />}
-          {rooms.length === 0 && !loading && !error && <p className="text-center">No rooms found.</p>}
+          {rooms.length === 0 && !loading && !error && <NoResultFound />}
 
           <div className={`grid grid-cols-1 sm:grid-cols-2 ${!isFilterOpen ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-6`}>
             {rooms.map((room: SearchRoomIF) => (
@@ -193,7 +194,7 @@ const SearchResultContent = () => {
           </div>
 
           {/* Load More Button */}
-          {page <= totalPages && (
+          {page <= totalPages && rooms.length >0 && !error && (
             <div className="text-center mt-6">
               <Button onClick={loadMore} disabled={loading} className="bg-primaryblue text-white">
                 {loading ? <ButtonLoading /> : "Load More"}
