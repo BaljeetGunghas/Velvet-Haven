@@ -141,7 +141,7 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
                 </div>
 
                 {/* Price Range Slider */}
-                <CustomSlider min={0} max={20000} value={[+filters.minPrice, +filters.maxPrice]} onChange={handlePriceChange} />
+                <CustomSlider min={1} max={20000} value={[+filters.minPrice, +filters.maxPrice]} onChange={handlePriceChange} />
 
                 {/* Apply Filter Button */}
                 <Button onClick={handleApplyFilter} className="bg-primaryblue text-white px-4 py-2">

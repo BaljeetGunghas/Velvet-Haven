@@ -19,9 +19,7 @@ export interface HotelIF {
   owner_name: string;
   description: string;
   address: string;
-  city: number;
-  state: number;
-  country: number;
+  city: string;
   postal_code: string;
   rating: number;
   reviews: string[];
@@ -266,12 +264,6 @@ const HotelTable: React.FC<Props> = ({ hotelData, loading, handleRefress }) => {
               </p>
               <p>
                 <strong>City:</strong> {selectedHotel.city}
-              </p>
-              <p>
-                <strong>State:</strong> {selectedHotel.state}
-              </p>
-              <p>
-                <strong>Country:</strong> {selectedHotel.country}
               </p>
               <p>
                 <strong>Postal Code:</strong> {selectedHotel.postal_code}

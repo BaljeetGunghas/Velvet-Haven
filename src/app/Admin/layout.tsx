@@ -1,17 +1,15 @@
 "use client";
 
 import Link from "next/link";
-// import AdminDashboard, { AdminProps } from "./page";
+import AdminDashboard, { AdminProps } from "./page";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PiGreaterThanDuotone, PiLessThanDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
 
-// export default function AdminLayout({
-//   children,
-// }: AdminProps) {
-export default function AdminLayout() {
+export default function AdminLayout(children) {
+// export default function AdminLayout() {
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
@@ -83,7 +81,7 @@ export default function AdminLayout() {
         className={`flex-1 transition-all duration-300 ml-${isSidebarOpen ? "60" : "0"
           }`}
       >
-        {/* <AdminDashboard>{children}</AdminDashboard> */}
+        <AdminDashboard>{children}</AdminDashboard>
       </div>
     </div>
   );

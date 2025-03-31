@@ -17,7 +17,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
   value,
   onChange,
 }) => {
-  const [minValue, setMinValue] = useState(value[0] || 0);
+  const [minValue, setMinValue] = useState(value[0] || 1);
   const [maxValue, setMaxValue] = useState(value[1] || 20000);
   const sliderRef = useRef<HTMLDivElement>(null);
 

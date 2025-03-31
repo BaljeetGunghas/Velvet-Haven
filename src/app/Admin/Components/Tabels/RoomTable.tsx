@@ -160,10 +160,10 @@ const RoomTable: React.FC<RoomTableProps> = ({
                     </td>
                     <td className="p-3 text-center hidden md:table-cell">
                       <p className="text-xs m-0 text-center">
-                        {dayjs(room.createdAt).format("DD MMM YYYY HH:mm a")}
+                        {dayjs(room.createdAt).format("DD MMM YYYY hh:mm A")}
                       </p>
                       <p className="text-xs m-0 text-center">
-                        {dayjs(room.updatedAt).format("DD MMM YYYY HH:mm a")}
+                        {dayjs(room.updatedAt).format("DD MMM YYYY hh:mm A")}
                       </p>
                     </td>
                     <td className="p-3 text-center space-x-2">

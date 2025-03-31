@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import Shimla from "@/asset/destination/Shimla.svg";
 import Agra from "@/asset/destination/Agra.svg";
 import Jaipur from "@/asset/destination/Jaipur.svg";
@@ -40,7 +41,12 @@ const TopDestinationHotel = () => {
     },
   ];
   return (
-    <div className="relative p-mainPading max-sm:h-full max-sm:p-5 max-sm:gap-5">
+    <motion.div
+      className="relative p-mainPading max-sm:h-full max-sm:p-5 max-sm:gap-5"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+    >
       <h2 className="text-xl font-medium text-secondrybackground ">
         Top Destinations
       </h2>
@@ -56,9 +62,13 @@ const TopDestinationHotel = () => {
       <div className="flex flex-row rounded flex-wrap items-center gap-10 max-sm:gap-5 my-3 mt-5">
         {topDetinationsDetails.map((d) => {
           return (
-            <div
+            <motion.div
               className="relative h-62 w-48 max-sm:w-44 rounded overflow-hidden cursor-pointer"
               key={d.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
             >
               {/* Image */}
               <Image
@@ -73,7 +83,7 @@ const TopDestinationHotel = () => {
                 <p className="text-white text-sm text-center max-w-[80%] max-sm:w-[90%] mx-auto font-normal">
                   {d.tripDetails}
                 </p>
-             
+              
                 <p className="text-white text-base font-semibold mt-7">{d.name}</p>
                 <hr className="my-2" />
                 <p className="text-white text-sm font-normal">
@@ -81,11 +91,11 @@ const TopDestinationHotel = () => {
                 </p>
                 <Button className=" border py-2 mt-3 text-xs font-medium text-white rounded">Book Now</Button>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

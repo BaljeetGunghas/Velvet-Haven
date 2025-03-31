@@ -41,7 +41,7 @@ const Gallery: FC<ComponentProps> = ({ images }) => {
 
                 {/* Middle Images - Scrollable Row on Mobile */}
                 {images?.length > 2 && (
-                    <div className="flex gap-2 overflow-x-auto py-1 justify-center scrollbar-hide">
+                    <div className="flex gap-4 overflow-x-auto py-1 justify-start scrollbar-hide">
                         {images.slice(1, -1).map((img, index) => (
                             <Image
                                 key={index}
