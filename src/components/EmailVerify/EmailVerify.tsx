@@ -106,6 +106,7 @@ const EmailVerify = ({ isOpen, onClose }: ComponentProps) => {
             maxLength={6}
             pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
             value={otp}
+            type="text"
             onChange={(value) => {
               setOtp(value);
               console.log("OTP Entered:", value); // Log OTP value

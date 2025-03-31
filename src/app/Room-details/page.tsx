@@ -214,7 +214,7 @@ const RoomDetailsPage = () => {
         if (responseData.output === 1) {
             setData((prev) => ({
                 ...prev,
-                roomReviews: [responseData.jsonResponse, ...prev.roomReviews]
+                roomReviews: [responseData.jsonResponse, ...prev.roomReviews || []]
             }));
             return toast.success(responseData.message);
         } else {

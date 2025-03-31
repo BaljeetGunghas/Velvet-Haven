@@ -1,17 +1,14 @@
-"use client";
-
-// import withAdminAuth from "./Components/withAdminAuth";
+import { FC } from "react"; 
+import withAdminAuth from "./Components/withAdminAuth";
 // import { NextPage } from "next";
-// import { ReactNode } from "react"; // ✅ Add this import
 
-// export interface AdminProps {
-//   children?: ReactNode;
-// }
+export interface AdminProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children?: any;
+}
 
-// const AdminDashboard: NextPage<AdminProps> = ({ children }) => {
-const AdminDashboard = () => {
-  return <main className="flex-1 p-6 dark:bg-bannerbg">{"hello Admin"}</main>;
-  // return <main className="flex-1 p-6 dark:bg-bannerbg">{children}</main>;
+const AdminDashboard: FC<AdminProps> = ({ children }) => {
+  return <main className="flex-1 p-6 dark:bg-bannerbg">{children}</main>;
 };
 
-export default AdminDashboard;
+export default withAdminAuth(AdminDashboard);

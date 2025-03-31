@@ -17,7 +17,7 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({
   onClose,
 }) => {
   if (!room) return null;
-  
+
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className="p-4 space-y-4">

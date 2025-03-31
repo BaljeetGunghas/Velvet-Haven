@@ -15,6 +15,17 @@ import { toast } from "react-toastify";
 import { HotelIF } from "../../Components/Tabels/HotelTabel";
 import { useHandleGetHotelDetails } from "@/Hooks/hotel";
 import ImageUploader from "../../../../components/UploadMultiImage/ImageUpload";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CityOptions } from "@/components/Form/CityOptions";
+import { FaLocationDot } from "react-icons/fa6";
 
 interface hotelResponseDataIF {
   output: number;
@@ -37,6 +48,7 @@ const CreateUpdateHotel: React.FC<Props> = ({
 
   const [ErrorMessage, setErrorMessage] = useState<string>("");
   const [status, setStatus] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const handleLogout = useHandleLogout();
   const [hotelDetailsLoading, setHotelDetailsLoading] =
     useState<boolean>(false);
@@ -62,6 +74,7 @@ const CreateUpdateHotel: React.FC<Props> = ({
       const payload = {
         ...values,
         status: status,
+        city: selectedCity
       };
       if (!selectedHotelId) {
         const response = await axios.post(
@@ -93,6 +106,7 @@ const CreateUpdateHotel: React.FC<Props> = ({
         formData.append("owner_name", values.owner_name);
         formData.append("description", values.description);
         formData.append("address", values.address);
+        formData.append("city", selectedCity);
         formData.append("postal_code", values.postal_code);
         formData.append("policies", values.policies);
         formData.append("cancellation_policy", values.cancellation_policy);
@@ -161,6 +175,7 @@ const CreateUpdateHotel: React.FC<Props> = ({
             status: response.jsonResponse?.status || "",
           });
           setStatus(response.jsonResponse?.status || "");
+          setSelectedCity(response.jsonResponse?.city || '')
           setHotelDetailsLoading(false);
           //   setHotelDetails(response.jsonResponse);
           setHotelImages(response.jsonResponse?.hotel_image || null);
@@ -344,6 +359,34 @@ const CreateUpdateHotel: React.FC<Props> = ({
               />
               <div className="flex gap-1 flex-col ">
                 <label className=" text-sm font-semibold text-black dark:text-white ">
+                  Hotel City{" "}
+                </label>
+                <div className="relative w-full">
+                  <Select value={selectedCity} onValueChange={setSelectedCity}>
+                    <SelectTrigger className="text-sm text-left border border-gray-200 text-gray-900 bg-gray-100 rounded-md w-full p-2 shadow-sm">
+                      <SelectValue placeholder="Hotel City">{selectedCity && CityOptions().find(city => city.value === selectedCity)?.label}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="bg-white dark:bg-foreground z-50">
+                      <SelectGroup>
+                        <SelectLabel>Select City</SelectLabel>
+                        {CityOptions().map((city, i) => (
+                          <SelectItem key={city.value + i} value={city.value} className="hover:bg-gray-200 dark:hover:bg-bannerbg cursor-pointer">
+                            <div className="flex gap-2 items-center p-2">
+                              <FaLocationDot className="text-primaryblue h-5 w-5" />
+                              <div className="flex flex-col">
+                                <p className="text-black dark:text-white font-semibold">{city.label}</p>
+                                <p className="font-normal text-gray-600 dark:text-slate-50">India</p>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex gap-1 flex-col ">
+                <label className=" text-sm font-semibold text-black dark:text-white ">
                   Hotel Address{" "}
                 </label>
                 <Textarea
@@ -372,10 +415,11 @@ const CreateUpdateHotel: React.FC<Props> = ({
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   name="description"
-                  maxLength={500}
+                  maxLength={2000}
                   required
                   rows={5}
                 />
+                {formik.values.description.length >0 && <p className="text-xs font-semibold text-right text-gray-500">Remaingin character {2000-formik.values.description.length}/2000</p>}
               </div>
 
               <div className="flex gap-1 flex-col ">
