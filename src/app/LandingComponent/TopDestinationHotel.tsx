@@ -65,10 +65,10 @@ const TopDestinationHotel = () => {
             <motion.div
               className="relative h-62 w-48 max-sm:w-44 rounded overflow-hidden cursor-pointer"
               key={d.id}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.7 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
             >
               {/* Image */}
               <Image
