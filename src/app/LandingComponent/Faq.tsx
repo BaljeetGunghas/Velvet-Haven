@@ -21,24 +21,24 @@ const Faq = () => {
       className="relative p-mainPading pt-2 max-sm:h-full max-sm:p-5 max-sm:gap-5"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
+      transition={{ duration: 1 }}
+      viewport={{ once: false }}
     >
       <motion.h2
         className="text-xl font-medium text-secondrybackground"
-        initial={{ opacity: 0, x: -50 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: -50 }}
+        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
       >
         FAQ
       </motion.h2>
       <motion.h3
         className="text-4xl my-2 font-semibold"
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
       >
         Frequently Asked Questions
       </motion.h3>
@@ -47,7 +47,7 @@ const Faq = () => {
         initial={{ opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
       >
         <AccordionComponent faqData={hotelFAQs} />
       </motion.div>

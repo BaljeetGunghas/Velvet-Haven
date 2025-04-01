@@ -19,14 +19,14 @@ const OurServices = () => {
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
+      viewport={{ once: false }}
     >
       <div className="w-1/2 h-full max-sm:w-full">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
         >
           <h2 className="text-xl font-medium text-secondrybackground">
             Our Services
@@ -45,7 +45,7 @@ const OurServices = () => {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
         >
           {services.map((service) => (
             <div key={service.id} className="flex items-center gap-3 my-1">
@@ -60,10 +60,10 @@ const OurServices = () => {
         </motion.div>
       </div>
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         className="relative w-1/2 h-full max-sm:w-full max-sm:h-96"
       >
         <Image
