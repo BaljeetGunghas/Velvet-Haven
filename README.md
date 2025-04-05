@@ -73,7 +73,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the app in your brow
 Make sure to add your environment variables in a `.env.local` file:
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=https://your-backend-api.com
+NEXT_PUBLIC_API_BASE_URL=https://velvet-haven.vercel.app/
 ```
 
 _(Update the value as per your backend setup)_
