@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Velvet Haven – Client Side 💘
 
-First, run the development server:
+This is the **frontend (client)** portion of the **Velvet Haven** matchmaking platform. Built with **Next.js**, **React**, **TypeScript**, and **Tailwind CSS**, this client delivers a fast, modern, and responsive user experience.
+
+> 🔗 **GitHub Repository:** [github.com/BaljeetGunghas/Velvet-Haven](https://github.com/BaljeetGunghas/Velvet-Haven)  
+> 🌐 **Live Site:** [velvet-haven.netlify.app](https://velvet-haven.netlify.app/)
+
+---
+
+## 🔥 Tech Stack
+
+- **React** – Component-based UI
+- **Next.js** – SSR and file-based routing
+- **TypeScript** – Type safety
+- **Tailwind CSS** – Utility-first styling
+- **Framer Motion** – Animations and transitions
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+│
+├── Hooks/         # Custom React hooks
+├── Types/         # TypeScript types and interfaces
+├── app/           # Next.js 13+ App directory structure
+├── asset/         # Static assets (images, etc.)
+├── components/    # Reusable UI components
+└── lib/           # Helper functions, constants, and configs
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/BaljeetGunghas/Velvet-Haven.git
+cd Velvet-Haven
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧠 Features
 
-## Learn More
+- Clean and modern UI with Tailwind CSS
+- Fully responsive layout (mobile + desktop)
+- Dynamic routing via Next.js App Router
+- Modular and scalable codebase
+- Integrated animations with Framer Motion
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛡 Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Make sure to add your environment variables in a `.env.local` file:
 
-## Deploy on Vercel
+```env
+NEXT_PUBLIC_API_BASE_URL=https://your-backend-api.com
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+_(Update the value as per your backend setup)_
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ✨ Deployment
+
+This project is ready to be deployed on platforms like **Vercel**, **Netlify**, or **Render**.
+
+Example deployment with Vercel:
+
+```bash
+vercel --prod
+```
+
+---
+
+## 🙌 Acknowledgments
+
+Special thanks to **Royal Matrimonial**, established in 2006, for the concept and real-world use case behind Velvet Haven. The platform aims to provide high-quality matchmaking services through a modern, digital experience.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
