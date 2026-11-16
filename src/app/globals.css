@@ -4,25 +4,43 @@
 
 
 :root {
+  /* Luxury Color Palette */
+  --primary-green: #173D35;
+  --secondary-ivory: #F8F6F0;
+  --accent-gold: #C5A46D;
+  --text-dark: #242824;
+  --text-secondary: #777A75;
+  --white: #FFFFFF;
+  --border-light: #E8E6E0;
+  --shadow-color: rgba(23, 61, 53, 0.08);
+
+  /* Legacy variables (kept for backward compatibility) */
   --background: #003B95;
   --secondrybackground: #7CB7FF;
   --foreground: #171717;
   --dard-text-color: #68cf14;
   --bannerbg: #1E1E1E;
   --lightGray: #F8F8F8;
+
+  /* Typography */
   --font-poppins: 'Poppins', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+
+  /* Spacing */
   --mainPadding: 4rem;
   --secondryPadding: 4rem;
-  --rdp-cell-size: 40px;
-  --rdp-accent-color: #007bff;
-  --rdp-background-color: #e9ecef;
 
+  /* Date Picker */
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: #173D35;
+  --rdp-background-color: #e9ecef;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground: #171717;
-    --background: #003B95;
+    --text-dark: #F5F3F0;
+    --text-secondary: #B8B5B0;
+    --secondary-ivory: #242824;
   }
 }
 
