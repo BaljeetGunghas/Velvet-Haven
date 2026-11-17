@@ -139,70 +139,98 @@ const BookingForm: React.FC<BookingFormProps> = ({ room }) => {
 
     return (
         <>
-            <div className="flex flex-col md:flex-row gap-6 p-6 bg-white dark:bg-bannerbg  border border-gray-200 rounded-lg mt-10 mx-auto">
+            <div className="w-full flex flex-col md:flex-row gap-6 md:gap-8 p-4 sm:p-6 md:p-8 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl md:rounded-3xl mt-10 mx-auto max-w-7xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 {/* Left Side: Booking Inputs */}
-                <div className="flex-1">
-                    <h2 className="text-xl font-semibold text-gray-700 dark:text-white mb-4">Book Your Stay</h2>
+                <div className="w-full md:flex-1">
+                    <h2 className="text-2xl md:text-3xl font-playfair font-bold text-primary-green dark:text-white mb-6">Book Your Stay</h2>
 
-                    <label className="block text-sm font-semibold text-gray-600 dark:text-slate-200 my-2">Check-in / Check-out</label>
-                    <div className="bg-white dark:bg-bannerbg flex items-center border rounded-md max-sm:w-full">
-                        <Image src={calendar} alt="calendar icon" className="w-8 h-8 dark:rounded-full size-6 dark:filter dark:invert dark:brightness-0 dark:p-1" />
+                    {/* Check-in / Check-out */}
+                    <label className="block text-xs uppercase tracking-widest font-semibold text-gray-600 dark:text-gray-400 mb-3">Check-in / Check-out</label>
+                    <div className="bg-white dark:bg-slate-700 flex items-center border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 sm:py-3 hover:border-accent-gold/50 transition-colors">
+                        <Image src={calendar} alt="calendar icon" className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 dark:invert dark:brightness-110" />
                         <DatePickerWithRange dateRange={date} setDate={setDate} />
                     </div>
-                    <span className="text-xs text-gray-400 font-semibold ">Check in time: {room.check_in_time} - Check out time: {room.check_out_time}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold mt-2 block">
+                        Check in: {room.check_in_time} | Check out: {room.check_out_time}
+                    </span>
+
                     {/* Number of Guests */}
-                    <label className="block text-sm font-semibold text-gray-600 dark:text-slate-200 my-2">Guests</label>
+                    <label className="block text-xs uppercase tracking-widest font-semibold text-gray-600 dark:text-gray-400 mb-3 mt-6">Number of Guests</label>
                     <input
                         type="number"
                         min={1}
-                        className="w-full p-2 border rounded-md dark:text-slate-200 dark:bg-transparent "
+                        max={room.max_occupancy}
+                        className="w-full px-4 py-2 sm:py-3 border border-gray-200 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white dark:bg-slate-700 focus:outline-none focus:border-accent-gold/50 focus:ring-2 focus:ring-accent-gold/20 transition-all"
                         value={`${guests}`}
                         placeholder="Number of guests"
-                        max={room.max_occupancy}
-                        onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
+                        onChange={(e) => setGuests(Math.min(Math.max(parseInt(e.target.value) || 1, 1), room.max_occupancy))}
                     />
-                    <span className="text-xs text-gray-400 font-semibold ">Max Guests :{room.max_occupancy} </span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold mt-2 block">
+                        Maximum {room.max_occupancy} guest{room.max_occupancy !== 1 ? 's' : ''}
+                    </span>
                 </div>
-                {/* Divider */}
-                <div className="hidden md:block w-px bg-gray-300 mx-4"></div>
+
+                {/* Divider - Responsive */}
+                <div className="block md:hidden w-full h-px bg-gradient-to-r from-accent-gold/0 via-accent-gold/30 to-accent-gold/0 my-2"></div>
+                <div className="hidden md:block w-px bg-gradient-to-b from-accent-gold/0 via-accent-gold/30 to-accent-gold/0"></div>
+
                 {/* Right Side: Pricing Summary */}
-                <div className="flex-1  dark:bg-foreground  rounded-2xl">
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-slate-200">
-                        {room.hotel_name} <span className="text-gray-500 dark:text-slate-200">({room.room_number})</span>
+                <div className="w-full md:flex-1 bg-gradient-to-br from-accent-gold/5 to-accent-gold/0 dark:from-slate-700/40 dark:to-slate-700/20 p-4 sm:p-6 rounded-2xl border border-accent-gold/20 dark:border-slate-600/50">
+                    <h3 className="text-lg md:text-2xl font-playfair font-bold text-primary-green dark:text-white mb-4">
+                        {room.hotel_name}
+                        <span className="text-sm md:text-base text-gray-500 dark:text-gray-400 font-normal block">Room {room.room_number}</span>
                     </h3>
 
-                    <div className="mt-4 space-y-3 text-gray-600 dark:text-slate-200">
-                        <div className="flex justify-between">
-                            <p>Price per night:</p>
-                            <span className="font-medium text-gray-900 dark:text-slate-200">₹{roomPrice}</span>
+                    <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                        {/* Price Breakdown */}
+                        <div className="flex justify-between items-center text-sm md:text-base">
+                            <p className="text-gray-600 dark:text-gray-400">Price per night:</p>
+                            <span className="font-semibold text-gray-900 dark:text-white">₹{roomPrice?.toLocaleString('en-IN')}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <p>Nights:</p>
-                            <span className="font-medium">{nights}</span>
+                        <div className="flex justify-between items-center text-sm md:text-base">
+                            <p className="text-gray-600 dark:text-gray-400">Number of nights:</p>
+                            <span className="font-semibold text-gray-900 dark:text-white">{nights}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <p>Subtotal:</p>
-                            <span className="font-medium">₹{subtotal.toFixed(2)}</span>
+
+                        {/* Horizontal Line */}
+                        <div className="h-px bg-gradient-to-r from-accent-gold/20 to-accent-gold/0 my-3"></div>
+
+                        {/* Subtotal */}
+                        <div className="flex justify-between items-center text-sm md:text-base">
+                            <p className="text-gray-600 dark:text-gray-400">Subtotal:</p>
+                            <span className="font-semibold text-gray-900 dark:text-white">₹{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <p>GST (18%):</p>
-                            <span className="font-medium text-red-600">₹{gst.toFixed(2)}</span>
+
+                        {/* GST */}
+                        <div className="flex justify-between items-center text-sm md:text-base">
+                            <p className="text-gray-600 dark:text-gray-400">GST (18%):</p>
+                            <span className="font-semibold text-accent-gold">₹{gst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
-                        <hr className="my-3 border-gray-300" />
-                        <div className="flex justify-between text-lg font-semibold">
-                            <p>Total:</p>
-                            <span className="text-blue-600">₹{totalAmount.toFixed(2)}</span>
+
+                        {/* Horizontal Line */}
+                        <div className="h-px bg-gradient-to-r from-accent-gold/20 to-accent-gold/0 my-3"></div>
+
+                        {/* Total */}
+                        <div className="flex justify-between items-center text-base md:text-xl font-playfair">
+                            <p className="text-primary-green dark:text-white font-semibold">Total Amount:</p>
+                            <span className="text-accent-gold font-bold">₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
                     </div>
 
-                    {/* Book Now Button */}
-
-                    <div className="flex justify-center items-center mt-3 pt-4 w-full gap-2 border-t border-gray-300">
+                    {/* Book Now Button - Mobile Optimized */}
+                    <div className="mt-6 pt-4">
                         <Button
                             onClick={handlePayment}
                             disabled={!date.startDate || !date.endDate || guests <= 0 || paymentLoading}
-                            className="bg-primaryblue text-white py-3 rounded-md text-sm transition active:scale-95 shadow-lg">
-                            {paymentLoading ? <ButtonLoading /> : "Proced to Payment"}
+                            className="w-full bg-gradient-to-r from-accent-gold to-accent-gold/90 text-white py-3 sm:py-4 px-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent-gold/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[44px]">
+                            {paymentLoading ? (
+                                <>
+                                    <ButtonLoading />
+                                    Processing...
+                                </>
+                            ) : (
+                                "Proceed to Payment"
+                            )}
                         </Button>
                     </div>
                 </div>
