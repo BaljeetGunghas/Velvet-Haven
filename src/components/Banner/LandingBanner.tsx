@@ -1,34 +1,34 @@
 import React from "react";
-import Image from "next/image";
 import LandingSearchForm from "../Form/LandingSearchForm";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import heroImage from "@/asset/hero-image.png";
 
-// High-quality luxury hotel architecture image from Unsplash
-// Configurable URL for easy replacement
-const HERO_IMAGE_URL =
-  "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&h=1080&fit=crop";
+// Local luxury hotel background image
+const HERO_IMAGE_URL = heroImage.src;
 
 const LandingBanner = () => {
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center mt-16 overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src={HERO_IMAGE_URL}
-          alt="Luxury Hotel Architecture"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
-        {/* Sophisticated Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-green/70 via-primary-green/60 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-primary-green/40"></div>
-      </div>
+    <section className="relative isolate mt-16 flex min-h-[calc(100svh-4rem)] w-full flex-col overflow-hidden">
+      {/* Background Image with Premium Gradient Overlay */}
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat dark:opacity-90"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              90deg,
+              rgba(10, 25, 23, 0.42),
+              rgba(10, 25, 23, 0.05)
+            ),
+            url('${HERO_IMAGE_URL}')
+          `,
+        }}
+      />
+      {/* Dark Mode Background Overlay */}
+      <div className="absolute inset-0 z-0 hidden bg-gradient-to-br from-[#103F38] via-[#0a3d3a] to-[#051f1e] dark:block" />
 
       {/* Hero Content Container */}
-      <div className="w-full px-mainPading max-sm:px-4 max-md:px-8 flex flex-col justify-center items-start min-h-screen relative z-10 pt-32 sm:pt-24 pb-80 sm:pb-96 lg:pb-60">
+      <div className="relative z-10 flex flex-1 flex-col items-start justify-center px-4 py-12 sm:px-8 sm:py-16 lg:px-16 lg:py-20 xl:px-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -37,58 +37,83 @@ const LandingBanner = () => {
         >
           {/* Eyebrow Text */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="mb-4 lg:mb-6 flex items-center gap-2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            className="mb-4 flex items-center gap-2 sm:mb-6 lg:mb-8"
           >
-            <span className="text-accent-gold text-xs lg:text-sm font-semibold tracking-[2px] lg:tracking-[3px] uppercase">
+            <div className="hidden sm:block h-0.5 w-8 bg-gradient-to-r from-accent-gold to-accent-gold/30 lg:w-10"></div>
+            <span className="text-xs font-semibold uppercase tracking-[2.5px] text-accent-gold sm:text-sm lg:tracking-[3px]">
               ✨ Experience The Art of Hospitality
             </span>
           </motion.div>
 
-          {/* Main Headline - Refined */}
-          <h1 className="font-playfair text-white font-bold leading-tight lg:leading-tight mb-8 drop-shadow-2xl max-w-4xl"
+          {/* Main Headline - Serif typography matching reference */}
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="max-w-4xl font-playfair font-semibold drop-shadow-2xl"
             style={{
               fontSize: 'clamp(2rem, 8vw, 5rem)',
+              lineHeight: '1.08',
+              letterSpacing: '-0.01em',
             }}>
-            Your Escape to Extraordinary<span className="text-accent-gold">.</span>
-          </h1>
+            <span className="block text-white">Your Escape to</span>
+            <span className="text-accent-gold">Extraordinary<span className="text-accent-gold">.</span></span>
+          </motion.h1>
 
-          {/* Description - Better Readability */}
-          <p className="text-slate-50 text-base lg:text-lg max-sm:text-sm font-light mb-8 lg:mb-10 max-w-2xl leading-relaxed drop-shadow-lg">
-            Discover exceptional stays, thoughtfully designed spaces, and unforgettable experiences. Your next extraordinary getaway begins here.
-          </p>
-
-          {/* CTA Link */}
-          <motion.a
-            href="#explore"
-            whileHover={{ x: 5 }}
-            className="inline-flex items-center gap-3 text-accent-gold font-semibold text-sm tracking-wide hover:text-white transition-all duration-300 group"
+          {/* Description - Enhanced */}
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="mb-6 max-w-2xl text-sm font-light leading-relaxed text-slate-100 drop-shadow-lg dark:text-slate-200 sm:mb-8 sm:text-base lg:mb-10 lg:text-lg"
           >
-            <span className="inline-block w-8 h-px bg-accent-gold"></span>
-            Explore Our Stays
-            <ArrowRight
-              size={20}
-              className="group-hover:translate-x-1 transition-transform duration-300"
-            />
-          </motion.a>
+            Discover exceptional stays, thoughtfully designed spaces, and unforgettable experiences. Your next extraordinary getaway begins here.
+          </motion.p>
+
+          {/* CTA Button - Gold Pill Style */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          >
+            <motion.a
+              href="#explore"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 rounded-full border-2 border-accent-gold bg-transparent px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:bg-accent-gold/10 hover:shadow-xl hover:shadow-accent-gold/40 group sm:px-8 sm:py-3.5 sm:text-base"
+            >
+              <span>Explore Our Stays</span>
+              <ArrowRight
+                size={20}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </motion.a>
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Search Panel - Premium Floating Card */}
+      {/* Search Panel - Responsive Flex Layout */}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-        className="relative w-11/12 max-w-4xl mx-auto z-20 -mt-32 sm:-mt-40 lg:-mt-48"
+        transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+        className="relative z-20 mx-auto mb-4 w-full flex-shrink-0 px-3 sm:px-6 lg:absolute lg:bottom-6 lg:left-0 lg:right-0 lg:mx-auto lg:mb-0 lg:w-full lg:max-w-6xl lg:px-8"
       >
-        {/* Card Container with Premium Styling */}
-        <div className="bg-white/95 dark:bg-primary-green/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-primary-green/30 p-4 sm:p-6 lg:p-8 border border-border-light dark:border-accent-gold/30">
-          <LandingSearchForm />
+        {/* Search Card */}
+        <div className="relative mx-auto w-full max-w-6xl overflow-visible rounded-xl sm:rounded-2xl border border-gray-100 bg-white p-3 sm:p-5 md:p-6 lg:p-7 shadow-2xl shadow-black/15 transition-all duration-500 hover:shadow-black/20 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-primary-green/50 dark:hover:shadow-primary-green/60">
+          {/* Gradient Effect */}
+          <div className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-accent-gold/10 via-transparent to-accent-gold/5" />
+
+          {/* Form */}
+          <div className="relative z-10 w-full min-w-0">
+            <LandingSearchForm />
+          </div>
         </div>
       </motion.div>
-    </div>
+    </section>
   );
 };
 

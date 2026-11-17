@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import logo from "@/asset/logo.png";
-import ModalLayout from "../ModelLayout/Modellayout";
 import LoginRegistrationModel from "../LoginRegModel/LoginRegistrationModel";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
@@ -18,6 +18,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const pathname = usePathname();
 
   const headerLinks = [
     { label: "Home", href: "/", icon: Home },
@@ -50,11 +51,11 @@ const Header = () => {
       <header
         className={`fixed inset-0 z-40 h-16 sm:h-20 transition-all duration-300 ${
           isScrolled
-            ? "bg-white dark:bg-primary-green shadow-2xl shadow-primary-green/40"
-            : "bg-primary-green dark:bg-primary-green shadow-lg shadow-primary-green/20"
+            ? "bg-white dark:bg-[#103F38] shadow-2xl shadow-[#103F38]/40"
+            : "bg-[#103F38] dark:bg-[#103F38] shadow-lg shadow-[#103F38]/20"
         }`}
       >
-        <div className="w-full mx-auto px-mainPading max-sm:px-3 h-full flex justify-between items-center py-2 sm:py-4">
+        <div className="w-full mx-auto px-28 max-sm:px-3 h-full flex justify-between items-center py-2 sm:py-4">
           {/* Logo with Brand Color */}
           <Link
             href="/"
@@ -76,6 +77,12 @@ const Header = () => {
               }`}>
                 Velvet Haven
               </span>
+              {/* Vertical Divider */}
+              <div className={`hidden lg:block w-px h-6 transition-all duration-300 ${
+                isScrolled
+                  ? "bg-accent-gold/40"
+                  : "bg-accent-gold/30"
+              }`}></div>
             </div>
           </Link>
 
@@ -83,6 +90,7 @@ const Header = () => {
           <nav className="flex items-center max-md:hidden gap-1 lg:gap-3">
             {headerLinks.map((link) => {
               const IconComponent = link.icon;
+              const isActive = pathname === link.href;
               return (
                 <motion.div
                   key={link.label}
@@ -91,10 +99,12 @@ const Header = () => {
                 >
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-1.5 px-3 py-2 lg:px-4 lg:py-2.5 rounded-full transition-all duration-300 relative group font-semibold text-xs lg:text-sm ${
-                      isScrolled
-                        ? "text-primary-green dark:text-white hover:bg-accent-gold/30 hover:text-accent-gold hover:shadow-lg shadow-md"
-                        : "text-white hover:bg-white/20 hover:text-accent-gold hover:shadow-lg"
+                    className={`flex items-center gap-1.5 px-3 py-2 lg:px-4 lg:py-2.5 rounded-full transition-all duration-300 relative group font-semibold text-xs lg:text-sm border-b-2 ${
+                      isActive
+                        ? "text-accent-gold border-accent-gold"
+                        : isScrolled
+                        ? "text-primary-green dark:text-white hover:bg-accent-gold/30 hover:text-accent-gold hover:shadow-lg shadow-md border-b-2 border-transparent"
+                        : "text-white hover:bg-white/20 hover:text-accent-gold hover:shadow-lg border-b-2 border-transparent"
                     }`}
                   >
                     <IconComponent size={16} className="lg:size-18 transition-transform duration-300 group-hover:scale-125" />
@@ -220,12 +230,11 @@ const Header = () => {
       </motion.div>
 
       {/* Login/Registration Modal */}
-      <ModalLayout
-        isOpen={isRegistrationModelOpen}
-        onClose={setIsRegistrationModelOpen}
-      >
-        <LoginRegistrationModel />
-      </ModalLayout>
+      {isRegistrationModelOpen && (
+        <LoginRegistrationModel
+          onClose={() => setIsRegistrationModelOpen(false)}
+        />
+      )}
     </>
   );
 };

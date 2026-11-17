@@ -19,7 +19,6 @@ import {
 import { useRouter } from "next/navigation";
 import DatePickerWithRange from "../Calendar/DatePicker";
 import { Range } from "react-date-range";
-import ModalLayout from "../ModelLayout/Modellayout";
 import dynamic from "next/dynamic";
 import dayjs from "dayjs";
 import { FaLocationDot } from "react-icons/fa6";
@@ -71,41 +70,42 @@ const LandingSearchForm = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-2 lg:gap-3 w-full items-stretch lg:items-center">
+      <div className="w-full flex flex-col gap-2 sm:gap-2.5 md:grid md:gap-3 items-stretch md:items-center" style={{ gridTemplateColumns: "1.1fr 1.4fr 1.25fr 0.8fr" }}>
         {/* City Selection */}
-        <div className="flex-1 min-w-0 flex items-center gap-3 bg-secondary-ivory dark:bg-slate-800 rounded-lg p-4 border border-border-light dark:border-slate-700 transition-all duration-300 hover:border-accent-gold focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20">
+        <div className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]">
           <Image
             src={BedIcon}
             alt="bed icon"
-            className="w-5 h-5 flex-shrink-0 opacity-60 dark:filter dark:invert"
+            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
+            style={{ color: '#103F38' }}
           />
           <div className="relative flex-1 min-w-0">
             <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="font-medium text-sm border-none shadow-none outline-none p-0 text-text-dark dark:text-white truncate">
+              <SelectTrigger className="border-none shadow-none outline-none p-0 text-xs sm:text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500">
                 <SelectValue placeholder="Where are you going?">
                   {selectedCity &&
                     CityOptions().find((city) => city.value === selectedCity)
                       ?.label}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-slate-900 z-50 border-border-light dark:border-slate-700">
+              <SelectContent className="bg-white dark:bg-slate-900 z-50 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg">
                 <SelectGroup>
-                  <SelectLabel className="text-text-secondary">
+                  <SelectLabel className="text-gray-500 dark:text-gray-400 px-4 py-2 text-xs font-semibold uppercase tracking-wider">
                     Select City
                   </SelectLabel>
                   {CityOptions().map((city, i) => (
                     <SelectItem
                       key={city.value + i}
                       value={city.value}
-                      className="hover:bg-secondary-ivory dark:hover:bg-slate-800 cursor-pointer"
+                      className="hover:bg-accent-gold/10 dark:hover:bg-slate-800 cursor-pointer focus:bg-accent-gold/10 py-3 px-4"
                     >
-                      <div className="flex gap-2 items-center p-1">
-                        <FaLocationDot className="text-primary-green h-4 w-4 flex-shrink-0" />
-                        <div className="flex flex-col">
-                          <p className="text-text-dark dark:text-white font-medium text-sm">
+                      <div className="flex gap-3 items-center">
+                        <FaLocationDot className="text-primary-green h-5 w-5 flex-shrink-0 opacity-100" />
+                        <div className="flex flex-col gap-0.5">
+                          <p className="text-gray-900 dark:text-white font-semibold text-sm">
                             {city.label}
                           </p>
-                          <p className="font-normal text-xs text-text-secondary">
+                          <p className="font-normal text-xs text-gray-500 dark:text-gray-400">
                             India
                           </p>
                         </div>
@@ -119,13 +119,14 @@ const LandingSearchForm = () => {
         </div>
 
         {/* Date Picker */}
-        <div className="flex-1 min-w-0 flex items-center gap-3 bg-secondary-ivory dark:bg-slate-800 rounded-lg p-4 border border-border-light dark:border-slate-700 transition-all duration-300 hover:border-accent-gold focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20">
+        <div className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]">
           <Image
             src={calendar}
             alt="calendar icon"
-            className="w-5 h-5 flex-shrink-0 opacity-60 dark:filter dark:invert"
+            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
+            style={{ color: '#103F38' }}
           />
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 overflow-hidden text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
             <DatePickerWithRange dateRange={date} setDate={setDate} />
           </div>
         </div>
@@ -133,31 +134,33 @@ const LandingSearchForm = () => {
         {/* Person & Room Selection */}
         <div
           onClick={() => setIsSelectPersonAndRoomModelOpen(true)}
-          className="flex-1 min-w-0 flex items-center gap-3 bg-secondary-ivory dark:bg-slate-800 rounded-lg p-4 border border-border-light dark:border-slate-700 transition-all duration-300 hover:border-accent-gold cursor-pointer hover:shadow-md"
+          className="min-w-0 flex items-center gap-3 bg-white dark:bg-slate-700/80 rounded-xl p-4 sm:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 cursor-pointer hover:shadow-md dark:hover:shadow-accent-gold/20 min-h-[52px]"
         >
           <Image
             src={iconuser}
             alt="user icon"
-            className="w-5 h-5 flex-shrink-0 opacity-60 dark:filter dark:invert"
+            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
+            style={{ color: '#103F38' }}
           />
-          <span className="font-medium text-sm text-text-dark dark:text-white flex-1 min-w-0 truncate">
+          <span className="flex-1 min-w-0 overflow-hidden text-xs sm:text-sm font-medium text-gray-700 dark:text-white">
             {personDetails.adults + personDetails.children > 0 &&
-              `${personDetails.adults}A, ${personDetails.children}C`}
+              `${personDetails.adults}A, ${personDetails.children}C | ${personDetails.rooms}R`}
             {personDetails.adults + personDetails.children === 0 &&
-              "Guests"}
+              "1A, 0C | 1R"}
           </span>
           <Image
             src={downline}
             alt="dropdown icon"
-            className="w-4 h-4 flex-shrink-0 dark:filter dark:invert opacity-60"
+            className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 dark:filter dark:invert opacity-100"
+            style={{ color: '#103F38' }}
           />
         </div>
 
         {/* Search Button */}
         <Button
           onClick={handleSearchHotel}
-          disabled={(!selectedCity || !date) ? true : false}
-          className="flex-shrink-0 lg:min-w-fit bg-primary-green hover:bg-accent-gold disabled:bg-gray-300 disabled:cursor-not-allowed text-white hover:text-primary-green disabled:text-gray-400 font-semibold text-sm h-auto py-4 px-6 lg:px-8 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-105 disabled:hover:scale-100 active:scale-95 whitespace-nowrap"
+          disabled={!selectedCity || !date.startDate || !date.endDate}
+          className="min-w-0 flex items-center justify-center gap-1 sm:gap-2 rounded-lg sm:rounded-xl bg-accent-gold px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 text-sm font-semibold text-white transition-all duration-300 min-h-[44px] sm:min-h-[48px] md:min-h-[52px] hover:bg-accent-gold/90 hover:shadow-lg hover:shadow-accent-gold/40 hover:scale-105 disabled:hover:scale-100 active:scale-95 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-400 w-full sm:w-auto"
         >
           {isHotelSearchingLoading ? (
             <span className="flex items-center gap-2">
@@ -166,20 +169,23 @@ const LandingSearchForm = () => {
               <span className="sm:hidden">...</span>
             </span>
           ) : (
-            "Search"
+            <>
+              <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+              </svg>
+              <span className="hidden sm:inline">Search</span>
+            </>
           )}
         </Button>
       </div>
 
-      {/* Modal for Person & Room Selection */}
-      <ModalLayout isOpen={isSelectPersonAndRoomModelOpen} onClose={setIsSelectPersonAndRoomModelOpen} >
-        <SelectPersonAndRoom
-          personDetails={personDetails}
-          setPersonDetails={setPersonDetails}
-          isOpen={isSelectPersonAndRoomModelOpen}
-          onClose={setIsSelectPersonAndRoomModelOpen}
-        />
-      </ModalLayout>
+      {/* Modal for Person & Room Selection - Uses React Portal */}
+      <SelectPersonAndRoom
+        personDetails={personDetails}
+        setPersonDetails={setPersonDetails}
+        isOpen={isSelectPersonAndRoomModelOpen}
+        onClose={setIsSelectPersonAndRoomModelOpen}
+      />
     </>
   );
 };

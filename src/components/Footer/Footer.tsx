@@ -1,85 +1,295 @@
-import Image from "next/image";
+"use client";
+
 import React from "react";
-import logo from "@/asset/logo.svg";
-import facebook from "@/asset/icon/facebook.svg";
-import instagram from "@/asset/icon/instagram-solid.svg";
-import linkedin from "@/asset/icon/linkedin.svg";
-import twitter from "@/asset/icon/twitter.svg";
+import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
+import logo from "@/asset/logo.png";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+  ArrowRight,
+  Github,
+  Globe,
+} from "lucide-react";
 
 const Footer = () => {
-  return (
-    <div className="relative bg-primaryblue dark:bg-foreground dark:border-t p-mainPading max-sm:h-full max-sm:p-5 max-sm:gap-5">
-      <div className="flex h-full justify-between max-sm:flex-col max-sm:gap-12">
-        <div className=" w-1/2 max-sm:w-full">
-          <Image src={logo} alt="logo" className="size-28" />
-          <span className="text-base font-normal text-white">
-          At Velvet-Haven, your satisfaction is our top priority. Thank you for choosing us for your stay. Stay connected to receive the latest updates, exclusive offers, and more. We look forward to welcoming you again soon!
-          </span>
-        </div>
-        <div className="flex gap-32 max-sm:w-full max-md:gap-12">
-          <div  className=" max-sm:w-full max-sm:flex max-sm:flex-col ">
-            <h3 className="text-white text-xl font-semibold mb-12">Service</h3>
-            <ul className="text-white text-base font-normal flex flex-col gap-5">
-              <li>
-                <Link href={"/"} className="text-base font-semibold">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href={"/About"} className="text-base font-semibold">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href={"/Contact"} className="text-base font-semibold">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href={"/Location"} className="text-base font-semibold">
-                  Location
-                </Link>
-              </li>
-              <li>
-                <Link href={"/Our_team"} className="text-base font-semibold">
-                  Our Team
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className=" max-sm:w-full max-sm:flex max-sm:flex-col max-sm:items-end ">
-            <h3 className="text-white text-xl font-semibold mb-12">Social</h3>
-            <ul className="text-white text-base font-normal flex gap-5 max-sm:flex-col max-md:flex-col">
-              <Link href={""} target="_blank" className="bg-white dark:bg-bannerbg  rounded-full size-10 grid place-items-center">
-                <Image src={facebook} alt="facebook" className="dark:filter dark:invert dark:brightness-0 size-6" />
-              </Link>
-              <Link href={""} target="_blank" className="bg-white dark:bg-bannerbg  rounded-full size-10 grid place-items-center">
-                <Image src={instagram} alt="instagram" className="dark:filter dark:invert dark:brightness-0 size-6" />
-              </Link>
-              <Link href={""} target="_blank" className="bg-white dark:bg-bannerbg  rounded-full size-10 grid place-items-center">
-                <Image src={linkedin} alt="linkedin" className="dark:filter dark:invert dark:brightness-0 size-6" />
-              </Link>
-              <Link href={""} target="_blank" className="bg-white dark:bg-bannerbg  rounded-full size-10 grid place-items-center">
-                <Image src={twitter} alt="twitter" className="dark:filter dark:invert dark:brightness-0 size-6" />
-              </Link>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <hr className="my-6" />
-      <div className="flex justify-between  max-sm:flex-col max-sm:items-center max-sm:gap-3">
-        <div className="flex gap-5 items-center ">
-          <Link href={''} className="text-base text-white font-medium ">Privacy Policy </Link>
-          <Link href={''} className="text-base font-medium  text-white">Terms of use </Link>
-        </div>
+  const currentYear = new Date().getFullYear();
 
-        <span className="text-base font-medium text-white">© 2025 Velvet-Haven. All rights reserved. </span>
+  const footerSections = [
+    {
+      title: "Quick Links",
+      links: [
+        { label: "Home", href: "/" },
+        { label: "Rooms & Suites", href: "/rooms" },
+        { label: "Dining", href: "/dining" },
+        { label: "Facilities", href: "/facilities" },
+        { label: "About Us", href: "/about" },
+      ],
+    },
+    {
+      title: "Guest Services",
+      links: [
+        { label: "Booking", href: "/booking" },
+        { label: "My Reservations", href: "/reservations" },
+        { label: "Special Offers", href: "/offers" },
+        { label: "Gift Cards", href: "/gift-cards" },
+        { label: "Loyalty Program", href: "/loyalty" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "Contact Us", href: "/contact" },
+        { label: "Careers", href: "/careers" },
+        { label: "Press", href: "/press" },
+        { label: "Partners", href: "/partners" },
+        { label: "Blog", href: "/blog" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms & Conditions", href: "/terms" },
+        { label: "Cancellation Policy", href: "/cancellation" },
+        { label: "Cookie Policy", href: "/cookies" },
+        { label: "Accessibility", href: "/accessibility" },
+      ],
+    },
+  ];
+
+  const socialLinks = [
+    { icon: Github, href: "https://github.com", label: "GitHub" },
+    { icon: Globe, href: "https://portfolio.com", label: "Portfolio" },
+    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+  ];
+
+  const contactInfo = [
+    {
+      icon: Phone,
+      label: "Phone",
+      value: "+1 (800) VELVET-99",
+      href: "tel:+18008358389",
+    },
+    {
+      icon: Mail,
+      label: "Email",
+      value: "reservations@velvethaven.com",
+      href: "mailto:reservations@velvethaven.com",
+    },
+    {
+      icon: MapPin,
+      label: "Address",
+      value: "123 Luxury Lane, Mumbai, India",
+      href: "#",
+    },
+  ];
+
+  return (
+    <footer className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-black border-t border-gray-200 dark:border-slate-800 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 xl:px-16 py-16 sm:py-20 lg:py-24">
+        {/* Top Section - Logo & Newsletter */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12 sm:mb-16 lg:mb-20"
+        >
+          {/* Brand Section */}
+          <div>
+            <Link href="/" className="inline-flex items-center gap-3 mb-6">
+              <Image
+                src={logo}
+                alt="Velvet Haven"
+                width={50}
+                height={50}
+                className="w-12 h-12 rounded-full"
+              />
+              <div>
+                <h3 className="text-lg sm:text-xl font-playfair font-bold text-primary-green dark:text-white">
+                  Velvet Haven
+                </h3>
+                <p className="text-xs text-accent-gold font-semibold tracking-wide">
+                  LUXURY STAYS
+                </p>
+              </div>
+            </Link>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mb-6 max-w-md">
+              Experience unparalleled luxury and hospitality at Velvet Haven. Your escape to extraordinary elegance awaits.
+            </p>
+            {/* Social Links */}
+            <div className="flex items-center gap-4">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <motion.a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-green to-primary-green/80 hover:from-accent-gold hover:to-accent-gold/80 text-white flex items-center justify-center transition-all duration-300"
+                    aria-label={social.label}
+                  >
+                    <Icon size={18} />
+                  </motion.a>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Newsletter Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="bg-gradient-to-br from-accent-gold/10 to-primary-green/10 dark:from-accent-gold/5 dark:to-primary-green/5 rounded-2xl border border-accent-gold/20 dark:border-accent-gold/10 p-6 sm:p-8"
+          >
+            <h3 className="text-lg sm:text-xl font-semibold text-primary-green dark:text-white mb-3">
+              Subscribe to Our Newsletter
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              Get exclusive offers, travel tips, and updates delivered to your inbox.
+            </p>
+            <form className="flex flex-col gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:border-accent-gold focus:ring-2 focus:ring-accent-gold/20 transition-all text-sm"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full px-4 py-3 bg-gradient-to-r from-accent-gold to-accent-gold/80 hover:from-accent-gold/90 hover:to-accent-gold/70 text-primary-green font-semibold rounded-lg flex items-center justify-center gap-2 transition-all duration-300 text-sm"
+              >
+                Subscribe
+                <ArrowRight size={16} />
+              </button>
+            </form>
+          </motion.div>
+        </motion.div>
+
+        {/* Divider */}
+        <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent mb-12 sm:mb-16" />
+
+        {/* Contact & Links Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 sm:gap-10 mb-12 sm:mb-16"
+        >
+          {/* Contact Info */}
+          <div className="lg:col-span-2">
+            <h4 className="text-base sm:text-lg font-semibold text-primary-green dark:text-white mb-6">
+              Contact Us
+            </h4>
+            <div className="space-y-4">
+              {contactInfo.map((info, idx) => {
+                const Icon = info.icon;
+                return (
+                  <motion.a
+                    key={idx}
+                    href={info.href}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: idx * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex items-start gap-3 group"
+                  >
+                    <Icon className="w-5 h-5 text-accent-gold flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                        {info.label}
+                      </p>
+                      <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-white group-hover:text-accent-gold transition-colors">
+                        {info.value}
+                      </p>
+                    </div>
+                  </motion.a>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Links Sections */}
+          {footerSections.map((section, sectionIdx) => (
+            <motion.div
+              key={sectionIdx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: (sectionIdx + 1) * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <h4 className="text-base sm:text-lg font-semibold text-primary-green dark:text-white mb-5">
+                {section.title}
+              </h4>
+              <ul className="space-y-3">
+                {section.links.map((link, linkIdx) => (
+                  <li key={linkIdx}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-gray-600 dark:text-gray-400 hover:text-accent-gold dark:hover:text-accent-gold transition-colors duration-200 inline-flex items-center gap-1 group"
+                    >
+                      {link.label}
+                      <ArrowRight
+                        size={14}
+                        className="opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Divider */}
+        <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent mb-8 sm:mb-10" />
+
+        {/* Bottom Section */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-6 text-xs sm:text-sm"
+        >
+          <p className="text-gray-600 dark:text-gray-400 text-center sm:text-left">
+            &copy; {currentYear} Velvet Haven. All rights reserved. Crafted with luxury in mind.
+          </p>
+
+          {/* Payment Methods */}
+          <div className="flex items-center gap-3">
+            <span className="text-gray-600 dark:text-gray-400">We Accept:</span>
+            <div className="flex items-center gap-2">
+              {["visa", "mastercard", "amex", "discover"].map((method) => (
+                <div
+                  key={method}
+                  className="w-8 h-5 rounded bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold text-gray-700 dark:text-gray-300"
+                >
+                  {method.toUpperCase().substring(0, 2)}
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
-      <div className="text-center text-xs text-white absolute right-16 bottom-0">
-          ver_04042025v2
-      </div>
-    </div>
+
+      {/* Top Footer Gradient Line */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-gold via-primary-green to-accent-gold opacity-30" />
+    </footer>
   );
 };
 
