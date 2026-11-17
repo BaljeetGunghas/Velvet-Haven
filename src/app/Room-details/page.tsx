@@ -527,7 +527,7 @@ const RoomDetailsPage = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.8 }}
-                        className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 mb-12"
+                        className="w-full max-w-7xl mx-auto mb-12"
                     >
                         {/* Reviews Header - Premium */}
                         <div className="mb-8">

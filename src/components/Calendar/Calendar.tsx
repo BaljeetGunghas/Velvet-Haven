@@ -31,29 +31,28 @@ export const CalendarComponent = ({ date, setDate }: ComponentProps) => {
         <Button
           variant="outline"
           className={cn(
-            "w-full bg-gray-100 flex items-center gap-2 justify-start text-left font-normal text-gray-900",
+            "w-full px-4 py-3 bg-gradient-to-br from-slate-50 to-slate-50/50 dark:from-slate-700/50 dark:to-slate-700/30 flex items-center gap-3 justify-start text-left font-normal text-gray-900 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg hover:border-accent-gold/50 hover:shadow-md hover:shadow-accent-gold/10 transition-all duration-300",
           )}
         >
-          <CalendarIcon className="w-5 h-5 text-gray-500" />
-          {date ? format(date, "PPP") : <span>Select Date of Birth</span>}
+          <CalendarIcon className="w-5 h-5 text-accent-gold flex-shrink-0" />
+          <span className="text-sm md:text-base">
+            {date ? format(date, "dd MMM yyyy") : "Select Date of Birth"}
+          </span>
         </Button>
       </PopoverTrigger>
 
-      {/* Wrapper to handle overlapping */}
-      <div className="relative">
-        <PopoverContent className="w-auto p-0 min-w-[250px] z-50" align="start">
-          <DatePicker
-            selected={date}
-            onChange={(date) => handleDateChange(date as Date | undefined)}
-            maxDate={new Date()} // Restrict future dates
-            showYearDropdown
-            showMonthDropdown
-            dropdownMode="select"
-            dateFormat="MMMM dd, yyyy"
-            className="w-full px-3 py-2 border rounded-md dark:bg-foreground"
-          />
-        </PopoverContent>
-      </div>
+      <PopoverContent className="w-auto p-0 z-50 shadow-lg border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden" align="start">
+        <DatePicker
+          selected={date}
+          onChange={(date) => handleDateChange(date as Date | undefined)}
+          maxDate={new Date()}
+          showYearDropdown
+          showMonthDropdown
+          dropdownMode="select"
+          dateFormat="dd MMM yyyy"
+          inline
+        />
+      </PopoverContent>
     </Popover>
   );
 };

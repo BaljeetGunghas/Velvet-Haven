@@ -24,6 +24,18 @@ interface ComponentProps {
   setState: (val: boolean) => void;
 }
 
+// Validation Schema
+const validationSchema = Yup.object({
+  name: Yup.string()
+    .min(3, "Name must be at least 3 characters")
+    .max(50, "Name cannot exceed 50 characters")
+    .matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces")
+    .required("Full name is required"),
+  mobile: Yup.string()
+    .matches(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits")
+    .required("Mobile number is required"),
+});
+
 const EditProfile = ({ setState }: ComponentProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -36,16 +48,71 @@ const EditProfile = ({ setState }: ComponentProps) => {
   const [userStatus, setUserStatus] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Initialize Formik
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      mobile: "",
+    },
+    validationSchema,
+    onSubmit: handleSubmit,
+  });
+
+  // Handle form submission
+  async function handleSubmit(values: any) {
+    setLoading(true);
+    try {
+      const formattedDate = date ? date.toISOString().split("T")[0] : null;
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("phone_number", values.mobile);
+      if (formattedDate) formData.append("date_of_birth", formattedDate);
+      formData.append("role", userRole);
+      formData.append("status", userStatus);
+      if (file) formData.append("image", file);
+
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/profile/update`,
+        formData,
+        {
+          headers: {
+            ...authHeader(),
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data.output === 1) {
+        if (user?.id) {
+          dispatch(userProfile({ _id: user.id }));
+        }
+        setState(false);
+        toast.success(response.data.message || "Profile updated successfully");
+      } else {
+        toast.error(response.data.message || "Failed to update profile");
+      }
+    } catch (error: any) {
+      console.error("Update error:", error);
+      toast.error(error.response?.data?.message || "Failed to update profile");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Load user data when component mounts
   useEffect(() => {
     if (userDetails) {
       setUserRole(userDetails.role);
       setUserStatus(userDetails.status);
-      if (userDetails.date_of_birth)
+      if (userDetails.date_of_birth) {
         setDate(new Date(userDetails.date_of_birth));
-      if (userDetails.profile_picture) setImage(`${process.env.NEXT_PUBLIC_IMAGE_URL}/${userDetails.profile_picture}`);
-      if (userDetails.name) formik.setFieldValue("name", userDetails.name);
-      if (userDetails.phone_number)
-        formik.setFieldValue("mobile", userDetails.phone_number);
+      }
+      if (userDetails.profile_picture) {
+        setImage(`${process.env.NEXT_PUBLIC_IMAGE_URL}/${userDetails.profile_picture}`);
+      }
+      // Set form values
+      formik.setFieldValue("name", userDetails.name || "");
+      formik.setFieldValue("mobile", userDetails.phone_number || "");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
@@ -59,76 +126,45 @@ const EditProfile = ({ setState }: ComponentProps) => {
     }
   };
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      mobile: "",
-      date_of_birth: "",
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().min(3).required("Name is required"),
-      mobile: Yup.string().length(10).required("Mobile is required"),
-    }),
-    onSubmit: async (values) => {
-      setLoading(true);
-      const formattedDate = date ? date.toISOString().split("T")[0] : null; 
-      const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("phone_number", values.mobile);
-      if (formattedDate) formData.append("date_of_birth", formattedDate?.toString());
-      formData.append("role", userRole);
-      formData.append("status", userStatus);
-      if (file) formData.append("image", file);
-
-      try {
-        const response = await axios.put(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/profile/update`,
-          formData,
-          {
-            headers: {
-              ...authHeader(),
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        const responseData = response.data;
-        if (responseData.output === 1) {
-          if (user?.id) {
-            dispatch(userProfile({ _id: user.id }));
-          }
-          setState(false);
-          toast.success(responseData.message);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    },
-  });
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="h-full w-full ">
-        <div className="h-32  p-2 w-full sm:w-5/6 mx-auto flex gap-3 items-center ">
-          <Image
-            src={image || userImage}
-            alt="user"
-            className="h-full w-28 rounded-full object-cover"
-            loading="lazy"
-            width={200}
-            height={200}
-          />
-          <div className="flex flex-col gap-2">
-            <label htmlFor="image" className=" text-sm font-semibold">
-              {" "}
-              Upload Image
-            </label>
-            <div className="flex gap-2 sm:gap-0 flex-col sm:flex-row">
-              <div className=" p-2 sm:p-3 text-gray-600 text-xs sm:text-sm bg-gray-100 w-60 rounded-md rounded-r-none">
-                {fileName && fileName.length > 20
-                  ? fileName.slice(0, 20).concat("...")
-                  : fileName ?? "No file chosen"}
+      <div className="w-full space-y-6">
+        {/* Profile Picture Upload - Premium */}
+        <div className="bg-gradient-to-br from-accent-gold/4 to-accent-gold/0 dark:from-accent-gold/8 dark:to-transparent rounded-2xl border border-accent-gold/15 dark:border-accent-gold/10 p-5 md:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+            {/* Avatar Preview */}
+            <div className="relative group flex-shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent-gold/20 to-primary-green/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <Image
+                src={image || userImage}
+                alt="user"
+                className="relative h-28 w-28 md:h-32 md:w-32 rounded-full object-cover shadow-lg border-4 border-accent-gold/30 group-hover:border-accent-gold/60 transition-all duration-300"
+                loading="lazy"
+                width={130}
+                height={130}
+              />
+            </div>
+
+            {/* Upload Section */}
+            <div className="flex-1 space-y-3">
+              <div>
+                <h3 className="text-lg font-playfair font-semibold text-primary-green dark:text-white mb-2">
+                  Profile Picture
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Update your profile photo (JPG, PNG up to 5MB)
+                </p>
               </div>
-              <div className="flex gap-5 items-center">
+
+              <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                <div className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 rounded-lg">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                    {fileName && fileName.length > 25
+                      ? fileName.slice(0, 25).concat("...")
+                      : fileName ?? "No file chosen"}
+                  </p>
+                </div>
+
                 <input
                   type="file"
                   id="imageUpload"
@@ -138,77 +174,127 @@ const EditProfile = ({ setState }: ComponentProps) => {
                 />
                 <label
                   htmlFor="imageUpload"
-                  className="px-4 py-2 sm:py-3 rounded-l-none bg-primaryblue text-white text-xs sm:text-sm rounded-md cursor-pointer m-0 hover:bg-blue-700 transition"
+                  className="px-6 py-2.5 bg-gradient-to-r from-accent-gold to-accent-gold/90 hover:from-accent-gold/90 hover:to-accent-gold text-white font-semibold rounded-lg cursor-pointer hover:shadow-lg hover:shadow-accent-gold/30 transition-all duration-300 text-sm whitespace-nowrap"
                 >
-                  Choose file
+                  Choose File
                 </label>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 px-0 sm:px-16 my-6 gap-5">
-          <div className="flex gap-1 flex-col ">
-            <label className=" text-sm font-semibold text-black dark:text-white ">
-              Name{" "}
+        {/* Form Fields Grid - Premium */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+          {/* Name */}
+          <div className="group">
+            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-widest block mb-2">
+              👤 Full Name
             </label>
             <Input
               type="text"
-              className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-              placeholder="Enter Name"
+              maxLength={50}
+              className={`w-full px-3.5 md:px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white bg-gradient-to-br from-slate-50 to-slate-50/50 dark:from-slate-700/50 dark:to-slate-700/30 border rounded-xl transition-all duration-300 placeholder:text-gray-500 dark:placeholder:text-gray-400 ${
+                formik.touched.name && formik.errors.name
+                  ? "border-red-400 dark:border-red-600 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/50"
+                  : "border-gray-200 dark:border-slate-600 group-hover:border-accent-gold/50 group-hover:shadow-sm group-hover:shadow-accent-gold/10 focus:border-accent-gold/50 focus:ring-2 focus:ring-accent-gold/20"
+              }`}
+              placeholder="Enter your name"
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               name="name"
             />
-            {formik.errors.name && formik.touched.name && (
-              <Error error={formik.errors.name} />
-            )}
-          </div>
-          <div className="flex gap-1 flex-col relative ">
-            <label className=" text-sm font-semibold text-black dark:text-white ">
-              Email{" "}
-            </label>
-            <Input
-              type="email"
-              className="text-sm text-gray-900 dark:text-foreground bg-gray-100 dark:bg-gray-100 rounded-md p-3 disabled:opacity-100"
-              value={userDetails?.email}
-              disabled
-            />
-            <div className="text-xs text-white dark:text-white absolute top-8 right-3 rounded-full p-1 bg-gray-400 dark:bg-darkGray">
-              <LockIcon className="h-4 w-4" />
+            <div className="flex justify-between items-start mt-2">
+              {formik.errors.name && formik.touched.name && (
+                <div className="flex-1 p-3 bg-red-50 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50 rounded-lg flex items-start gap-3">
+                  <span className="text-red-600 dark:text-red-400 text-lg flex-shrink-0">✕</span>
+                  <div>
+                    <p className="font-semibold text-sm text-red-800 dark:text-red-300">Error</p>
+                    <p className="text-xs text-red-700 dark:text-red-400 mt-0.5">{formik.errors.name}</p>
+                  </div>
+                </div>
+              )}
+              <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">
+                {formik.values.name.length}/50
+              </span>
             </div>
           </div>
-          <div className="flex gap-1 flex-col ">
-            <label className=" text-sm font-semibold text-black dark:text-white ">
-              Mobile{" "}
+
+          {/* Email - Read Only */}
+          <div className="group relative">
+            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-widest block mb-2">
+              📧 Email Address
+            </label>
+            <div className="relative">
+              <Input
+                type="email"
+                className="w-full px-3.5 md:px-4 py-2.5 text-sm font-medium text-gray-500 dark:text-gray-400 bg-gradient-to-br from-slate-50 to-slate-50/50 dark:from-slate-700/50 dark:to-slate-700/30 border border-gray-200 dark:border-slate-600 rounded-xl cursor-not-allowed opacity-70"
+                value={userDetails?.email || "Not provided"}
+                disabled
+              />
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                <LockIcon className="h-5 w-5" />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Email cannot be changed</p>
+          </div>
+
+          {/* Mobile */}
+          <div className="group">
+            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-widest block mb-2">
+              📱 Mobile Number
             </label>
             <Input
               type="tel"
-              className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3"
-              placeholder="Enter Number"
+              maxLength={10}
+              inputMode="numeric"
+              className={`w-full px-3.5 md:px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white bg-gradient-to-br from-slate-50 to-slate-50/50 dark:from-slate-700/50 dark:to-slate-700/30 border rounded-xl transition-all duration-300 placeholder:text-gray-500 dark:placeholder:text-gray-400 ${
+                formik.touched.mobile && formik.errors.mobile
+                  ? "border-red-400 dark:border-red-600 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/50"
+                  : "border-gray-200 dark:border-slate-600 group-hover:border-accent-gold/50 group-hover:shadow-sm group-hover:shadow-accent-gold/10 focus:border-accent-gold/50 focus:ring-2 focus:ring-accent-gold/20"
+              }`}
+              placeholder="10-digit number"
               value={formik.values.mobile}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
+                formik.setFieldValue("mobile", value);
+              }}
               onBlur={formik.handleBlur}
               name="mobile"
             />
-            {formik.errors.mobile && formik.touched.mobile && (
-              <Error error={formik.errors.mobile} />
-            )}
+            <div className="flex justify-between items-start mt-2">
+              {formik.errors.mobile && formik.touched.mobile && (
+                <div className="flex-1 p-3 bg-red-50 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50 rounded-lg flex items-start gap-3">
+                  <span className="text-red-600 dark:text-red-400 text-lg flex-shrink-0">✕</span>
+                  <div>
+                    <p className="font-semibold text-sm text-red-800 dark:text-red-300">Error</p>
+                    <p className="text-xs text-red-700 dark:text-red-400 mt-0.5">{formik.errors.mobile}</p>
+                  </div>
+                </div>
+              )}
+              <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">
+                {formik.values.mobile.length}/10
+              </span>
+            </div>
           </div>
-          <div className="flex gap-1 flex-col ">
-            <label className=" text-sm font-semibold text-black dark:text-white ">
-              Date of birth{" "}
+
+          {/* Date of Birth */}
+          <div className="group">
+            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-widest block mb-2">
+              🎂 Date of Birth
             </label>
-            {/* <CalendarComponent date={date} setDate={setDate} /> */}
             <CalendarComponent date={date} setDate={setDate} />
           </div>
+
+          {/* Role */}
           <SingleSelect
             value={userRole}
             setValue={setUserRole}
             option={UserRoleIF}
             label="Role"
           />
+
+          {/* Status */}
           <SingleSelect
             value={userStatus}
             setValue={setUserStatus}
@@ -217,20 +303,29 @@ const EditProfile = ({ setState }: ComponentProps) => {
           />
         </div>
 
-        <div className=" pt-6 flex gap-5 justify-center items-center w-full">
-          <Button
+        {/* Action Buttons - Premium */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-6 border-t border-gray-200 dark:border-slate-700">
+          <button
+            type="button"
             onClick={() => setState(false)}
-            className=" border border-primaryblue min-w-40 text-sm rounded-md text-primaryblue font-semibold dark:border-white dark:text-white"
+            className="px-8 py-3 border-2 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:border-accent-gold/50 transition-all duration-300 text-base min-w-[160px]"
           >
             Cancel
-          </Button>
-          <Button
-            type={"submit"}
-            className=" bg-primaryblue text-sm rounded-md min-w-40 text-white font-semibold"
+          </button>
+          <button
+            type="submit"
             disabled={loading}
+            className="px-8 py-3 bg-gradient-to-r from-accent-gold to-accent-gold/90 hover:from-accent-gold/90 hover:to-accent-gold text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:shadow-accent-gold/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-base min-w-[160px] flex items-center justify-center gap-2"
           >
-            {loading ? <ButtonLoading /> : "Save"}
-          </Button>
+            {loading ? (
+              <>
+                <ButtonLoading />
+                <span>Saving...</span>
+              </>
+            ) : (
+              "Save Changes"
+            )}
+          </button>
         </div>
       </div>
     </form>
