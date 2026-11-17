@@ -21,10 +21,13 @@ const ModalLayout = ({ children, isOpen, onClose }: ModalLayoutProps) => {
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
       >
         <button
-          className="absolute top-2 right-2 rounded-full size-6 border-[1.5px] border-black dark:border-white dark:text-white max-sm:dark:text-black text-base p-0 m-0 text-gray-500 hover:text-gray-800 dark:hover:text-white max-sm:bg-white"
+          className="absolute top-3 right-3 rounded-full size-10 flex items-center justify-center border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 hover:text-primary-green dark:hover:text-accent-gold transition-all duration-300 z-50"
           onClick={() => onClose(false)}
+          aria-label="Close modal"
         >
-          &times;
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
         {children}
       </div>

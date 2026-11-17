@@ -212,7 +212,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ room }) => {
                 isOpen={isRegistrationModelOpen && !user?.id}
                 onClose={setIsRegistrationModelOpen}
             >
-                <LoginRegistrationModel />
+                <LoginRegistrationModel onClose={() => setIsRegistrationModelOpen(false)} />
             </ModalLayout>
         </>
     );

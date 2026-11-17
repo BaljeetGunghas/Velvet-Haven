@@ -105,7 +105,7 @@ const ReviewCard: FC<ReviewCardProps> = ({ review }) => {
 
             {/* Login Modal */}
             <ModalLayout isOpen={isRegistrationModelOpen} onClose={setIsRegistrationModelOpen}>
-                <LoginRegistrationModel />
+                <LoginRegistrationModel onClose={() => setIsRegistrationModelOpen(false)} />
             </ModalLayout>
         </>
     );
