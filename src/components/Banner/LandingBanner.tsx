@@ -8,7 +8,22 @@ import heroImage from "@/asset/hero-image.png";
 // Local luxury hotel background image
 const HERO_IMAGE_URL = heroImage.src;
 
-const LandingBanner = () => {
+// List of supported cities for search
+const SUPPORTED_CITIES = ["delhi", "mumbai", "bangalore", "goa", "jaipur", "kolkata", "hyderabad", "pune", "chandigarh", "udaipur"];
+
+// Check if city is supported, otherwise return fallback
+const normalizeCityName = (city: string | null): string => {
+  if (!city) return "delhi";
+  const normalizedCity = city.toLowerCase().trim();
+  return SUPPORTED_CITIES.includes(normalizedCity) ? normalizedCity : "delhi";
+};
+
+interface LandingBannerProps {
+  userCity?: string | null;
+}
+
+const LandingBanner = ({ userCity }: LandingBannerProps) => {
+  const detectedCity = normalizeCityName(userCity);
   return (
     <section className="relative isolate mt-16 flex w-full min-h-[calc(100svh-4rem)] flex-col overflow-hidden pb-16 sm:pb-20 lg:pb-0">
       {/* Background Image with Premium Gradient Overlay */}
@@ -80,7 +95,7 @@ const LandingBanner = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           >
-            <Link href="/SearchResult?city=delhi&check_in_date=2025-03-19&check_out_date=2025-03-20&adults=1&page=1">
+            <Link href={`/SearchResult?city=${detectedCity}&check_in_date=2025-03-19&check_out_date=2025-03-20&adults=1&page=1`}>
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
