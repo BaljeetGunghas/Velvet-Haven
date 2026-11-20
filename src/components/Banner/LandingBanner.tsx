@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import LandingSearchForm from "../Form/LandingSearchForm";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -79,18 +80,19 @@ const LandingBanner = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           >
-            <motion.a
-              href="#explore"
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 rounded-full border-2 border-accent-gold bg-transparent px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:bg-accent-gold/10 hover:shadow-xl hover:shadow-accent-gold/40 group sm:px-8 sm:py-3.5 sm:text-base"
-            >
-              <span>Explore Our Stays</span>
-              <ArrowRight
-                size={20}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </motion.a>
+            <Link href="/SearchResult?city=delhi&check_in_date=2025-03-19&check_out_date=2025-03-20&adults=1&page=1">
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 rounded-full border-2 border-accent-gold bg-transparent px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:bg-accent-gold/10 hover:shadow-xl hover:shadow-accent-gold/40 group sm:px-8 sm:py-3.5 sm:text-base"
+              >
+                <span>Explore Our Stays</span>
+                <ArrowRight
+                  size={20}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </motion.button>
+            </Link>
           </motion.div>
         </motion.div>
       </div>
