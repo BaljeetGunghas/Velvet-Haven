@@ -17,8 +17,9 @@ import { LayoutDashboard, Hotel, DoorOpen, Calendar, Settings, ShoppingBag, Hear
 export default function AdminLayout() {
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const { userRole } = useSelector((state: RootState) => state.auth);
+  const { userRole, user } = useSelector((state: RootState) => state.auth);
   const isHost = userRole?.toLowerCase() === "host" || userRole?.toLowerCase() === "admin";
+  const userName = user?.name || "User";
 
   // Host navigation items
   const hostNavItems = [
@@ -64,9 +65,9 @@ export default function AdminLayout() {
           <div className="w-64 bg-gradient-to-b from-primary-green via-primary-green/95 to-primary-green/90 text-white h-screen overflow-y-auto shadow-xl">
             <div className="p-6 sticky top-0 bg-primary-green/95 border-b border-accent-gold/20">
               <h2 className="text-2xl font-playfair font-bold text-accent-gold">
-                {isHost ? "🏨 Host" : "👤 Guest"}
+                {isHost ? "🏨 Host" : "👤"} {userName}
               </h2>
-              <p className="text-xs text-white/70 mt-1 font-light">
+              <p className="text-xs text-white/70 mt-1 font-light truncate">
                 {isHost ? "Management Panel" : "My Account"}
               </p>
             </div>
