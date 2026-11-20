@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PiGreaterThanDuotone, PiLessThanDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { LayoutDashboard, Hotel, DoorOpen, Calendar, Settings, ShoppingBag, Heart, LogOut } from "lucide-react";
 
 // export default function AdminLayout({
 //   children,
@@ -14,14 +17,28 @@ import { motion } from "framer-motion";
 export default function AdminLayout() {
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const { userRole } = useSelector((state: RootState) => state.auth);
+  const isHost = userRole?.toLowerCase() === "host" || userRole?.toLowerCase() === "admin";
 
-  const navItems = [
-    { name: "Dashboard", path: "/Admin/dashboard" },
-    { name: "Hotel", path: "/Admin/hotel" },
-    { name: "Room", path: "/Admin/room" },
-    { name: "Booking", path: "/Admin/booking" },
-    { name: "More", path: "/Admin/more" },
+  // Host navigation items
+  const hostNavItems = [
+    { name: "Dashboard", path: "/Admin/dashboard", icon: LayoutDashboard },
+    { name: "Hotels", path: "/Admin/hotel", icon: Hotel },
+    { name: "Rooms", path: "/Admin/room", icon: DoorOpen },
+    { name: "Bookings", path: "/Admin/booking", icon: Calendar },
+    { name: "Settings", path: "/Admin/settings", icon: Settings },
   ];
+
+  // Customer navigation items
+  const customerNavItems = [
+    { name: "Dashboard", path: "/Admin/dashboard", icon: LayoutDashboard },
+    { name: "My Bookings", path: "/Admin/bookings", icon: Calendar },
+    { name: "Wishlist", path: "/Admin/wishlist", icon: Heart },
+    { name: "Orders", path: "/Admin/orders", icon: ShoppingBag },
+    { name: "Settings", path: "/Admin/settings", icon: Settings },
+  ];
+
+  const navItems = isHost ? hostNavItems : customerNavItems;
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,27 +58,52 @@ export default function AdminLayout() {
         initial={{ x: -250 }}
         animate={{ x: isSidebarOpen ? 0 : -250 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="fixed h-screen z-20"
       >
         {isSidebarOpen && (
-          <div
-            className="w-60  bg-gray-800 text-white p-4 pr-0 duration-300 translate-x-0 relative 
-          ransition-all ease-in-out shadow-lg h-full"
-          >
-            <div className="fixed w-4/5  ">
-              <h2 className="text-xl font-bold mb-4">Host Panel</h2>
-              <ul>
-                {navItems.map(({ name, path }) => (
-                  <li key={path} className="mb-2">
+          <div className="w-64 bg-gradient-to-b from-primary-green via-primary-green/95 to-primary-green/90 text-white h-screen overflow-y-auto shadow-xl">
+            <div className="p-6 sticky top-0 bg-primary-green/95 border-b border-accent-gold/20">
+              <h2 className="text-2xl font-playfair font-bold text-accent-gold">
+                {isHost ? "🏨 Host" : "👤 Guest"}
+              </h2>
+              <p className="text-xs text-white/70 mt-1 font-light">
+                {isHost ? "Management Panel" : "My Account"}
+              </p>
+            </div>
+
+            <ul className="p-4 space-y-2">
+              {navItems.map(({ name, path, icon: Icon }) => {
+                const isActive = pathname === path;
+                return (
+                  <li key={path}>
                     <Link
                       href={path}
-                      className={`block p-2 rounded ${pathname === path ? "bg-gray-700" : "hover:bg-gray-600"
-                        }`}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 font-medium ${
+                        isActive
+                          ? "bg-accent-gold text-primary-green shadow-lg shadow-accent-gold/30"
+                          : "text-white hover:bg-white/10 hover:translate-x-1"
+                      }`}
                     >
-                      {name}
+                      <Icon size={20} className="flex-shrink-0" />
+                      <span className="text-sm">{name}</span>
                     </Link>
                   </li>
-                ))}
-              </ul>
+                );
+              })}
+            </ul>
+
+            {/* Divider */}
+            <div className="mx-4 my-4 border-t border-white/10"></div>
+
+            {/* Logout */}
+            <div className="p-4">
+              <Link
+                href="/logout"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-white hover:bg-red-500/20 transition-all duration-300 font-medium"
+              >
+                <LogOut size={20} className="flex-shrink-0" />
+                <span className="text-sm">Logout</span>
+              </Link>
             </div>
           </div>
         )}
@@ -80,10 +122,9 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <div
-        className={`flex-1 transition-all duration-300 ml-${isSidebarOpen ? "60" : "0"
-          }`}
+        className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}
       >
-        {/* <AdminDashboard>{children}</AdminDashboard> */}
+        {/* Content rendered by child pages */}
       </div>
     </div>
   );
