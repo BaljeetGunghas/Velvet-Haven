@@ -8,8 +8,67 @@ import heroImage from "@/asset/hero-image.png";
 // Local luxury hotel background image
 const HERO_IMAGE_URL = heroImage.src;
 
-// List of supported cities for search
-const SUPPORTED_CITIES = ["delhi", "mumbai", "bangalore", "goa", "jaipur", "kolkata", "hyderabad", "pune", "chandigarh", "udaipur"];
+// List of all supported cities - must match CityOptions exactly
+const SUPPORTED_CITIES = [
+  // Andhra Pradesh
+  "visakhapatnam", "vijayawada", "guntur",
+  // Arunachal Pradesh
+  "itanagar", "naharlagun",
+  // Assam
+  "guwahati", "dibrugarh", "silchar",
+  // Bihar
+  "patna", "gaya", "muzaffarpur",
+  // Chhattisgarh
+  "raipur", "bhilai", "bilaspur",
+  // Goa
+  "panaji", "margao",
+  // Gujarat
+  "ahmedabad", "surat", "vadodara",
+  // Haryana
+  "gurugram", "faridabad", "panipat",
+  // Himachal Pradesh
+  "shimla", "dharamshala", "solan",
+  // Jharkhand
+  "ranchi", "jamshedpur", "dhanbad",
+  // Karnataka
+  "bangalore", "mysore", "hubli",
+  // Kerala
+  "thiruvananthapuram", "kochi", "kozhikode",
+  // Madhya Pradesh
+  "indore", "bhopal", "jabalpur",
+  // Maharashtra
+  "mumbai", "pune", "nagpur",
+  // Manipur
+  "imphal", "thoubal",
+  // Meghalaya
+  "shillong", "tura",
+  // Mizoram
+  "aizawl", "lunglei",
+  // Nagaland
+  "kohima", "dimapur",
+  // Odisha
+  "bhubaneswar", "cuttack", "rourkela",
+  // Punjab
+  "ludhiana", "amritsar", "jalandhar",
+  // Rajasthan
+  "jaipur", "jodhpur", "udaipur",
+  // Sikkim
+  "gangtok", "namchi",
+  // Tamil Nadu
+  "chennai", "coimbatore", "madurai",
+  // Telangana
+  "hyderabad", "warangal", "karimnagar",
+  // Tripura
+  "agartala",
+  // Uttar Pradesh
+  "lucknow", "kanpur", "varanasi",
+  // Uttarakhand
+  "dehradun", "haridwar", "haldwani",
+  // West Bengal
+  "kolkata", "howrah", "durgapur",
+  // Union Territory
+  "chandigarh", "delhi"
+];
 
 // Check if city is supported, otherwise return fallback
 const normalizeCityName = (city: string | null): string => {
