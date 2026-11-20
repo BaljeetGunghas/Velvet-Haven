@@ -16,6 +16,7 @@ const Header = () => {
   const [isRegistrationModelOpen, setIsRegistrationModelOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const pathname = usePathname();
@@ -27,6 +28,11 @@ const Header = () => {
     { label: "Location", href: "/Location", icon: MapPin },
     { label: "Dining", href: "/Dining", icon: UtensilsCrossed },
   ];
+
+  // Mark component as hydrated
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -119,7 +125,8 @@ const Header = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-3 lg:gap-4">
-            {!isAuthenticated ? (
+            {/* Sign In Button - Only show when not authenticated and hydrated */}
+            {isHydrated && !isAuthenticated && (
               <motion.button
                 onClick={() => setIsRegistrationModelOpen(true)}
                 whileHover={{ scale: 1.08, boxShadow: "0 10px 30px rgba(197, 164, 109, 0.4)" }}
@@ -133,7 +140,9 @@ const Header = () => {
                 <LogIn size={18} />
                 <span className="hidden sm:inline">Sign In</span>
               </motion.button>
-            ) : (
+            )}
+            {/* Avatar Dropdown - Only show when authenticated and hydrated */}
+            {isHydrated && isAuthenticated && (
               <div className="hidden sm:block">
                 <AvatarDropdown />
               </div>
