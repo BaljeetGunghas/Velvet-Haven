@@ -38,23 +38,11 @@ export default function NotFoundPage() {
           </div>
         </motion.div>
 
-        {/* Error Code */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-6"
-        >
-          <h2 className="text-7xl md:text-8xl font-playfair font-bold text-accent-gold drop-shadow-lg">
-            404
-          </h2>
-        </motion.div>
-
         {/* Heading */}
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           className="text-4xl md:text-5xl font-playfair font-bold text-primary-green dark:text-white mb-4"
         >
           Page Not Found
