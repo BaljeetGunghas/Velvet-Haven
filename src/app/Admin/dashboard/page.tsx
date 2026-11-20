@@ -31,20 +31,25 @@ export default function HostDashboard() {
   const isHost = userRole?.toLowerCase() === "host" || userRole?.toLowerCase() === "admin";
 
   const getDashBoardResponse = async () => {
-    setIsDashBoardLoading(true);
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/host/host-dashboard`,
-      { hostId: user?.id },
-      {
-        headers: authHeader(),
-      }
-    );
+    try {
+      setIsDashBoardLoading(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/host/host-dashboard`,
+        { hostId: user?.id },
+        {
+          headers: authHeader(),
+        }
+      );
 
-    const responseData = response.data;
-    if (responseData.output === 1) {
-      setDashBoardData(responseData);
-      setIsDashBoardLoading(false);
-    } else {
+      const responseData = response.data;
+      if (responseData.output === 1) {
+        setDashBoardData(responseData);
+      } else {
+        console.warn("Dashboard API returned non-success output:", responseData);
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
       setIsDashBoardLoading(false);
     }
   };
@@ -76,12 +81,44 @@ export default function HostDashboard() {
     },
   ]);
 
+  if (isDashBoardLoading) {
+    return (
+      <div className="container mx-auto p-6 px-0 md:px-6">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Loading...</h1>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg h-24 animate-pulse"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6 px-0 md:px-6">
-      {/* Header */}
-      <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6 text-center sm:text-left">
-        {isHost ? "🏨 Host Dashboard" : "👤 Customer Dashboard"}
-      </h1>
+      {/* Header with Refresh Button */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white text-center sm:text-left flex-1">
+          {isHost ? "🏨 Host Dashboard" : "👤 Customer Dashboard"}
+        </h1>
+        {isHost && (
+          <button
+            onClick={getDashBoardResponse}
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition-all text-sm"
+          >
+            🔄 Refresh
+          </button>
+        )}
+      </div>
+
+      {/* Debug Info */}
+      {!dashBoardData && isHost && (
+        <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">
+            ℹ️ Dashboard data is loading or not available. Make sure you are logged in as a host and have created hotels.
+          </p>
+        </div>
+      )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 w-full">
