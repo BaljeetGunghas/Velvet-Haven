@@ -9,7 +9,7 @@ const HERO_IMAGE_URL = heroImage.src;
 
 const LandingBanner = () => {
   return (
-    <section className="relative isolate mt-16 flex min-h-[calc(100svh-4rem)] w-full flex-col overflow-hidden">
+    <section className="relative isolate mt-16 w-full flex-col lg:flex lg:min-h-[calc(100svh-4rem)] lg:overflow-hidden pb-20 sm:pb-24 lg:pb-0">
       {/* Background Image with Premium Gradient Overlay */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
@@ -28,7 +28,7 @@ const LandingBanner = () => {
       <div className="absolute inset-0 z-0 hidden bg-gradient-to-br from-[#103F38]/60 via-[#0a3d3a]/40 to-[#051f1e]/50 dark:block" />
 
       {/* Hero Content Container */}
-      <div className="relative z-10 flex flex-1 flex-col items-start justify-center px-4 py-12 sm:px-8 sm:py-16 lg:px-16 lg:py-20 xl:px-24">
+      <div className="relative z-10 flex flex-1 flex-col items-start justify-center px-4 py-8 sm:px-8 sm:py-12 lg:px-16 lg:py-20 xl:px-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -100,7 +100,7 @@ const LandingBanner = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-        className="relative z-20 mx-auto mb-4 w-full flex-shrink-0 px-3 sm:px-6 lg:absolute lg:bottom-6 lg:left-0 lg:right-0 lg:mx-auto lg:mb-0 lg:w-full lg:max-w-6xl lg:px-8"
+        className="relative z-20 mx-auto w-full px-3 sm:px-6 flex-shrink-0 lg:absolute lg:bottom-6 lg:left-0 lg:right-0 lg:mx-auto lg:w-full lg:max-w-6xl lg:px-8"
       >
         {/* Search Card */}
         <div className="relative mx-auto w-full max-w-6xl overflow-visible rounded-xl sm:rounded-2xl border border-gray-100 bg-white p-3 sm:p-5 md:p-6 lg:p-7 shadow-2xl shadow-black/15 transition-all duration-500 hover:shadow-black/20 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-primary-green/50 dark:hover:shadow-primary-green/60">
