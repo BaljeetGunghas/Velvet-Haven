@@ -70,7 +70,7 @@ const LandingSearchForm = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col gap-2 sm:gap-2.5 md:grid md:gap-3 items-stretch md:items-center" style={{ gridTemplateColumns: "1.1fr 1.4fr 1.25fr 0.8fr" }}>
+      <div className="w-full flex flex-col gap-3 sm:gap-3 md:grid md:gap-3 items-stretch md:items-center" style={{ gridTemplateColumns: "1fr 1.2fr 1.1fr 0.75fr" }}>
         {/* City Selection */}
         <div className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]">
           <Image

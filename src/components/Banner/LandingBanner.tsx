@@ -12,7 +12,7 @@ const LandingBanner = () => {
     <section className="relative isolate mt-16 flex min-h-[calc(100svh-4rem)] w-full flex-col overflow-hidden">
       {/* Background Image with Premium Gradient Overlay */}
       <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat dark:opacity-90"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `
             linear-gradient(
@@ -24,8 +24,8 @@ const LandingBanner = () => {
           `,
         }}
       />
-      {/* Dark Mode Background Overlay */}
-      <div className="absolute inset-0 z-0 hidden bg-gradient-to-br from-[#103F38] via-[#0a3d3a] to-[#051f1e] dark:block" />
+      {/* Dark Mode Enhanced Overlay - More Transparent to Show Image */}
+      <div className="absolute inset-0 z-0 hidden bg-gradient-to-br from-[#103F38]/60 via-[#0a3d3a]/40 to-[#051f1e]/50 dark:block" />
 
       {/* Hero Content Container */}
       <div className="relative z-10 flex flex-1 flex-col items-start justify-center px-4 py-12 sm:px-8 sm:py-16 lg:px-16 lg:py-20 xl:px-24">
