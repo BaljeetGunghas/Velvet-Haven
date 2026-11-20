@@ -9,7 +9,7 @@ const HERO_IMAGE_URL = heroImage.src;
 
 const LandingBanner = () => {
   return (
-    <section className="relative isolate mt-16 w-full flex-col lg:flex lg:min-h-[calc(100svh-4rem)] lg:overflow-hidden pb-20 sm:pb-24 lg:pb-0">
+    <section className="relative isolate mt-16 w-full flex-col lg:flex lg:min-h-[calc(100svh-4rem)] lg:overflow-hidden pb-16 sm:pb-20 lg:pb-0">
       {/* Background Image with Premium Gradient Overlay */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
