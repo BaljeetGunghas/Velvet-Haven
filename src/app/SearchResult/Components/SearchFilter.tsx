@@ -94,11 +94,11 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
 
     return (
         <>
-            <div className="flex flex-col justify-center space-y-5">
+            <div className="flex flex-col justify-center space-y-6">
                 {/* City Selection */}
-                <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-600 dark:text-gray-400">Destination</label>
-                    <div className="bg-gray-50 dark:bg-slate-700/50 flex items-center rounded-lg border border-gray-200 dark:border-slate-700 focus-within:border-accent-gold/50 focus-within:bg-white dark:focus-within:bg-slate-800 transition-colors duration-300 min-w-[200px] max-sm:w-full">
+                <div className="space-y-2.5">
+                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-gray-300">Destination</label>
+                    <div className="bg-gray-50/80 dark:bg-slate-700/40 flex items-center rounded-xl border border-gray-200 dark:border-slate-700/60 focus-within:border-accent-gold/70 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:shadow-md dark:focus-within:shadow-accent-gold/5 transition-all duration-300 min-w-[200px] max-sm:w-full">
                         <Image src={BedIcon} alt="bed icon" className="ml-3 w-5 h-5 dark:filter dark:invert dark:brightness-0 dark:p-0.5" />
                         <div className="relative w-full">
                             <Select value={selectedCity} onValueChange={setSelectedCity}>
@@ -129,18 +129,18 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
                 </div>
 
                 {/* Date Picker */}
-                <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-600 dark:text-gray-400">Check-in & Check-out</label>
-                    <div className="bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-700 focus-within:border-accent-gold/50 focus-within:bg-white dark:focus-within:bg-slate-800 transition-colors duration-300 flex items-center rounded-lg overflow-hidden">
+                <div className="space-y-2.5">
+                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-gray-300">Check-in & Check-out</label>
+                    <div className="bg-gray-50/80 dark:bg-slate-700/40 border border-gray-200 dark:border-slate-700/60 focus-within:border-accent-gold/70 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:shadow-md dark:focus-within:shadow-accent-gold/5 transition-all duration-300 flex items-center rounded-xl overflow-hidden">
                         <Image src={calendar} alt="calendar icon" className="ml-3 w-5 h-5 dark:filter dark:invert dark:brightness-0 dark:p-0.5" />
                         <DatePickerWithRange dateRange={date} setDate={setDate} />
                     </div>
                 </div>
 
                 {/* Person & Room Selector */}
-                <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-600 dark:text-gray-400">Guests & Rooms</label>
-                    <div onClick={() => setIsSelectPersonAndRoomModelOpen(true)} className="relative bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-700 hover:border-accent-gold/50 dark:hover:border-accent-gold/40 hover:bg-white dark:hover:bg-slate-800 transition-colors duration-300 flex items-center gap-3 px-4 py-2.5 rounded-lg w-full cursor-pointer">
+                <div className="space-y-2.5">
+                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-gray-300">Guests & Rooms</label>
+                    <div onClick={() => setIsSelectPersonAndRoomModelOpen(true)} className="relative bg-gray-50/80 dark:bg-slate-700/40 border border-gray-200 dark:border-slate-700/60 hover:border-accent-gold/70 dark:hover:border-accent-gold/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md dark:hover:shadow-accent-gold/5 transition-all duration-300 flex items-center gap-3 px-4 py-3 rounded-xl w-full cursor-pointer">
                         <Image src={iconuser} alt="user icon" className="w-5 h-5 dark:filter dark:invert dark:brightness-0 dark:p-0.5" />
                         <div className="flex-1">
                             <span className="font-medium text-sm text-gray-900 dark:text-white">{personDetails.adults} adult{personDetails.adults !== 1 ? 's' : ''}</span>
@@ -152,13 +152,13 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
                 </div>
 
                 {/* Price Range Slider */}
-                <div className="space-y-2">
-                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-600 dark:text-gray-400">Price Range</label>
+                <div className="space-y-2.5 pt-2">
+                    <label className="text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-gray-300">Price Range</label>
                     <CustomSlider min={1} max={20000} value={[+filters.minPrice, +filters.maxPrice]} onChange={handlePriceChange} />
                 </div>
 
-                {/* Apply Filter Button */}
-                <Button onClick={handleApplyFilter} className="w-full bg-accent-gold text-white hover:bg-accent-gold/90 px-4 py-3 rounded-lg font-semibold transition-all hover:shadow-lg hover:shadow-accent-gold/30 mt-6">
+                {/* Apply Filter Button - Premium */}
+                <Button onClick={handleApplyFilter} className="w-full bg-gradient-to-r from-accent-gold to-accent-gold/90 hover:from-accent-gold/95 hover:to-accent-gold/85 text-white px-4 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-accent-gold/30 mt-8 text-base">
                     Apply Filters
                 </Button>
             </div>

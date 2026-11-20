@@ -177,55 +177,67 @@ const SearchResultContent = () => {
     <main className="min-h-screen w-full bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-900 dark:via-slate-800/50 dark:to-slate-900 pt-20 sm:pt-24 lg:pt-28">
       {/* Main Content Section - Full Width Premium Layout */}
       <section className="relative w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 sm:py-12 lg:py-16">
-        <div className="w-full max-w-6xl mx-auto">
-          {/* Page Heading - Top */}
+        <div className="w-full max-w-7xl mx-auto">
+          {/* Page Heading - Elegant Hero Section */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-10 lg:mb-12"
+            className="mb-12 lg:mb-14 pb-6 border-b border-gray-200/50 dark:border-slate-700/50"
           >
-            <h1 className="text-5xl md:text-6xl font-playfair font-bold text-primary-green dark:text-white mb-2">
+            <h1 className="text-6xl md:text-7xl font-playfair font-bold text-primary-green dark:text-white mb-3 tracking-tight">
               Luxury <span className="text-accent-gold">Stays</span>
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg font-light">
-              Discover our premium collection of hotels and resorts
+            <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg font-light max-w-2xl">
+              Discover our premium collection of handpicked hotels and resorts, curated for your perfect escape
             </p>
           </motion.div>
 
           {/* Filter Toggle Button (Mobile & Tablet) */}
-          <div className="flex justify-between items-center mb-8 lg:hidden">
+          <div className="flex justify-between items-center mb-8 lg:hidden gap-3">
             {isFilterOpen && (
-              <div className="flex items-center gap-2 text-accent-gold font-semibold">
-                <FiFilter size={18} />
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-2 text-accent-gold font-semibold text-sm"
+              >
+                <FiFilter size={16} />
                 Filters Active
-              </div>
+              </motion.div>
             )}
             <Button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border border-accent-gold/50 bg-transparent hover:bg-accent-gold/5 text-accent-gold transition-all ${isFilterOpen ? 'gap-2' : 'gap-3'}`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 border-accent-gold/60 bg-white dark:bg-slate-800 hover:bg-accent-gold/5 dark:hover:bg-slate-700 text-accent-gold font-semibold text-sm transition-all duration-300 ${isFilterOpen ? 'gap-2' : 'gap-3'}`}
             >
-              {isFilterOpen ? <ArrowLeft size={18} /> : <>Filter <ArrowRight size={18} /></>}
+              {isFilterOpen ? <ArrowLeft size={16} /> : <>Filter <ArrowRight size={16} /></>}
             </Button>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
-            {/* Filter Section - Sticky Sidebar (Desktop) */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            {/* Filter Section - Premium Sidebar (Desktop) */}
             <motion.aside
               initial={{ x: -550, opacity: 0 }}
               animate={{ x: isFilterOpen ? 0 : -550, opacity: isFilterOpen ? 1 : 0 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className={`${isFilterOpen ? 'block' : 'hidden lg:block'} w-full md:w-96 lg:w-80 flex-shrink-0`}
             >
-              <div className="h-fit sticky top-32 overflow-y-auto pr-4 md:pr-6">
-                <div className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-200 dark:border-slate-700 shadow-lg p-7 hover:shadow-2xl hover:shadow-accent-gold/20 transition-all duration-300">
-                  <h2 className="text-lg font-semibold text-primary-green dark:text-white mb-6 font-playfair">Refine Your Search</h2>
+              <div className="h-fit sticky top-36 overflow-y-auto pr-4 md:pr-6 scrollbar-thin scrollbar-thumb-accent-gold/30 scrollbar-track-gray-100 dark:scrollbar-track-slate-800">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-slate-700 shadow-md hover:shadow-xl hover:shadow-accent-gold/10 transition-all duration-300 p-8"
+                >
+                  <div className="flex items-center gap-2 mb-8">
+                    <FiFilter className="text-accent-gold" size={18} />
+                    <h2 className="text-xl font-playfair font-semibold text-primary-green dark:text-white">Refine Your Search</h2>
+                  </div>
                   <SearchFilter filters={filters} setfilter={setFilters} fetchRooms={(val) => fetchRooms(val)} />
-                </div>
+                </motion.div>
               </div>
             </motion.aside>
 
-            {/* Room Listings - Responsive Grid */}
+            {/* Room Listings - Premium Grid */}
             <div className="w-full flex-1">
               {loading && rooms.length === 0 && <LoadingComponent />}
               {error && <ComponentError error={error} reload={() => { setPage(1); fetchRooms(true); }} />}
@@ -237,7 +249,7 @@ const SearchResultContent = () => {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-8 lg:gap-9"
                   key={`grid-${rooms.length}`}
                 >
                   {rooms.map((room: SearchRoomIF, index: number) => (
@@ -252,17 +264,22 @@ const SearchResultContent = () => {
                 </motion.div>
               )}
 
-              {/* Load More Button */}
+              {/* Load More Button - Premium Style */}
               {page <= totalPages && rooms.length > 0 && !error && (
-                <div className="text-center mt-12 lg:mt-16">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="text-center mt-14 lg:mt-16"
+                >
                   <Button
                     onClick={loadMore}
                     disabled={loading}
-                    className="bg-accent-gold text-white hover:bg-accent-gold/90 px-8 lg:px-10 py-3 lg:py-3 rounded-lg font-semibold transition-all hover:shadow-lg hover:shadow-accent-gold/30"
+                    className="bg-gradient-to-r from-accent-gold to-accent-gold/90 hover:from-accent-gold/95 hover:to-accent-gold/85 text-white px-10 lg:px-12 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-accent-gold/30 text-base"
                   >
                     {loading ? <ButtonLoading /> : "Load More Properties"}
                   </Button>
-                </div>
+                </motion.div>
               )}
             </div>
           </div>
