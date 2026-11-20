@@ -27,13 +27,13 @@ const ComponentError: FC<ComponentProps> = ({ error, reload }) => {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 text-center max-w-md">
+            <div className="relative z-10 flex flex-col items-center justify-center">
                 {/* Error Image */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
-                    className="flex justify-center mb-8"
+                    className="flex justify-center mb-12"
                 >
                     <div className="relative">
                         <div className="absolute inset-0 bg-gradient-to-br from-accent-gold/20 to-primary-green/20 rounded-full blur-2xl w-80 h-80 mx-auto"></div>
@@ -52,7 +52,7 @@ const ComponentError: FC<ComponentProps> = ({ error, reload }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="text-4xl md:text-5xl font-playfair font-bold text-primary-green dark:text-white mb-3"
+                    className="text-3xl md:text-4xl font-playfair font-bold text-primary-green dark:text-white mb-4 text-center"
                 >
                     Something Went Wrong
                 </motion.h2>
@@ -62,7 +62,7 @@ const ComponentError: FC<ComponentProps> = ({ error, reload }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
-                    className="text-base md:text-lg text-gray-600 dark:text-gray-400 font-light mb-8 leading-relaxed"
+                    className="text-sm md:text-base text-gray-600 dark:text-gray-400 font-light mb-8 text-center max-w-lg px-4"
                 >
                     {error}
                 </motion.p>
@@ -75,7 +75,7 @@ const ComponentError: FC<ComponentProps> = ({ error, reload }) => {
                 >
                     <Button
                         onClick={reload}
-                        className="bg-gradient-to-r from-accent-gold to-accent-gold/90 hover:from-accent-gold/95 hover:to-accent-gold/85 text-white px-8 md:px-10 py-3.5 rounded-xl font-semibold text-base md:text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-accent-gold/30 hover:scale-105 transform"
+                        className="bg-gradient-to-r from-accent-gold to-accent-gold/90 hover:from-accent-gold/95 hover:to-accent-gold/85 text-white px-8 md:px-10 py-3 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-accent-gold/30 hover:scale-105 transform"
                     >
                         Try Again
                     </Button>
@@ -86,7 +86,7 @@ const ComponentError: FC<ComponentProps> = ({ error, reload }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
-                    className="text-xs md:text-sm text-gray-500 dark:text-gray-500 mt-6 font-light"
+                    className="text-xs md:text-sm text-gray-500 dark:text-gray-500 mt-8 font-light text-center"
                 >
                     If the problem persists, please try refreshing the page
                 </motion.p>
