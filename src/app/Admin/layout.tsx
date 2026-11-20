@@ -64,7 +64,7 @@ export default function AdminLayout() {
         {isSidebarOpen && (
           <div className="w-64 bg-gradient-to-b from-primary-green via-primary-green/95 to-primary-green/90 text-white h-screen overflow-y-auto shadow-xl">
             <div className="p-6 sticky top-0 bg-primary-green/95 border-b border-accent-gold/20">
-              <h2 className="text-2xl font-playfair font-bold text-accent-gold">
+              <h2 className="text-2xl font-playfair font-bold text-accent-gold capitalize truncate">
                 {isHost ? "🏨 Host" : "👤"} {userName}
               </h2>
               <p className="text-xs text-white/70 mt-1 font-light truncate">
