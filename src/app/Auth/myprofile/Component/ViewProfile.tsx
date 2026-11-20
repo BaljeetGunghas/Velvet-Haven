@@ -42,12 +42,20 @@ const ViewProfile = () => {
     }
   };
 
-  if (error) {
-    throw new Error(error);
-  }
-
   // 🚨 Prevent SSR mismatch
   if (!isMounted) return null;
+
+  // Handle errors gracefully
+  if (error) {
+    return (
+      <div className="w-full space-y-7 p-6">
+        <div className="bg-gradient-to-r from-red-50 to-red-50/30 dark:from-red-950/40 dark:to-red-950/20 border border-red-200 dark:border-red-800/50 rounded-xl p-6 text-center">
+          <p className="text-red-700 dark:text-red-300 font-semibold mb-2">Unable to load profile</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return !userDetails ? (
     <UserProfileSkeleton />
