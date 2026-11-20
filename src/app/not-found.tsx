@@ -21,21 +21,16 @@ export default function NotFoundPage() {
         transition={{ duration: 0.6 }}
         className="relative z-10 max-w-2xl w-full text-center"
       >
-        {/* 404 Image */}
+        {/* Error Code */}
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="mb-8 flex justify-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-6"
         >
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent-gold/20 to-primary-green/20 rounded-full blur-3xl w-96 h-96 mx-auto"></div>
-            <Image
-              src={pageNotFound}
-              alt="Page Not Found"
-              className="relative z-10 h-64 w-auto"
-            />
-          </div>
+          <h2 className="text-7xl md:text-8xl font-playfair font-bold text-accent-gold drop-shadow-lg">
+            404
+          </h2>
         </motion.div>
 
         {/* Heading */}

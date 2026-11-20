@@ -9,24 +9,29 @@ import { PiGreaterThanDuotone, PiLessThanDuotone } from "react-icons/pi";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { LayoutDashboard, Hotel, DoorOpen, Calendar, Settings, ShoppingBag, Heart, LogOut } from "lucide-react";
+import { LayoutDashboard, Hotel, DoorOpen, Calendar, Settings, ShoppingBag, Heart, LogOut, Plus, Edit, Eye, MessageCircle, BarChart3, AlertCircle } from "lucide-react";
 
-// export default function AdminLayout({
-//   children,
-// }: AdminProps) {
-export default function AdminLayout() {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
-  const { userRole, user } = useSelector((state: RootState) => state.auth);
+  const [isHydrated, setIsHydrated] = useState<boolean>(false);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const userRole = user?.userRole;
   const isHost = userRole?.toLowerCase() === "host" || userRole?.toLowerCase() === "admin";
-  const userName = user?.name || "User";
+  const userName = isHydrated && user?.name ? user.name : "User";
 
-  // Host navigation items
+  // Host navigation items - Enhanced for property management
   const hostNavItems = [
     { name: "Dashboard", path: "/Admin/dashboard", icon: LayoutDashboard },
-    { name: "Hotels", path: "/Admin/hotel", icon: Hotel },
-    { name: "Rooms", path: "/Admin/room", icon: DoorOpen },
+    { name: "Add Hotel", path: "/Admin/hotel", icon: Plus },
+    { name: "Manage Hotels", path: "/Admin/hotel-list", icon: Hotel },
+    { name: "Add Room", path: "/Admin/room", icon: Plus },
+    { name: "Manage Rooms", path: "/Admin/room-management", icon: DoorOpen },
+    { name: "Update Pricing", path: "/Admin/update-pricing", icon: BarChart3 },
     { name: "Bookings", path: "/Admin/booking", icon: Calendar },
+    { name: "Guest Feedback", path: "/Admin/feedback", icon: MessageCircle },
+    { name: "Reviews & Ratings", path: "/Admin/reviews", icon: Eye },
+    { name: "Competitor Analysis", path: "/Admin/wishlist", icon: AlertCircle },
     { name: "Settings", path: "/Admin/settings", icon: Settings },
   ];
 
@@ -40,6 +45,10 @@ export default function AdminLayout() {
   ];
 
   const navItems = isHost ? hostNavItems : customerNavItems;
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -110,14 +119,91 @@ export default function AdminLayout() {
         )}
       </motion.nav>
 
-      <Button
-        variant={"secondary"}
+      {/* Premium Sidebar Toggle - Floating Button */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.85 }}
         onClick={() => setSidebarOpen(!isSidebarOpen)}
-        className={`fixed bg-white dark:bg-foreground top-16 px-3 shadow-lg rounded-full z-10 ${isSidebarOpen ? " md left-56" : "left-4"
-          } transition-all duration-300`}
+        className="fixed bottom-8 left-8 z-40 group cursor-pointer"
+        title={isSidebarOpen ? "Close Menu" : "Open Menu"}
       >
-        {isSidebarOpen ? <PiLessThanDuotone /> : <PiGreaterThanDuotone />}
-      </Button>
+        <motion.div
+          animate={{
+            width: isSidebarOpen ? "200px" : "56px",
+            paddingLeft: isSidebarOpen ? "16px" : "12px",
+            paddingRight: isSidebarOpen ? "16px" : "12px",
+          }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="relative h-14 rounded-full flex items-center justify-between cursor-pointer overflow-hidden"
+        >
+          {/* Gradient Background */}
+          <motion.div
+            animate={{
+              background: isSidebarOpen
+                ? "linear-gradient(135deg, #C9A66B 0%, #B8955F 100%)"
+                : "linear-gradient(135deg, #103F38 0%, #0a3d3a 100%)"
+            }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 rounded-full"
+          />
+
+          {/* Animated Background Glow */}
+          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-40 blur-xl bg-accent-gold transition-opacity duration-300" />
+
+          {/* Premium SVG Icon */}
+          <motion.svg
+            animate={{ rotate: isSidebarOpen ? 0 : 180 }}
+            transition={{ duration: 0.4 }}
+            className="relative z-10 w-6 h-6 text-white flex-shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {isSidebarOpen ? (
+              // Menu Open Icon
+              <>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </>
+            ) : (
+              // Menu Closed Icon (Hamburger)
+              <>
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+              </>
+            )}
+          </motion.svg>
+
+          {/* Text Label */}
+          <motion.span
+            animate={{
+              opacity: isSidebarOpen ? 1 : 0,
+              marginLeft: isSidebarOpen ? "12px" : "0px"
+            }}
+            transition={{ duration: 0.3 }}
+            className="relative z-10 font-semibold text-sm text-white whitespace-nowrap"
+          >
+            {isSidebarOpen ? "Close Menu" : ""}
+          </motion.span>
+
+          {/* Border Glow */}
+          <motion.div
+            animate={{
+              opacity: 0.3
+            }}
+            whileHover={{ opacity: 0.8 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 rounded-full border-2 border-white/40 pointer-events-none"
+          />
+
+          {/* Shine Effect */}
+          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-50 bg-gradient-to-r from-white/20 via-transparent to-transparent transition-opacity duration-300" />
+        </motion.div>
+      </motion.button>
 
       {/* Toggle Sidebar Button */}
 
@@ -125,7 +211,7 @@ export default function AdminLayout() {
       <div
         className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}
       >
-        {/* Content rendered by child pages */}
+        {children}
       </div>
     </div>
   );
