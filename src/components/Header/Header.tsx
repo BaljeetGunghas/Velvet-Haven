@@ -216,10 +216,10 @@ const Header = () => {
           })}
 
           {/* Divider */}
-          <div className="my-2 border-t border-accent-gold/20"></div>
+          {isHydrated && <div className="my-2 border-t border-accent-gold/20"></div>}
 
-          {/* Mobile Sign In */}
-          {!isAuthenticated && (
+          {/* Mobile Sign In - Only show when not authenticated and hydrated */}
+          {isHydrated && !isAuthenticated && (
             <motion.div whileHover={{ x: 8 }} whileTap={{ scale: 0.98 }}>
               <motion.button
                 onClick={() => {
@@ -239,7 +239,7 @@ const Header = () => {
       </motion.div>
 
       {/* Login/Registration Modal */}
-      {isRegistrationModelOpen && (
+      {isHydrated && isRegistrationModelOpen && (
         <LoginRegistrationModel
           onClose={() => setIsRegistrationModelOpen(false)}
         />
