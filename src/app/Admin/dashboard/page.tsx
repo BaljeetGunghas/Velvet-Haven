@@ -93,13 +93,10 @@ const StatCard = ({
 );
 
 export default function AdminDashboard() {
-  const { user, role, userRole } = useSelector(
-    (state: RootState) =>
-      state.auth as RootState["auth"] & { role?: string; userRole?: string }
-  );
+  const { user } = useSelector((state: RootState) => state.auth);
   const [dashBoardData, setDashBoardData] = useState<ApiResponseIF | null>(null);
   const [isDashBoardLoading, setIsDashBoardLoading] = useState<boolean>(false);
-  const currentRole = userRole ?? role;
+  const currentRole = user?.userRole;
   const isHost = currentRole?.toLowerCase() === "host" || currentRole?.toLowerCase() === "admin";
 
   const getDashBoardResponse = async () => {

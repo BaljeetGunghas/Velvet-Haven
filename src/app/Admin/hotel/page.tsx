@@ -322,7 +322,7 @@ const AdminHotelPage = () => {
                       {/* Owner */}
                       <td className="px-6 py-4">
                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {hotel.owner || "—"}
+                          {hotel.owner_name || "—"}
                         </span>
                       </td>
 

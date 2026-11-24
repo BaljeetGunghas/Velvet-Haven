@@ -314,11 +314,11 @@ const BookingCard = ({
 };
 
 export default function BookingPage() {
-  const { user, userRole } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<Booking["status"] | "all">("all");
-  const isHost = userRole?.toLowerCase() === "host" || userRole?.toLowerCase() === "admin";
+  const isHost = user?.userRole?.toLowerCase() === "host" || user?.userRole?.toLowerCase() === "admin";
 
   // Mock data - Replace with API calls
   const mockBookings: Booking[] = [
