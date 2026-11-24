@@ -31,7 +31,7 @@ export default function CancellationPage() {
                 Cancellation Fees
               </h2>
               <p>
-                Cancellations within 7 days of arrival may incur a fee of one night's accommodation.
+                Cancellations within 7 days of arrival may incur a fee of one night&apos;s accommodation.
               </p>
             </section>
 

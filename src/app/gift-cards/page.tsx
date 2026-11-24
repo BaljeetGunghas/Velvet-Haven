@@ -3,7 +3,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Gift, Heart, Share2 } from "lucide-react";
-import Link from "next/link";
 
 export default function GiftCardsPage() {
   return (

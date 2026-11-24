@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Quote, MapPin, Calendar, Users, MessageCircle, ThumbsUp } from "lucide-react";
+import { Star, Quote, MapPin, Calendar, Users, ThumbsUp } from "lucide-react";
 
 const reviews = [
   {
@@ -273,7 +273,7 @@ export default function ReviewsPage() {
 
               {/* Review Text */}
               <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                "{review.review}"
+                &quot;{review.review}&quot;
               </p>
 
               {/* Helpful Button */}

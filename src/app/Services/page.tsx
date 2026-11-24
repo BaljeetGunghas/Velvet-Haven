@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
-import { Star, MapPin, Clock, Users, ArrowRight, ChevronRight, Zap } from "lucide-react";
+import { Star, ArrowRight, ChevronRight, Zap } from "lucide-react";
 // Import professional service images
 import serviceImg1 from "@/asset/service/01-luxurious-rooms.png";
 import serviceImg2 from "@/asset/service/02-gourmet-dining.png";

@@ -197,7 +197,7 @@ export default function RoomsPage() {
 
               <div className="border-t border-gray-200 dark:border-slate-700 pt-6">
                 <h3 className="font-semibold text-primary-green dark:text-white mb-3">
-                  What's Included
+                  What&apos;s Included
                 </h3>
                 <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                   <li className="flex items-center gap-2">
