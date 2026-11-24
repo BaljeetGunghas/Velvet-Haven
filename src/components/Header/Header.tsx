@@ -55,7 +55,7 @@ const Header = () => {
     <>
       {/* Premium Navigation Header */}
       <header
-        className={`fixed inset-0 z-40 h-16 sm:h-20 transition-all duration-300 ${
+        className={`fixed inset-0 z-[100] h-16 sm:h-20 transition-all duration-300 ${
           isScrolled
             ? "bg-white dark:bg-[#103F38] shadow-2xl shadow-[#103F38]/40"
             : "bg-[#103F38] dark:bg-[#103F38] shadow-lg shadow-[#103F38]/20"

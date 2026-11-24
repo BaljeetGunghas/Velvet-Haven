@@ -18,7 +18,6 @@ import { useSearchParams } from "next/navigation";
 import { FaLocationDot } from "react-icons/fa6";
 import BedIcon from "@/asset/icon/bed-outline.svg";
 import iconuser from "@/asset/icon/icon_user.svg";
-import calendar from "@/asset/icon/calendar.svg";
 import downline from "@/asset/icon/down-line.svg";
 import DatePickerWithRange from "../../../components/Calendar/DatePicker";
 import { Range } from "react-date-range";
@@ -129,12 +128,9 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
                 </div>
 
                 {/* Date Picker */}
-                <div className="space-y-2.5">
+                <div className="space-y-2.5 relative z-50">
                     <label className="text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-gray-300">Check-in & Check-out</label>
-                    <div className="bg-gray-50/80 dark:bg-slate-700/40 border border-gray-200 dark:border-slate-700/60 focus-within:border-accent-gold/70 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:shadow-md dark:focus-within:shadow-accent-gold/5 transition-all duration-300 flex items-center rounded-xl overflow-hidden">
-                        <Image src={calendar} alt="calendar icon" className="ml-3 w-5 h-5 dark:filter dark:invert dark:brightness-0 dark:p-0.5" />
-                        <DatePickerWithRange dateRange={date} setDate={setDate} />
-                    </div>
+                    <DatePickerWithRange dateRange={date} setDate={setDate} />
                 </div>
 
                 {/* Person & Room Selector */}

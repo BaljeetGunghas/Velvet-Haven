@@ -17,8 +17,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
   const { user } = useSelector((state: RootState) => state.auth);
   const userRole = user?.userRole;
-  const isHost = userRole?.toLowerCase() === "host" || userRole?.toLowerCase() === "admin";
+  const isHost = isHydrated && (userRole?.toLowerCase() === "host" || userRole?.toLowerCase() === "admin");
   const userName = isHydrated && user?.name ? user.name : "User";
+  const displayIcon = isHydrated && isHost ? "🏨" : "👤";
 
   // Host navigation items - Enhanced for property management
   const hostNavItems = [
@@ -74,7 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="w-64 bg-gradient-to-b from-primary-green via-primary-green/95 to-primary-green/90 text-white h-screen overflow-y-auto shadow-xl">
             <div className="p-6 sticky top-0 bg-primary-green/95 border-b border-accent-gold/20">
               <h2 className="text-2xl font-playfair font-bold text-accent-gold capitalize truncate">
-                {isHost ? "🏨 Host" : "👤"} {userName}
+                {displayIcon} {userName}
               </h2>
               <p className="text-xs text-white/70 mt-1 font-light truncate">
                 {isHost ? "Management Panel" : "My Account"}

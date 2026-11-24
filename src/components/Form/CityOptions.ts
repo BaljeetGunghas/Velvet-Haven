@@ -93,7 +93,6 @@ export const CityOptions = () => {
     { name: "Karimnagar", stateCode: "TS" },
 
     { name: "Agartala", stateCode: "TR" },
-    { name: "Udaipur", stateCode: "TR" },
 
     { name: "Lucknow", stateCode: "UP" },
     { name: "Kanpur", stateCode: "UP" },

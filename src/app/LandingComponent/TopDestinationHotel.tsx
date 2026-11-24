@@ -2,15 +2,22 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Shimla from "@/asset/destination/Shimla.svg";
-import Agra from "@/asset/destination/Agra.svg";
-import Jaipur from "@/asset/destination/Jaipur.svg";
-import Mumbai from "@/asset/destination/Mumbai.svg";
+import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import Shimla from "@/asset/destination/shimla.jpg";
+import Jaipur from "@/asset/destination/jaipur.jpg";
+import Mumbai from "@/asset/destination/mumbai.jpg";
+import Chandigarh from "@/asset/destination/chandigarh.jpg";
+import Chennai from "@/asset/destination/chennai.jpg";
+import Bangalore from "@/asset/destination/bangalore.jpg";
+import Hyderabad from "@/asset/destination/hyderabad.jpg";
+import Haridwar from "@/asset/destination/haridwar.jpg";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MapPin, Star, ArrowRight } from "lucide-react";
 
 const TopDestinationHotel = () => {
+  const router = useRouter();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const topDestinationsDetails = [
@@ -46,13 +53,53 @@ const TopDestinationHotel = () => {
     },
     {
       id: 4,
-      name: "Agra",
-      image: Agra,
-      description: "Marvel at timeless beauty and historic grandeur",
-      hotels: 40,
+      name: "Chandigarh",
+      image: Chandigarh,
+      description: "Discover the well-planned city of gardens and art",
+      hotels: 32,
+      rating: 4.5,
+      reviews: 850,
+      highlights: ["Modern architecture", "Gardens", "Art scene"],
+    },
+    {
+      id: 5,
+      name: "Chennai",
+      image: Chennai,
+      description: "Experience the charm of South India's vibrant metropolis",
+      hotels: 36,
       rating: 4.6,
-      reviews: 1050,
-      highlights: ["Taj Mahal view", "Luxury stays", "Cultural tours"],
+      reviews: 920,
+      highlights: ["Beach resorts", "South Indian cuisine", "Temples"],
+    },
+    {
+      id: 6,
+      name: "Bangalore",
+      image: Bangalore,
+      description: "Discover the city of gardens and tech innovation",
+      hotels: 44,
+      rating: 4.7,
+      reviews: 1300,
+      highlights: ["Tech hub", "Gardens & parks", "Modern nightlife"],
+    },
+    {
+      id: 7,
+      name: "Hyderabad",
+      image: Hyderabad,
+      description: "Experience the charm of pearls and biryani",
+      hotels: 38,
+      rating: 4.6,
+      reviews: 1100,
+      highlights: ["Historic monuments", "Culinary delights", "Shopping"],
+    },
+    {
+      id: 8,
+      name: "Haridwar",
+      image: Haridwar,
+      description: "Experience spiritual tranquility by the sacred Ganges",
+      hotels: 28,
+      rating: 4.8,
+      reviews: 950,
+      highlights: ["Spiritual retreats", "River ghats", "Adventure activities"],
     },
   ];
 
@@ -224,6 +271,11 @@ const TopDestinationHotel = () => {
 
               {/* Hover Button */}
               <motion.button
+                onClick={() => {
+                  const today = dayjs().format("YYYY-MM-DD");
+                  const tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD");
+                  router.push(`/SearchResult?city=${destination.name.toLowerCase()}&check_in_date=${today}&check_out_date=${tomorrow}`);
+                }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{
                   opacity: hoveredId === destination.id ? 1 : 0,
@@ -251,7 +303,13 @@ const TopDestinationHotel = () => {
         <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base mb-6">
           Can't find your destination? Explore all available hotels and resorts across India.
         </p>
-        <Button className="bg-gradient-to-r from-primary-green to-accent-gold hover:from-primary-green/90 hover:to-accent-gold/90 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+        <Button
+          onClick={() => {
+            const today = dayjs().format("YYYY-MM-DD");
+            const tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD");
+            router.push(`/SearchResult?check_in_date=${today}&check_out_date=${tomorrow}`);
+          }}
+          className="bg-gradient-to-r from-primary-green to-accent-gold hover:from-primary-green/90 hover:to-accent-gold/90 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
           View All Destinations
           <ArrowRight size={18} className="ml-2" />
         </Button>

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { createPortal } from "react-dom";
 import { authHeader } from "@/app/Auth/AuthHeader/authHeader";
 import HotelTable, { HotelIF } from "../Components/Tabels/HotelTabel";
 import CreateUpdateHotel from "./Components/CreateUpdateHotel";
@@ -11,6 +12,7 @@ import { toast } from "react-toastify";
 import { useHandleLogout } from "@/Hooks/handleLogout";
 
 const AdminHotelPage = () => {
+  const [mounted, setMounted] = useState(false);
   const [hotels, setHotels] = useState<HotelIF[]>([]);
   const [filteredHotels, setFilteredHotels] = useState<HotelIF[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -23,6 +25,10 @@ const AdminHotelPage = () => {
   const [viewHotel, setViewHotel] = useState<HotelIF | null>(null);
   const [isViewingHotel, setIsViewingHotel] = useState(false);
   const handleLogout = useHandleLogout();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const fetchHotels = async () => {
     setLoading(true);
@@ -468,14 +474,21 @@ const AdminHotelPage = () => {
       )}
 
       {/* View Hotel Details Modal */}
-      {viewHotel && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 flex justify-center items-center bg-black/70 backdrop-blur-md z-50 p-4"
-          onClick={() => setViewHotel(null)}
-        >
+      {viewHotel && mounted && (() => {
+        const portal = document.getElementById("modal-root");
+        return portal ? createPortal(
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 flex justify-center items-center bg-black/70 z-[9999] p-4"
+            onClick={() => setViewHotel(null)}
+            style={{
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              willChange: "backdrop-filter"
+            }}
+          >
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -504,8 +517,16 @@ const AdminHotelPage = () => {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setViewHotel(null)}
                 className="p-3 hover:bg-white/20 rounded-full transition-all backdrop-blur-sm flex-shrink-0"
+                title="Close"
               >
-                <X className="w-6 h-6 text-white" />
+                <X
+                  className="w-6 h-6 flex-shrink-0"
+                  style={{
+                    color: "#FFFFFF",
+                    textShadow: "0 0 2px rgba(0,0,0,0.8)",
+                    filter: "drop-shadow(0 0 3px rgba(0,0,0,0.6))"
+                  }}
+                />
               </motion.button>
             </div>
 
@@ -811,8 +832,10 @@ const AdminHotelPage = () => {
               </motion.div>
             </div>
           </motion.div>
-        </motion.div>
-      )}
+        </motion.div>,
+        portal
+        ) : null;
+      })()}
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm.isOpen && (

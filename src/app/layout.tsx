@@ -56,6 +56,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${playfairDisplay.variable} dark:bg-black dark:text-white bg-white text-black`}
       >
+        <div id="modal-root" />
         <StoreProvider>
           <ThemeProvider attribute="class" disableTransitionOnChange>
             <TooltipProvider>

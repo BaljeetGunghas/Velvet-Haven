@@ -8,15 +8,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store/store";
 import { userProfile } from "@/app/store/Profile/userProfileSlice";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useHandleLogout } from "@/Hooks/handleLogout";
+import { toast } from "react-toastify";
 
 const Page: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const handleLogout = useHandleLogout();
 
   const { user } = useSelector((state: RootState) => state.auth);
-  const { userDetails } = useSelector(
+  const { userDetails, error } = useSelector(
     (state: RootState) => state.userProfile
   );
   const [isEditEnable, setIsEditEnable] = useState<boolean>(false);
+
+  // Handle 401 errors and redirect
+  useEffect(() => {
+    if (error && error.includes("Session expired")) {
+      toast.error("Your session has expired. Please login again.");
+      handleLogout();
+    }
+  }, [error, handleLogout]);
+
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!user) {
+      toast.info("Please login to view your profile");
+      router.push("/");
+    }
+  }, [user, router]);
 
   useEffect(() => {
     if (user) {

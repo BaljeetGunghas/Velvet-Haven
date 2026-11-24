@@ -27,18 +27,36 @@ const ViewProfile = () => {
   }, []);
 
   const sendEmailVerificationToken = async () => {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/verfication-email-token-send`,
-      {},
-      {
-        headers: authHeader(),
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/verfication-email-token-send`,
+        {},
+        {
+          headers: authHeader(),
+        }
+      );
+
+      const responseData = response.data;
+
+      // Handle 401 Unauthorized
+      if (responseData.output === -401) {
+        toast.error("Session expired. Please login again.");
+        // The parent component will handle logout
+        return;
       }
-    );
 
-    const responseData = response.data;
-
-    if (responseData.output === 1) {
-      return toast.success(responseData.message);
+      if (responseData.output === 1) {
+        return toast.success(responseData.message);
+      } else {
+        toast.error(responseData.message || "Failed to send verification email");
+      }
+    } catch (error: any) {
+      // Handle 401 HTTP status
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.");
+        return;
+      }
+      toast.error(error.message || "Error sending verification email");
     }
   };
 

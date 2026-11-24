@@ -5,7 +5,7 @@ import calendar from "@/asset/icon/calendar.svg";
 import downline from "@/asset/icon/down-line.svg";
 import iconuser from "@/asset/icon/icon_user.svg";
 import Image from "next/image";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Button } from "../ui/button";
 import {
   Select,
@@ -27,31 +27,52 @@ import { CityOptions } from "./CityOptions";
 // Lazy loading SelectPersonAndRoom for better performance
 const SelectPersonAndRoom = dynamic(() => import("../SelectPersonAndRoom/SelectPersonAndRoom"), { ssr: false });
 
-const defaultDateRange: Range = {
-  startDate: undefined,
-  endDate: undefined,
-  key: "selection",
-};
-
 const LandingSearchForm = () => {
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState<string>("");
-  const [date, setDate] = useState<Range>(defaultDateRange);
+
+  // Initialize with today and tomorrow
+  const getDefaultDateRange = (): Range => ({
+    startDate: new Date(),
+    endDate: dayjs().add(1, 'day').toDate(),
+    key: "selection",
+  });
+
+  const [date, setDate] = useState<Range>(getDefaultDateRange());
   const [isSelectPersonAndRoomModelOpen, setIsSelectPersonAndRoomModelOpen] = useState<boolean>(false);
   const [personDetails, setPersonDetails] = useState({ rooms: 1, adults: 1, children: 0 });
   const [isHotelSearchingLoading, setIsHotelSearchingLoading] = useState<boolean>(false);
 
-  // Fetch city options only once and prevent unnecessary re-renders
+  // Update date to today + tomorrow when component mounts or when date becomes stale
+  useEffect(() => {
+    const today = dayjs();
+    const selectedCheckIn = dayjs(date.startDate);
 
-
+    // If the date is from yesterday or earlier, update to today
+    if (selectedCheckIn.isBefore(today, 'day')) {
+      setDate(getDefaultDateRange());
+    }
+  }, []);
 
   const handleSearchHotel = useCallback(() => {
     setIsHotelSearchingLoading(true);
 
+    // Always use today's date + tomorrow as defaults for fresh calculation
+    const today = dayjs().format('YYYY-MM-DD');
+    const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
+
+    // Use selected dates if they're valid and in the future, otherwise use today + tomorrow
+    const checkInDate = (date.startDate && dayjs(date.startDate).isSameOrAfter(dayjs(), 'day'))
+      ? dayjs(date.startDate).format('YYYY-MM-DD')
+      : today;
+    const checkOutDate = (date.endDate && dayjs(date.endDate).isAfter(dayjs(date.startDate), 'day'))
+      ? dayjs(date.endDate).format('YYYY-MM-DD')
+      : tomorrow;
+
     const queryParams = new URLSearchParams({
       city: selectedCity,
-      check_in_date: dayjs(date.startDate).format('YYYY-MM-DD'),
-      check_out_date: dayjs(date.endDate).format('YYYY-MM-DD'),
+      check_in_date: checkInDate,
+      check_out_date: checkOutDate,
     });
 
     if (personDetails.adults) {

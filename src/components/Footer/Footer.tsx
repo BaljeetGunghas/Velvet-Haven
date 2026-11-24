@@ -27,16 +27,16 @@ const Footer = () => {
       links: [
         { label: "Home", href: "/" },
         { label: "Rooms & Suites", href: "/rooms" },
-        { label: "Dining", href: "/dining" },
+        { label: "Dining", href: "/Dining" },
         { label: "Facilities", href: "/facilities" },
-        { label: "About Us", href: "/about" },
+        { label: "About Us", href: "/About" },
       ],
     },
     {
       title: "Guest Services",
       links: [
         { label: "Booking", href: "/booking" },
-        { label: "My Reservations", href: "/reservations" },
+        { label: "Guest Reviews", href: "/reviews" },
         { label: "Special Offers", href: "/offers" },
         { label: "Gift Cards", href: "/gift-cards" },
         { label: "Loyalty Program", href: "/loyalty" },
@@ -45,7 +45,7 @@ const Footer = () => {
     {
       title: "Company",
       links: [
-        { label: "Contact Us", href: "/contact" },
+        { label: "Contact Us", href: "/Contact" },
         { label: "Careers", href: "/careers" },
         { label: "Press", href: "/press" },
         { label: "Partners", href: "/partners" },
@@ -65,29 +65,29 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-    { icon: Globe, href: "https://portfolio.com", label: "Portfolio" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+    { icon: Github, href: "https://github.com/BaljeetGunghas", label: "GitHub" },
+    { icon: Globe, href: "https://baljeetgunghasportfolio.netlify.app/", label: "Portfolio" },
+    { icon: Linkedin, href: "https://in.linkedin.com/in/baljeet-gunghas-b6698421b", label: "LinkedIn" },
+    { icon: Instagram, href: "https://www.instagram.com/baljeet_gunghas2/", label: "Instagram" },
   ];
 
   const contactInfo = [
     {
       icon: Phone,
       label: "Phone",
-      value: "+1 (800) VELVET-99",
-      href: "tel:+18008358389",
+      value: "+91 8685007017",
+      href: "tel:+918685007017",
     },
     {
       icon: Mail,
       label: "Email",
-      value: "reservations@velvethaven.com",
-      href: "mailto:reservations@velvethaven.com",
+      value: "baljeetgunghas5@gmail.com",
+      href: "mailto:baljeetgunghas5@gmail.com",
     },
     {
       icon: MapPin,
       label: "Address",
-      value: "123 Luxury Lane, Mumbai, India",
+      value: "New Delhi, India",
       href: "#",
     },
   ];

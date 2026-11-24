@@ -12,6 +12,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { createPortal } from "react-dom";
 import { HotelIF } from "../../Components/Tabels/HotelTabel";
 import { useHandleGetHotelDetails } from "@/Hooks/hotel";
 import ImageUploader from "../../../../components/UploadMultiImage/ImageUpload";
@@ -46,6 +47,7 @@ const CreateUpdateHotel: React.FC<Props> = ({
   handleRefress,
   selectedHotelId,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [isloading, setIsLoading] = useState<boolean>(false);
   const handleGetHotelDetails = useHandleGetHotelDetails;
 
@@ -56,6 +58,10 @@ const CreateUpdateHotel: React.FC<Props> = ({
   const [hotelDetailsLoading, setHotelDetailsLoading] = useState<boolean>(false);
   const [hotelImages, setHotelImages] = useState<string[] | null>(null);
   const [images, setImages] = useState<File[] | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -230,13 +236,23 @@ const CreateUpdateHotel: React.FC<Props> = ({
 
   const errorCount = Object.keys(formik.errors).filter((key) => formik.errors[key as keyof typeof formik.errors]).length;
 
-  return (
+  if (!mounted) return null;
+
+  const portal = document.getElementById("modal-root");
+  if (!portal) return null;
+
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur-sm z-50 p-4"
+      className="fixed inset-0 flex justify-center items-center bg-black/70 z-[9999] p-4"
       onClick={() => onClose()}
+      style={{
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        willChange: "backdrop-filter"
+      }}
     >
       <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -264,8 +280,9 @@ const CreateUpdateHotel: React.FC<Props> = ({
             whileTap={{ scale: 0.9 }}
             onClick={() => onClose()}
             className="p-2 hover:bg-white/20 rounded-full transition-all"
+            title="Close"
           >
-            <X className="w-6 h-6 text-white" />
+            <X className="w-6 h-6 text-white drop-shadow-lg" />
           </motion.button>
         </div>
 
@@ -598,7 +615,8 @@ const CreateUpdateHotel: React.FC<Props> = ({
           </form>
         )}
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    portal
   );
 };
 

@@ -3,10 +3,20 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import services1 from "@/asset/services1.svg";
-import services2 from "@/asset/services2.svg";
+import { useRouter } from "next/navigation";
+// Import professional service images
+import services1 from "@/asset/service/01-luxurious-rooms.png";
+import services2 from "@/asset/service/02-gourmet-dining.png";
+import services3 from "@/asset/service/03-premium-wellness.png";
+import services4 from "@/asset/service/04-personal-concierge.png";
+import services5 from "@/asset/service/05-recreation-entertainment.png";
+import services6 from "@/asset/service/06-curated-experiences.png";
+import services7 from "@/asset/service/07-business-facilities.png";
+import services8 from "@/asset/service/08-luxury-transportation.png";
 
 const OurServices = () => {
+  const router = useRouter();
+
   // Featured services (large showcase blocks)
   const featuredServices = [
     {
@@ -31,7 +41,7 @@ const OurServices = () => {
       title: "Premium Wellness & Spa",
       description:
         "Full-service spa with signature treatments, heated pools, sauna, steam room, and yoga classes for ultimate relaxation.",
-      image: services1,
+      image: services3,
     },
     {
       id: 4,
@@ -39,7 +49,7 @@ const OurServices = () => {
       title: "Personal Concierge Service",
       description:
         "24/7 dedicated concierge team for personalized itineraries, reservations, and VIP treatment with exclusive access.",
-      image: services2,
+      image: services4,
     },
   ];
 
@@ -206,6 +216,7 @@ const OurServices = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, x: 5 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => router.push(`/Services?service=${service.id}`)}
                   className="inline-flex items-center gap-3 px-8 py-4 bg-accent-gold/20 hover:bg-accent-gold/30 text-accent-gold font-semibold rounded-xl transition-all duration-300 border border-accent-gold/40 hover:border-accent-gold/60 group"
                 >
                   <span>Explore Service</span>

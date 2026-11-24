@@ -4,6 +4,7 @@ import LandingSearchForm from "../Form/LandingSearchForm";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/asset/hero-image.png";
+import dayjs from "dayjs";
 
 // Local luxury hotel background image
 const HERO_IMAGE_URL = heroImage.src;
@@ -71,7 +72,7 @@ const SUPPORTED_CITIES = [
 ];
 
 // Check if city is supported, otherwise return fallback
-const normalizeCityName = (city: string | null): string => {
+const normalizeCityName = (city: string | null | undefined): string => {
   if (!city) return "delhi";
   const normalizedCity = city.toLowerCase().trim();
   return SUPPORTED_CITIES.includes(normalizedCity) ? normalizedCity : "delhi";
@@ -154,7 +155,7 @@ const LandingBanner = ({ userCity }: LandingBannerProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           >
-            <Link href={`/SearchResult?city=${detectedCity}&check_in_date=2025-03-19&check_out_date=2025-03-20&adults=1&page=1`}>
+            <Link href={`/SearchResult?city=${detectedCity}&check_in_date=${dayjs().format('YYYY-MM-DD')}&check_out_date=${dayjs().add(1, 'day').format('YYYY-MM-DD')}&adults=1&page=1`}>
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}

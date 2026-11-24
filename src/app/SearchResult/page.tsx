@@ -213,15 +213,15 @@ const SearchResultContent = () => {
             </Button>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 relative">
             {/* Filter Section - Premium Sidebar (Desktop) */}
             <motion.aside
               initial={{ x: -550, opacity: 0 }}
               animate={{ x: isFilterOpen ? 0 : -550, opacity: isFilterOpen ? 1 : 0 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className={`${isFilterOpen ? 'block' : 'hidden lg:block'} w-full md:w-96 lg:w-80 flex-shrink-0`}
+              className={`${isFilterOpen ? 'block' : 'hidden lg:block'} w-full md:w-96 lg:w-80 flex-shrink-0 relative z-20`}
             >
-              <div className="h-fit sticky top-36 overflow-y-auto pr-4 md:pr-6 scrollbar-thin scrollbar-thumb-accent-gold/30 scrollbar-track-gray-100 dark:scrollbar-track-slate-800">
+              <div className="h-fit sticky top-24 sm:top-32 md:top-28 overflow-visible pr-4 md:pr-6 relative z-20">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}

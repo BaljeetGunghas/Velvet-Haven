@@ -18,6 +18,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { createPortal } from "react-dom";
 import ImageUploader from "../../../../components/UploadMultiImage/ImageUpload";
 import { RoomIF } from "../../Components/Tabels/RoomTable";
 import { useHandleGetHotelRoomDetails } from "@/Hooks/room";
@@ -44,6 +45,7 @@ const CreateUpdateRoom: React.FC<Props> = ({
   handleRefress,
   selectedRoomId,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [isloading, setIsLoading] = useState<boolean>(false);
   const handleGetHotelRoomDetails = useHandleGetHotelRoomDetails;
 
@@ -53,6 +55,10 @@ const CreateUpdateRoom: React.FC<Props> = ({
     useState<boolean>(false);
   const [roomImages, setRoomImages] = useState<string[] | null>(null);
   const [images, setImages] = useState<File[] | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [hotelNameData, setHotelNameData] = useState<
     { value: string; label: string }[]
@@ -283,13 +289,23 @@ const CreateUpdateRoom: React.FC<Props> = ({
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  const portal = document.getElementById("modal-root");
+  if (!portal) return null;
+
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 flex justify-center items-center bg-black/70 backdrop-blur-md z-50 p-4"
+      className="fixed inset-0 flex justify-center items-center bg-black/70 z-[9999] p-4"
       onClick={() => onClose()}
+      style={{
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        willChange: "backdrop-filter"
+      }}
     >
       <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 30 }}
@@ -318,8 +334,9 @@ const CreateUpdateRoom: React.FC<Props> = ({
             whileTap={{ scale: 0.9 }}
             onClick={() => onClose()}
             className="p-3 hover:bg-white/20 rounded-full transition-all backdrop-blur-sm flex-shrink-0"
+            title="Close"
           >
-            <X className="w-6 h-6 text-white" />
+            <X className="w-6 h-6 text-white drop-shadow-lg" />
           </motion.button>
         </div>
 
@@ -678,7 +695,8 @@ const CreateUpdateRoom: React.FC<Props> = ({
           </form>
         )}
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    portal
   );
 };
 
