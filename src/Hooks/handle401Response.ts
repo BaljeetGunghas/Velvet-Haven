@@ -77,7 +77,11 @@ export const useHandle401 = () => {
  * Utility function to check if response is 401 (can be used outside components)
  */
 export const is401Response = (response: unknown): boolean => {
-    return response?.output === -401 || response?.status === 401;
+    if (typeof response === 'object' && response !== null) {
+        const res = response as Record<string, unknown>;
+        return res.output === -401 || res.status === 401;
+    }
+    return false;
 };
 
 /**
