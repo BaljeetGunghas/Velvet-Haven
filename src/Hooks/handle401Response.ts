@@ -76,7 +76,7 @@ export const useHandle401 = () => {
 /**
  * Utility function to check if response is 401 (can be used outside components)
  */
-export const is401Response = (response: any): boolean => {
+export const is401Response = (response: unknown): boolean => {
     return response?.output === -401 || response?.status === 401;
 };
 

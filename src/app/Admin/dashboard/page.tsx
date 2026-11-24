@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import HotelTable, { HotelIF } from "../Components/Tabels/HotelTabel";
-import Image from "next/image";
-import Arrow from "@/asset/icon/Arrow.svg";
 import Link from "next/link";
 import axios from "axios";
 import { authHeader } from "@/app/Auth/AuthHeader/authHeader";

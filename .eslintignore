@@ -1,0 +1,13 @@
+# Ignore build files
+.next/
+out/
+dist/
+build/
+
+# Ignore test files  
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Note: ESLint is configured to check all source files

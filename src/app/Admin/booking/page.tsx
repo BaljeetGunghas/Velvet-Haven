@@ -20,8 +20,6 @@ import {
   Trash2,
   MessageSquare,
 } from "lucide-react";
-import axios from "axios";
-import { authHeader } from "@/app/Auth/AuthHeader/authHeader";
 
 interface Booking {
   id: number;
