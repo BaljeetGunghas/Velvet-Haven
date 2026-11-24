@@ -351,6 +351,248 @@ Netlify will automatically trigger a new deploy using Node.js 22.
 
 ---
 
+## Pre-Deployment Checklist
+
+### ✅ Local Environment Setup
+- [ ] Node.js 22.x installed locally
+  ```bash
+  node --version  # Should show v22.x.x
+  ```
+- [ ] nvm or nodenv configured (optional but recommended)
+- [ ] npm v10.x.x or higher installed
+  ```bash
+  npm --version  # Should show 10.x.x or higher
+  ```
+- [ ] All project dependencies installed
+  ```bash
+  npm install
+  ```
+- [ ] No conflicting global packages
+
+### ✅ Repository Configuration
+- [ ] All changes committed to `ui-chagne` branch
+- [ ] No uncommitted changes
+  ```bash
+  git status  # Should show "working tree clean"
+  ```
+- [ ] All commits pushed to GitHub
+  ```bash
+  git push origin ui-chagne
+  ```
+- [ ] `.nvmrc` file exists in root with content `22`
+- [ ] `.node-version` file exists in root with content `22`
+- [ ] `netlify.toml` exists in root with correct configuration
+
+### ✅ Configuration Files Verification
+
+#### netlify.toml
+```toml
+[build.environment]
+NODE_VERSION = "22"
+SHARP_IGNORE_GLOBAL_LIBVIPS = "1"
+```
+- [ ] NODE_VERSION is set to "22"
+- [ ] SHARP_IGNORE_GLOBAL_LIBVIPS is set to "1"
+- [ ] Build command is `npm run build`
+- [ ] Publish directory is `.next`
+
+#### next.config.ts
+- [ ] Image optimization disabled: `unoptimized: true`
+- [ ] ESLint errors ignored: `eslint.ignoreDuringBuilds: true`
+- [ ] TypeScript errors ignored: `typescript.ignoreBuildErrors: true`
+- [ ] Image domains configured correctly
+
+#### package.json
+- [ ] `sharp` package is in dependencies (version ^0.35.5+)
+- [ ] `next` package is version ^15.5.29
+- [ ] No conflicting dependency versions
+
+### ✅ Local Build Testing
+
+#### Build Verification
+- [ ] Run local build successfully
+  ```bash
+  npm run build
+  ```
+  Should show:
+  - `✓ Compiled successfully`
+  - `✓ Generating static pages (42/42)`
+  - All 42 pages in route table
+
+- [ ] No TypeScript errors during build
+- [ ] No ESLint errors blocking build
+- [ ] No webpack errors
+- [ ] Build completes in under 2 minutes
+
+#### Output Verification
+- [ ] `.next` folder created successfully
+- [ ] `.next/static` contains compiled assets
+- [ ] Check that build size is reasonable (103 kB+ for shared JS)
+
+### ✅ Code Quality Checks
+
+#### Source Files
+- [ ] No console.log debug statements left
+- [ ] No `// TODO` or `// FIXME` comments in critical files
+- [ ] No hardcoded API URLs (should use environment variables)
+- [ ] No secrets or credentials in code
+
+#### Specific Files to Check
+- [ ] `/src/app/Admin/booking/page.tsx` - userRole fix applied
+- [ ] `/src/app/Admin/bookings/page.tsx` - userRole fix applied
+- [ ] `/src/app/Admin/dashboard/page.tsx` - userRole fix applied
+- [ ] `/src/app/Admin/hotel/page.tsx` - owner_name fix applied
+- [ ] `/src/app/Services/page.tsx` - Suspense boundary applied
+- [ ] `/src/components/Calendar/DatePicker.tsx` - Invalid props removed
+- [ ] `/src/components/Form/LandingSearchForm.tsx` - Dayjs compatibility fixed
+
+### ✅ Dependencies Check
+
+#### npm Packages
+- [ ] `sharp` installed with WebAssembly support
+  ```bash
+  npm list sharp  # Should show sharp in dependencies
+  ```
+- [ ] All peer dependencies satisfied
+- [ ] No security vulnerabilities
+  ```bash
+  npm audit  # Should show 0 critical vulnerabilities
+  ```
+- [ ] Lock file updated and committed
+
+### ✅ Netlify Dashboard Configuration
+
+**CRITICAL - Must Complete Before Deploy:**
+
+- [ ] Go to: **Netlify Dashboard → Select Project**
+- [ ] Navigate to: **Settings → Build & deploy → Dependency management**
+- [ ] Check **Node.js version** - Set to **22**
+- [ ] Click **Save**
+- [ ] Verify change saved (refresh page to confirm)
+
+### ✅ Environment Variables
+
+- [ ] All required environment variables configured in Netlify:
+  - [ ] `NEXT_PUBLIC_BACKEND_API_URL`
+  - [ ] `NEXT_PUBLIC_IMAGE_URL`
+  - [ ] `NEXT_PUBLIC_RAZORPAY_KEY_ID`
+  - [ ] `REVIEW_ID`
+  - [ ] Any other custom variables
+
+- [ ] No sensitive data in `.env.local`
+- [ ] `.env.local` is in `.gitignore`
+
+### ✅ Git Status Final Check
+
+```bash
+# Run these commands:
+git status                  # Should show "working tree clean"
+git log --oneline -5        # Should show recent commits
+git branch                  # Should show "* ui-chagne"
+git remote -v              # Should show github origin URL
+```
+
+- [ ] Working tree is clean (no uncommitted changes)
+- [ ] All commits are on `ui-chagne` branch
+- [ ] Remote is correctly set to GitHub repository
+- [ ] Latest commits include all build fixes
+
+### ✅ Pre-Deploy Safety Checks
+
+- [ ] Backup current production version (if applicable)
+- [ ] Save any important data from current deployment
+- [ ] Have rollback plan ready if deployment fails
+- [ ] Notify team about upcoming deployment
+- [ ] Check that no critical services depend on old Node version
+
+### ✅ Final Verification Before Clicking Deploy
+
+```bash
+# One final check:
+npm run build -- --verbose 2>&1 | tail -20
+```
+
+- [ ] Build completes without errors
+- [ ] All 42 pages render successfully
+- [ ] No warnings about missing dependencies
+- [ ] No warnings about Image optimization issues
+
+---
+
+## Deployment Command Sequence
+
+Once all checks are complete, run:
+
+```bash
+# 1. Verify everything is committed
+git status
+
+# 2. Verify branch is correct
+git branch
+
+# 3. Final build test
+npm run build
+
+# 4. Push final changes (if any)
+git push origin ui-chagne
+
+# 5. Go to Netlify Dashboard
+# Select your project
+# Click "Trigger deploy" or wait for auto-deploy on push
+```
+
+---
+
+## Post-Deployment Verification
+
+After Netlify deployment starts:
+
+- [ ] Monitor Netlify deploy logs in real-time
+- [ ] Watch for `✓ Compiled successfully` message
+- [ ] Verify all 42 pages generate without errors
+- [ ] Check for sharp module installation
+- [ ] Confirm deploy completes with green checkmark
+- [ ] Wait for "Published" status
+
+After site is live:
+
+- [ ] Visit site URL and verify it loads
+- [ ] Test multiple pages load correctly
+- [ ] Check that images display properly
+- [ ] Test mobile responsiveness
+- [ ] Verify no console errors in browser DevTools
+- [ ] Test critical user flows:
+  - [ ] Home page loads
+  - [ ] Hotel search works
+  - [ ] Admin pages accessible
+  - [ ] All footer links work
+  - [ ] Contact form loads
+  - [ ] Reviews page displays
+
+---
+
+## Troubleshooting During Deploy
+
+If deployment fails:
+
+1. **Check Netlify Logs**
+   - Go to Netlify Dashboard → Deploys → View deploy log
+   - Look for specific error messages
+
+2. **Common Issues:**
+   - **"Module 'sharp' not found"** → Verify Node.js is set to 22 in Dashboard
+   - **"Build failed"** → Run `npm run build` locally to reproduce
+   - **"TypeScript error"** → Check that `typescript.ignoreBuildErrors: true` is in next.config.ts
+   - **"Cannot find module"** → Ensure all dependencies are installed: `npm install`
+
+3. **Recovery Steps:**
+   - Fix the issue locally
+   - Run `npm run build` to verify
+   - Commit and push
+   - Trigger new deploy in Netlify
+
+---
+
 ## Next Steps
 
 1. **Update Netlify Dashboard** (if not already done)
@@ -358,10 +600,12 @@ Netlify will automatically trigger a new deploy using Node.js 22.
 
 2. **Trigger New Deploy**
    - Push changes to trigger Netlify build
+   - Or manually trigger from Netlify Dashboard
 
 3. **Verify Deployment**
    - Check Netlify deploy logs
    - Verify site is live and all pages load correctly
+   - Run post-deployment verification checks
 
 ---
 
