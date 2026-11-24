@@ -1,0 +1,12 @@
+[build]
+command = "npm run build"
+publish = ".next"
+
+[build.environment]
+# Node.js version
+NODE_VERSION = "18.20.8"
+# Sharp prebuilt binaries for Linux
+SHARP_IGNORE_GLOBAL_LIBVIPS = "1"
+
+[functions]
+node_bundler = "esbuild"
