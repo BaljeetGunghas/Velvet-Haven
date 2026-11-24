@@ -10,6 +10,7 @@ import CreateUpdateHotel from "./Components/CreateUpdateHotel";
 import { RefreshCcw, Plus, Search, Filter, Eye, Edit, Trash2, MapPin, Star, Users, DollarSign, AlertCircle, Building2, Mail, Phone, X, FileText, CheckCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { useHandleLogout } from "@/Hooks/handleLogout";
+import ButtonLoading from "@/components/Loading/ButtonLoading";
 
 const AdminHotelPage = () => {
   const [mounted, setMounted] = useState(false);
