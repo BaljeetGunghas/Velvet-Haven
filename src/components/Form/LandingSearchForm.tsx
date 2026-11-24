@@ -49,7 +49,7 @@ const LandingSearchForm = () => {
     const selectedCheckIn = dayjs(date.startDate);
 
     // If the date is from yesterday or earlier, update to today
-    if (selectedCheckIn.isBefore(today, 'day')) {
+    if (selectedCheckIn.diff(today, 'day') < 0) {
       setDate(getDefaultDateRange());
     }
   }, []);
@@ -62,10 +62,10 @@ const LandingSearchForm = () => {
     const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
 
     // Use selected dates if they're valid and in the future, otherwise use today + tomorrow
-    const checkInDate = (date.startDate && dayjs(date.startDate).isSameOrAfter(dayjs(), 'day'))
+    const checkInDate = (date.startDate && dayjs(date.startDate).diff(dayjs(), 'day') >= 0)
       ? dayjs(date.startDate).format('YYYY-MM-DD')
       : today;
-    const checkOutDate = (date.endDate && dayjs(date.endDate).isAfter(dayjs(date.startDate), 'day'))
+    const checkOutDate = (date.endDate && dayjs(date.endDate).diff(dayjs(date.startDate), 'day') > 0)
       ? dayjs(date.endDate).format('YYYY-MM-DD')
       : tomorrow;
 
