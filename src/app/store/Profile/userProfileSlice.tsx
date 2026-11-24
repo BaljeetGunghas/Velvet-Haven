@@ -60,6 +60,25 @@ export const userProfile = createAsyncThunk<
       headers: authHeader(),
     });
     const responseData = response.data;
+
+    // Check for 401 Unauthorized
+    if (responseData.output === -401) {
+      console.warn("User unauthorized - clearing session");
+      // Clear everything on 401
+      localStorage.clear();
+      sessionStorage.clear();
+      if (typeof window !== "undefined") {
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+        });
+      }
+      return rejectWithValue({
+        message: "Session expired. Please login again.",
+      });
+    }
+
     if (responseData.output === 1) {
       setCookie(null, "userRole", responseData?.jsonResponse?.role, {
         path: "/",
@@ -68,12 +87,30 @@ export const userProfile = createAsyncThunk<
       });
       localStorage.setItem("user", JSON.stringify(responseData.jsonResponse));
       return responseData as UserProfileResponse;
-    }else{
+    } else {
       return rejectWithValue(responseData);
     }
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const typedError = error as any;
+
+    // Check for 401 HTTP status
+    if (typedError.response?.status === 401) {
+      console.warn("401 Unauthorized - clearing session");
+      localStorage.clear();
+      sessionStorage.clear();
+      if (typeof window !== "undefined") {
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+        });
+      }
+      return rejectWithValue({
+        message: "Session expired. Please login again.",
+      });
+    }
+
     return rejectWithValue({
       message: typedError.response?.data?.message || "Unknown error occurred",
     });

@@ -1,43 +1,75 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
-import registrationBanner from "@/asset/registrationbanner.svg";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
 import Login from "./Login";
-import horizantalBanner from "@/asset/registrationhorizatalbanner.jpg";
 import Registration from "./Registration";
 
-const LoginRegistrationModel = () => {
+interface LoginRegistrationModelProps {
+  onClose?: () => void;
+}
+
+const LoginRegistrationModel = ({ onClose }: LoginRegistrationModelProps) => {
   const [isLoginShow, setIsLoginShow] = useState<boolean>(true);
 
+  // Lock body scroll when modal opens
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <div
-      className={`w-full h-full flex  overflow-hidden max-sm:flex-col ${
-        !isLoginShow ? "items-start" : "items-center"
-      }`}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[10001] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 sm:p-6"
+      onClick={handleClose}
     >
-      <div className="w-7/12 h-full max-sm:w-full max-sm:h-[200px]">
-        <Image
-          src={registrationBanner}
-          alt="registrationBanner"
-          className="w-[100%] object-contain h-full rounded-md -ml-10 max-sm:hidden max-md:object-cover max-h-[600px]"
-          lazyRoot="lazy-loading"
-        />
-        <Image
-          src={horizantalBanner}
-          alt="horizantalBanner"
-          className="w-[100%] object-cover h-full rounded-md hidden max-sm:block max-sm:overflow-auto "
-          lazyRoot="lazy-loading"
-        />
-      </div>
-      <div className="w-1/2 h-full pt-8 max-sm:w-full max-sm:pt-5 max max-md:pt-24">
-        {isLoginShow ? (
-          <Login onChange={setIsLoginShow} />
-        ) : (
-          <Registration onChange={setIsLoginShow} />
-        )}
-      </div>
-    </div>
+      {/* Main Modal Container */}
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+        transition={{
+          duration: 0.3,
+          ease: "easeOut",
+        }}
+        className="relative w-full max-w-md bg-white dark:bg-slate-700 rounded-2xl shadow-2xl shadow-black/40 border border-gray-100 dark:border-slate-600 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header Gradient Accent */}
+        <div className="h-2 sm:h-3 bg-gradient-to-r from-accent-gold via-primary-green to-accent-gold"></div>
+
+        {/* Close Button */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 hover:text-primary-green dark:hover:text-accent-gold transition-all duration-300 group"
+          aria-label="Close modal"
+        >
+          <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+        </button>
+
+        {/* Content */}
+        <div className="p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+          {isLoginShow ? (
+            <Login onChange={setIsLoginShow} />
+          ) : (
+            <Registration onChange={setIsLoginShow} />
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

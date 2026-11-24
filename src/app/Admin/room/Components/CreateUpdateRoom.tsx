@@ -18,12 +18,15 @@ import axios from "axios";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { createPortal } from "react-dom";
 import ImageUploader from "../../../../components/UploadMultiImage/ImageUpload";
 import { RoomIF } from "../../Components/Tabels/RoomTable";
 import { useHandleGetHotelRoomDetails } from "@/Hooks/room";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { MultiSelect } from "@/components/Select/MultiSelect";
+import { motion } from "framer-motion";
+import { X, DoorOpen, AlertCircle } from "lucide-react";
 
 interface roomResponseDataIF {
   output: number;
@@ -36,11 +39,13 @@ interface Props {
   handleRefress: () => void;
   selectedRoomId?: string;
 }
+
 const CreateUpdateRoom: React.FC<Props> = ({
   onClose,
   handleRefress,
   selectedRoomId,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [isloading, setIsLoading] = useState<boolean>(false);
   const handleGetHotelRoomDetails = useHandleGetHotelRoomDetails;
 
@@ -50,6 +55,10 @@ const CreateUpdateRoom: React.FC<Props> = ({
     useState<boolean>(false);
   const [roomImages, setRoomImages] = useState<string[] | null>(null);
   const [images, setImages] = useState<File[] | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [hotelNameData, setHotelNameData] = useState<
     { value: string; label: string }[]
@@ -280,310 +289,414 @@ const CreateUpdateRoom: React.FC<Props> = ({
     }
   };
 
-  return (
-    <div
-      className="fixed inset-0 flex justify-center bg-black bg-opacity-70 z-50 max-sm:items-center"
+  if (!mounted) return null;
+
+  const portal = document.getElementById("modal-root");
+  if (!portal) return null;
+
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 flex justify-center items-center bg-black/70 z-[9999] p-4"
       onClick={() => onClose()}
+      style={{
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        willChange: "backdrop-filter"
+      }}
     >
-      <div
-        className="relative bg-white dark:bg-gray-800  shadow-lg rounded-md max-sm:px-1 w-full max-w-5xl max-sm:w-11/12 h-4/5 top-8 max-sm:h-fit max-sm:top-0 md:h-fit"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0, y: 30 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="relative bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 shadow-2xl rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
       >
-        <button
-          className="absolute top-2 right-2 rounded-full size-6 border-[1.5px] border-black dark:border-white dark:text-white max-sm:dark:text-black text-base p-0 m-0 text-gray-500 hover:text-gray-800 dark:hover:text-white max-sm:bg-white scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600"
-          onClick={() => onClose()}
-        >
-          &times;
-        </button>
-        <h2 className="font-semibold text-2xl bg-slate-200 dark:bg-primaryblue w-full p-2 rounded-md">
-          Create update Room
-        </h2>
+        {/* Premium Header with Gradient */}
+        <div className="bg-gradient-to-r from-primary-green via-primary-green/95 to-primary-green/90 dark:from-primary-green dark:via-primary-green/90 dark:to-primary-green/80 p-8 sticky top-0 z-10 flex items-center justify-between border-b-4 border-accent-gold/50">
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <div className="p-3 rounded-xl bg-accent-gold/25 backdrop-blur-sm flex-shrink-0">
+              <DoorOpen className="w-8 h-8 text-accent-gold" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-3xl font-playfair font-bold text-white drop-shadow-lg truncate">
+                {selectedRoomId ? "Update Room" : "Create Room"}
+              </h2>
+              <p className="text-sm text-white/90 mt-1">
+                {selectedRoomId ? "Modify room details" : "Add a new room to your hotel"}
+              </p>
+            </div>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.15, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => onClose()}
+            className="p-3 hover:bg-white/20 rounded-full transition-all backdrop-blur-sm flex-shrink-0"
+            title="Close"
+          >
+            <X className="w-6 h-6 text-white drop-shadow-lg" />
+          </motion.button>
+        </div>
+
         {hotelDetailsLoading ? (
-          <div className="bg-gray-100 dark:bg-gray-800 flex items-center justify-center h-[90vh]">
+          <div className="flex items-center justify-center flex-1">
             <ButtonLoading />
           </div>
         ) : (
           <form
             onSubmit={formik.handleSubmit}
-            className="p-4 bg-gray-100 dark:bg-gray-800 flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 max-h-[90vh]"
+            className="p-8 space-y-8 overflow-y-auto overflow-x-hidden flex-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-2 ">
-              <div className="flex gap-1 flex-col ">
-                <SingleSelect
-                  value={hotel_id}
-                  setValue={setHotel_id}
-                  option={hotelNameData}
-                  label=" Hotel Name"
-                />
-                {isFormSubmit && !hotel_id.length && (
-                  <div className="flex justify-center">
-                    <Error error={"Please select value !"} />
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <SingleSelect
-                  value={room_type}
-                  setValue={setRoom_Type}
-                  option={RoomTypeIF}
-                  label="Room Type"
-                />
-                {isFormSubmit && !room_type.length && (
-                  <div className="flex justify-center">
-                    <Error error={"Please select value !"} />
-                  </div>
-                )}
-              </div>
+            {/* Error Message */}
+            {ErrorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 rounded-xl bg-red-100/80 dark:bg-red-950/30 border-2 border-red-300/50 dark:border-red-800/50 flex items-start gap-3"
+              >
+                <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm font-medium text-red-700 dark:text-red-300">{ErrorMessage}</p>
+              </motion.div>
+            )}
 
-              {/* <SingleSelect
-                value={status}
-                setValue={setStatus}
-                option={UserStatusIF}
-                label="Hotel Status"
-                /> */}
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Room Number{" "}
-                </label>
-                <Input
-                  type="tel"
-                  className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Number"
-                  value={formik.values.room_number}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="room_number"
-                  maxLength={5}
-                  pattern="[0-9]*"
-                  required
-                />
-                <p className="text-xs my-0 text-gray-500">
-                  only number allowed !
-                </p>
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Floor Number{" "}
-                </label>
-                <Input
-                  type="tel"
-                  className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Number"
-                  value={formik.values.floor_number}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="floor_number"
-                  maxLength={2}
-                  required
-                  pattern="[0-9]*"
-                />
-                <p className="text-xs my-0 text-gray-500">
-                  only number allowed !
-                </p>
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <SingleSelect
-                  value={bed_type}
-                  setValue={setBed_type}
-                  option={BedTypeIF}
-                  label="Room Type"
-                />
-                {isFormSubmit && !room_type.length && (
-                  <div className="flex justify-center">
-                    <Error error={"Please select value !"} />
+            {/* Section 1: Hotel & Room Basic Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="space-y-4"
+            >
+              <h3 className="text-lg font-playfair font-bold text-primary-green dark:text-white flex items-center gap-2">
+                <div className="w-1 h-6 bg-accent-gold rounded-full" />
+                Basic Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Hotel Name */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Hotel Name *
+                  </label>
+                  <div className="relative">
+                    <SingleSelect
+                      value={hotel_id}
+                      setValue={setHotel_id}
+                      option={hotelNameData}
+                      label=""
+                    />
+                    {isFormSubmit && !hotel_id.length && (
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">Please select a hotel</p>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <SingleSelect
-                  value={max_occupancy}
-                  setValue={setMax_occupancy}
-                  option={MaxOccupancyIF}
-                  label="Max Occupancy"
-                />
-                {isFormSubmit && !room_type.length && (
-                  <div className="flex justify-center">
-                    <Error error={"Please select value !"} />
+                </div>
+
+                {/* Room Type */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Room Type *
+                  </label>
+                  <div className="relative">
+                    <SingleSelect
+                      value={room_type}
+                      setValue={setRoom_Type}
+                      option={RoomTypeIF}
+                      label=""
+                    />
+                    {isFormSubmit && !room_type.length && (
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">Please select a room type</p>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <SingleSelect
-                  value={availability_status}
-                  setValue={setavailability_status}
-                  option={AvailabilityStatusIF}
-                  label="Availability Status"
-                />
-                {isFormSubmit && !room_type.length && (
-                  <div className="flex justify-center">
-                    <Error error={"Please select value !"} />
-                  </div>
-                )}
-              </div>
+                </div>
 
+                {/* Room Number */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Room Number *
+                  </label>
+                  <Input
+                    type="number"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-accent-gold transition-colors"
+                    placeholder="Enter room number"
+                    value={formik.values.room_number}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="room_number"
+                    maxLength={5}
+                    required
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Only numbers allowed</p>
+                </div>
 
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Price per Night{" "}
-                </label>
-                <Input
-                  type="tel"
-                  className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Price Rs"
-                  value={formik.values.price_per_night}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="price_per_night"
-                  maxLength={5}
-                  required
-                  pattern="[0-9]*"
-                />
-                <p className="text-xs my-0 text-gray-500">
-                  only number allowed !
-                </p>
-              </div>
+                {/* Floor Number */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Floor Number *
+                  </label>
+                  <Input
+                    type="number"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-accent-gold transition-colors"
+                    placeholder="Enter floor number"
+                    value={formik.values.floor_number}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="floor_number"
+                    maxLength={2}
+                    required
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Only numbers allowed</p>
+                </div>
 
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Check In Time
-                </label>
-                <DatePicker
-                  selected={
-                    formik.values.check_in_time
-                      ? new Date(
-                        new Date().setHours(
-                          Number(formik.values.check_in_time.split(":")[0]) ||
-                          12,
-                          Number(formik.values.check_in_time.split(":")[1]) ||
-                          0,
-                          0,
-                          0
-                        )
-                      )
-                      : new Date(new Date().setHours(12, 0, 0, 0))
-                  }
-                  onChange={(date) => {
-                    if (date) {
-                      const hours = String(date.getHours()).padStart(2, "0");
-                      const minutes = String(date.getMinutes()).padStart(
-                        2,
-                        "0"
-                      );
-                      formik.setFieldValue(
-                        "check_in_time",
-                        `${hours}:${minutes}`
-                      );
-                    }
-                  }}
-                  onBlur={formik.handleBlur}
-                  name="check_in_time"
-                  className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3 py-2 border outline-none border-slate-200 w-full"
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={30}
-                  dateFormat="h:mm aa"
-                />
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Check Out Time
-                </label>
-                <DatePicker
-                  selected={
-                    formik.values.check_out_time
-                      ? new Date(
-                        new Date().setHours(
-                          Number(
-                            formik.values.check_out_time.split(":")[0]
-                          ) || 12,
-                          Number(
-                            formik.values.check_out_time.split(":")[1]
-                          ) || 0,
-                          0,
-                          0
-                        )
-                      )
-                      : new Date(new Date().setHours(12, 0, 0, 0))
-                  }
-                  onChange={(date) => {
-                    if (date) {
-                      const hours = String(date.getHours()).padStart(2, "0");
-                      const minutes = String(date.getMinutes()).padStart(
-                        2,
-                        "0"
-                      );
-                      formik.setFieldValue(
-                        "check_out_time",
-                        `${hours}:${minutes}`
-                      );
-                    }
-                  }}
-                  onBlur={formik.handleBlur}
-                  name="check_out_time"
-                  className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3 py-2 border outline-none border-slate-200 w-full"
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={30}
-                  dateFormat="h:mm aa"
-                />
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <MultiSelect
-                  value={amenities}
-                  setValue={setAmenities}
-                  option={AmenitiesList}
-                  label="Amenities"
-                />
-                {isFormSubmit && !room_type.length && (
-                  <div className="flex justify-center">
-                    <Error error={"Please select value !"} />
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Room Description
-                </label>
-                <Textarea
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Description"
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="description"
-                  maxLength={500}
-                  required
-                  rows={5}
-                />
-              </div>
-
-              {selectedRoomId && (
-                <div className="flex gap-1 flex-col ">
-                  <ImageUploader
-                    existingImages={roomImages || []}
-                    onUpload={handleImageUpload}
-                    onDelete={handleDelteImage}
-                    label="Room Images"
+                {/* Bed Type */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Bed Type *
+                  </label>
+                  <SingleSelect
+                    value={bed_type}
+                    setValue={setBed_type}
+                    option={BedTypeIF}
+                    label=""
                   />
                 </div>
-              )}
-            </div>
-            {ErrorMessage && (
-              <div className="flex justify-center">
-                <Error error={ErrorMessage} />
+
+                {/* Max Occupancy */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Max Occupancy *
+                  </label>
+                  <SingleSelect
+                    value={max_occupancy}
+                    setValue={setMax_occupancy}
+                    option={MaxOccupancyIF}
+                    label=""
+                  />
+                </div>
               </div>
-            )}
-            <button
-              type="submit"
-              className="bg-primaryblue text-white p-2 rounded-md w-1/2 mx-auto text-center flex justify-center "
-              disabled={isloading}
+            </motion.div>
+
+            {/* Section 2: Pricing & Availability */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="space-y-4"
             >
-              {isloading ? <ButtonLoading /> : "Submit"}
-            </button>
+              <h3 className="text-lg font-playfair font-bold text-primary-green dark:text-white flex items-center gap-2">
+                <div className="w-1 h-6 bg-accent-gold rounded-full" />
+                Pricing & Availability
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Price per Night */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Price per Night (Rs) *
+                  </label>
+                  <Input
+                    type="number"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-accent-gold transition-colors"
+                    placeholder="Enter price"
+                    value={formik.values.price_per_night}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="price_per_night"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Only numbers allowed</p>
+                </div>
+
+                {/* Availability Status */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Availability Status *
+                  </label>
+                  <SingleSelect
+                    value={availability_status}
+                    setValue={setavailability_status}
+                    option={AvailabilityStatusIF}
+                    label=""
+                  />
+                </div>
+
+                {/* Check In Time */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Check In Time *
+                  </label>
+                  <DatePicker
+                    selected={
+                      formik.values.check_in_time
+                        ? new Date(
+                            new Date().setHours(
+                              Number(formik.values.check_in_time.split(":")[0]) || 12,
+                              Number(formik.values.check_in_time.split(":")[1]) || 0,
+                              0,
+                              0
+                            )
+                          )
+                        : new Date(new Date().setHours(12, 0, 0, 0))
+                    }
+                    onChange={(date) => {
+                      if (date) {
+                        const hours = String(date.getHours()).padStart(2, "0");
+                        const minutes = String(date.getMinutes()).padStart(2, "0");
+                        formik.setFieldValue("check_in_time", `${hours}:${minutes}`);
+                      }
+                    }}
+                    onBlur={formik.handleBlur}
+                    name="check_in_time"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 text-gray-900 dark:text-white focus:outline-none focus:border-accent-gold transition-colors"
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={30}
+                    dateFormat="h:mm aa"
+                  />
+                </div>
+
+                {/* Check Out Time */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Check Out Time *
+                  </label>
+                  <DatePicker
+                    selected={
+                      formik.values.check_out_time
+                        ? new Date(
+                            new Date().setHours(
+                              Number(formik.values.check_out_time.split(":")[0]) || 12,
+                              Number(formik.values.check_out_time.split(":")[1]) || 0,
+                              0,
+                              0
+                            )
+                          )
+                        : new Date(new Date().setHours(12, 0, 0, 0))
+                    }
+                    onChange={(date) => {
+                      if (date) {
+                        const hours = String(date.getHours()).padStart(2, "0");
+                        const minutes = String(date.getMinutes()).padStart(2, "0");
+                        formik.setFieldValue("check_out_time", `${hours}:${minutes}`);
+                      }
+                    }}
+                    onBlur={formik.handleBlur}
+                    name="check_out_time"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 text-gray-900 dark:text-white focus:outline-none focus:border-accent-gold transition-colors"
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={30}
+                    dateFormat="h:mm aa"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Section 3: Amenities & Description */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-4"
+            >
+              <h3 className="text-lg font-playfair font-bold text-primary-green dark:text-white flex items-center gap-2">
+                <div className="w-1 h-6 bg-accent-gold rounded-full" />
+                Details & Amenities
+              </h3>
+              <div className="space-y-5">
+                {/* Amenities */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Amenities
+                  </label>
+                  <MultiSelect
+                    value={amenities}
+                    setValue={setAmenities}
+                    option={AmenitiesList}
+                    label=""
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest block">
+                    Room Description *
+                  </label>
+                  <Textarea
+                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-accent-gold transition-colors resize-none"
+                    placeholder="Describe your room..."
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="description"
+                    maxLength={500}
+                    required
+                    rows={5}
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {formik.values.description.length}/500 characters
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Section 4: Room Images (only for edit) */}
+            {selectedRoomId && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="space-y-4"
+              >
+                <h3 className="text-lg font-playfair font-bold text-primary-green dark:text-white flex items-center gap-2">
+                  <div className="w-1 h-6 bg-accent-gold rounded-full" />
+                  Room Images
+                </h3>
+                <ImageUploader
+                  existingImages={roomImages || []}
+                  onUpload={handleImageUpload}
+                  onDelete={handleDelteImage}
+                  label=""
+                />
+              </motion.div>
+            )}
+
+            {/* Submit Button */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex gap-4 justify-end pt-6 border-t-2 border-slate-200 dark:border-slate-700/50 sticky bottom-0 bg-gradient-to-t from-white dark:from-slate-900 to-white/80 dark:to-slate-900/80 px-2 py-4 -mx-8"
+            >
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onClose()}
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-slate-300 to-slate-200 dark:from-slate-600 dark:to-slate-700 hover:from-slate-400 hover:to-slate-300 dark:hover:from-slate-500 dark:hover:to-slate-600 text-gray-800 dark:text-gray-100 font-bold shadow-md hover:shadow-lg transition-all border-2 border-slate-400/50 dark:border-slate-600/50"
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                type="submit"
+                disabled={isloading}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-accent-gold to-accent-gold/80 hover:from-accent-gold hover:to-accent-gold/90 disabled:from-accent-gold/60 disabled:to-accent-gold/50 text-white font-bold shadow-lg hover:shadow-2xl hover:shadow-accent-gold/40 transition-all flex items-center gap-2 disabled:opacity-50 border-2 border-accent-gold/50"
+              >
+                {isloading ? (
+                  <>
+                    <ButtonLoading />
+                    <span>Submitting...</span>
+                  </>
+                ) : (
+                  <span>{selectedRoomId ? "Update Room" : "Create Room"}</span>
+                )}
+              </motion.button>
+            </motion.div>
           </form>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>,
+    portal
   );
 };
 

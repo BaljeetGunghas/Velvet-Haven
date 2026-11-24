@@ -77,7 +77,7 @@ export default function Home() {
   
   return (
     <>
-      <LandingBanner />
+      <LandingBanner userCity={cityname} />
       <OurServeces />
       <TopDestinationHotel />
       <Testimonial />

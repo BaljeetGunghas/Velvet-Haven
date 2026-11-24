@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Geist, Geist_Mono, Poppins, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/Theme/theme-provider";
 import Header from "@/components/Header/Header";
+import { ModeToggle } from "@/components/ModeToggle";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import Footer from "@/components/Footer/Footer";
 import { StoreProvider } from "./store/storeProvider";
@@ -26,6 +27,13 @@ const poppins = Poppins({
   style: ["normal", "italic"],
 });
 
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
   title: "Book Your Luxury Stay at Velvet-Haven - India’s Premier Hotel",
   description:
@@ -38,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en ||hi">
+    <html lang="en ||hi" suppressHydrationWarning>
       <head>
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
@@ -46,12 +54,14 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} dark:bg-black dark:text-white bg-white text-black`}
+        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${playfairDisplay.variable} dark:bg-black dark:text-white bg-white text-black`}
       >
+        <div id="modal-root" />
         <StoreProvider>
           <ThemeProvider attribute="class" disableTransitionOnChange>
             <TooltipProvider>
               <Header />
+              <ModeToggle />
               <ToastContainer
                 position="top-right"
                 autoClose={2000}

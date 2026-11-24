@@ -1,7 +1,7 @@
 "use client";
 
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, Suspense, useRef } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -45,9 +45,26 @@ const SearchResult = () => {
   );
 };
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
 const SearchResultContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const gridRef = useRef<HTMLDivElement>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(true); // Toggle state for filter
 
   const [rooms, setRooms] = useState<SearchRoomIF[]>([]);
@@ -144,66 +161,131 @@ const SearchResultContent = () => {
 
   const loadMore = () => {
     if (page <= totalPages) {
+      // Store current scroll position before fetching
+      const scrollBefore = window.scrollY;
+
       fetchRooms();
+
+      // Scroll back to position after items load and animate
+      setTimeout(() => {
+        window.scrollTo({ top: scrollBefore + 300, behavior: 'smooth' });
+      }, 800);  // Wait for API response and animations to complete
     }
   };
+
   return (
-    <div className="container mx-auto mt-20">
-      <h1 className="mx-auto px-8 font-bold text-2xl text-center">Search Result</h1>
+    <main className="min-h-screen w-full bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-900 dark:via-slate-800/50 dark:to-slate-900 pt-20 sm:pt-24 lg:pt-28">
+      {/* Main Content Section - Full Width Premium Layout */}
+      <section className="relative w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 sm:py-12 lg:py-16">
+        <div className="w-full max-w-7xl mx-auto">
+          {/* Page Heading - Elegant Hero Section */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-12 lg:mb-14 pb-6 border-b border-gray-200/50 dark:border-slate-700/50"
+          >
+            <h1 className="text-6xl md:text-7xl font-playfair font-bold text-primary-green dark:text-white mb-3 tracking-tight">
+              Luxury <span className="text-accent-gold">Stays</span>
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg font-light max-w-2xl">
+              Discover our premium collection of handpicked hotels and resorts, curated for your perfect escape
+            </p>
+          </motion.div>
 
-      {/* Filter Toggle Button (Mobile & Small Screens) */}
-      <div className="container w-full md:w-1/4 justify-between px-8 pr-0 mt-4 flex">
-        {isFilterOpen && (
-          <Button className="flex items-center gap-2 dark:border px-4 py-2 rounded-md cursor-default">
-            Filter
-            <FiFilter size={20} />
-          </Button>
-        )}
-        <Button
-          onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className={`flex items-center dark:border gap-2 px-4 py-2 rounded-md ${isFilterOpen && "rounded-full"}`}
-        >
-          {isFilterOpen ? <ArrowLeft size={20} /> : <>Filter <ArrowRight size={20} /></>}
-        </Button>
-      </div>
-
-      <div className="container mx-auto p-4 flex flex-col md:flex-row">
-        {/* Filter Section */}
-        {isFilterOpen && <motion.nav
-          initial={{ x: -550 }}
-          animate={{ x: isFilterOpen ? 0 : -550 }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className={`w-full md:w-1/4 p-4 border-b md:border-b-0 md:border-r bg-white`}
-        >
-          <div className="h-fit sticky top-20 overflow-y-auto  bg-white">
-            <SearchFilter filters={filters} setfilter={setFilters} fetchRooms={(val) => fetchRooms(val)} />
-          </div>
-        </motion.nav>
-        }
-
-        {/* Room Listings */}
-        <div className={`w-full ${!isFilterOpen ? "md:w-full" : "md:w-3/4"} px-2`}>
-          {loading && rooms.length === 0 && <LoadingComponent />}
-          {error && <ComponentError error={error} reload={() => { setPage(1); fetchRooms(true); }} />}
-          {rooms.length === 0 && !loading && !error && <NoResultFound />}
-
-          <div className={`grid grid-cols-1 sm:grid-cols-2 ${!isFilterOpen ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-6`}>
-            {rooms.map((room: SearchRoomIF) => (
-              <SearchCard key={room._id} room={room} />
-            ))}
+          {/* Filter Toggle Button (Mobile & Tablet) */}
+          <div className="flex justify-between items-center mb-8 lg:hidden gap-3">
+            {isFilterOpen && (
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-2 text-accent-gold font-semibold text-sm"
+              >
+                <FiFilter size={16} />
+                Filters Active
+              </motion.div>
+            )}
+            <Button
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg border-2 border-accent-gold/60 bg-white dark:bg-slate-800 hover:bg-accent-gold/5 dark:hover:bg-slate-700 text-accent-gold font-semibold text-sm transition-all duration-300 ${isFilterOpen ? 'gap-2' : 'gap-3'}`}
+            >
+              {isFilterOpen ? <ArrowLeft size={16} /> : <>Filter <ArrowRight size={16} /></>}
+            </Button>
           </div>
 
-          {/* Load More Button */}
-          {page <= totalPages && rooms.length >0 && !error && (
-            <div className="text-center mt-6">
-              <Button onClick={loadMore} disabled={loading} className="bg-primaryblue text-white">
-                {loading ? <ButtonLoading /> : "Load More"}
-              </Button>
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 relative">
+            {/* Filter Section - Premium Sidebar (Desktop) */}
+            <motion.aside
+              initial={{ x: -550, opacity: 0 }}
+              animate={{ x: isFilterOpen ? 0 : -550, opacity: isFilterOpen ? 1 : 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className={`${isFilterOpen ? 'block' : 'hidden lg:block'} w-full md:w-96 lg:w-80 flex-shrink-0 relative z-20`}
+            >
+              <div className="h-fit sticky top-24 sm:top-32 md:top-28 overflow-visible pr-4 md:pr-6 relative z-20">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-slate-700 shadow-md hover:shadow-xl hover:shadow-accent-gold/10 transition-all duration-300 p-8"
+                >
+                  <div className="flex items-center gap-2 mb-8">
+                    <FiFilter className="text-accent-gold" size={18} />
+                    <h2 className="text-xl font-playfair font-semibold text-primary-green dark:text-white">Refine Your Search</h2>
+                  </div>
+                  <SearchFilter filters={filters} setfilter={setFilters} fetchRooms={(val) => fetchRooms(val)} />
+                </motion.div>
+              </div>
+            </motion.aside>
+
+            {/* Room Listings - Premium Grid */}
+            <div className="w-full flex-1">
+              {loading && rooms.length === 0 && <LoadingComponent />}
+              {error && <ComponentError error={error} reload={() => { setPage(1); fetchRooms(true); }} />}
+              {rooms.length === 0 && !loading && !error && <NoResultFound />}
+
+              {rooms.length > 0 && (
+                <motion.div
+                  ref={gridRef}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-8 lg:gap-9"
+                  key={`grid-${rooms.length}`}
+                >
+                  {rooms.map((room: SearchRoomIF, index: number) => (
+                    <motion.div
+                      key={room._id}
+                      variants={itemVariants}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                    >
+                      <SearchCard room={room} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* Load More Button - Premium Style */}
+              {page <= totalPages && rooms.length > 0 && !error && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="text-center mt-14 lg:mt-16"
+                >
+                  <Button
+                    onClick={loadMore}
+                    disabled={loading}
+                    className="bg-gradient-to-r from-accent-gold to-accent-gold/90 hover:from-accent-gold/95 hover:to-accent-gold/85 text-white px-10 lg:px-12 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-accent-gold/30 text-base"
+                  >
+                    {loading ? <ButtonLoading /> : "Load More Properties"}
+                  </Button>
+                </motion.div>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 

@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
 
 interface SelectPersonAndRoomProps {
   personDetails: {
     rooms: number;
     adults: number;
     children: number;
-  }
-  setPersonDetails: (details: { rooms: number; adults: number; children: number }) => void;
+  };
+  setPersonDetails: (details: {
+    rooms: number;
+    adults: number;
+    children: number;
+  }) => void;
   isOpen: boolean;
   onClose: (val: boolean) => void;
 }
@@ -17,6 +23,7 @@ const SelectPersonAndRoom: React.FC<SelectPersonAndRoomProps> = ({
   isOpen,
   onClose,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [rooms, setRooms] = useState<number>(personDetails.rooms || 1);
   const [adults, setAdults] = useState<number>(personDetails.adults || 1);
   const [children, setChildren] = useState<number>(personDetails.children || 0);
@@ -24,102 +31,172 @@ const SelectPersonAndRoom: React.FC<SelectPersonAndRoomProps> = ({
   const maxAdults = rooms * 2;
   const maxChildren = rooms * 2;
 
+  // Ensure portal is mounted on the client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scrolling and sync values when opening
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setRooms(personDetails.rooms || 1);
+    setAdults(personDetails.adults || 1);
+    setChildren(personDetails.children || 0);
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen, personDetails]);
+
   const handleConfirm = () => {
     setPersonDetails({ rooms, adults, children });
     onClose(false);
   };
 
-  if (!isOpen) return null;
+  if (!mounted || !isOpen) return null;
 
-  return (
-    <div
-      className="fixed inset-0 flex justify-center bg-black bg-opacity-30 z-50 max-sm:items-center"
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/60 backdrop-blur-md p-4 sm:items-center"
       onClick={() => onClose(false)}
     >
-      <div
-        className="relative dark:bg-gray-800 shadow-lg p-3 max-sm:px-1 w-full max-w-5xl max-sm:w-11/12 h-4/5 top-8 max-sm:h-fit max-sm:top-0 md:h-fit"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+      <motion.div
+        initial={{ y: 500, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 500, opacity: 0 }}
+        transition={{
+          duration: 0.4,
+          ease: "easeOut",
+          type: "spring",
+          stiffness: 100,
+          damping: 25,
+        }}
+        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl border border-gray-100 bg-white p-5 sm:p-7 shadow-2xl shadow-black/40 dark:border-slate-600/60 dark:bg-slate-700/95 dark:shadow-primary-green/50"
+        onClick={(e) => e.stopPropagation()}
       >
+        {/* Close Button */}
         <button
-          className="absolute top-2 right-2 rounded-full size-6 border-[1.5px] border-black dark:border-white dark:text-white text-gray-500 hover:text-gray-800 dark:hover:text-white max-sm:bg-white"
           onClick={() => onClose(false)}
+          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-all hover:border-accent-gold hover:text-accent-gold dark:border-slate-600 dark:text-gray-400 dark:hover:border-accent-gold dark:hover:text-accent-gold"
+          aria-label="Close modal"
         >
-          &times;
+          ✕
         </button>
 
-        <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 mx-auto my-5 w-96">
+        {/* Header */}
+        <h3 className="mb-6 text-lg font-semibold text-primary-green dark:text-white">
+          Guests & Rooms
+        </h3>
 
-          {/* Adult Selection */}
-          <div className="flex justify-between items-center mb-5">
-            <span className="text-lg font-medium text-gray-700">Adults</span>
-            <div className="flex items-center gap-3">
+        {/* Adults */}
+        <div className="mb-5 space-y-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Adults
+          </label>
+          <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-slate-600 dark:bg-slate-800/50">
+            <span className="text-lg font-semibold text-gray-900 dark:text-white">
+              {adults}
+            </span>
+            <div className="flex gap-2">
               <button
-                className="w-9 h-9 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-xl hover:bg-gray-300 transition"
                 onClick={() => setAdults((prev) => Math.max(1, prev - 1))}
                 disabled={adults <= 1}
+                className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 bg-white text-gray-600 transition-all hover:border-accent-gold hover:bg-accent-gold/5 disabled:opacity-50 disabled:cursor-not-allowed dark:border-slate-600 dark:bg-slate-800 dark:text-gray-400"
               >
-                -
+                −
               </button>
-              <span className="text-lg font-semibold">{adults}</span>
               <button
-                className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl hover:bg-blue-700 transition"
-                onClick={() => setAdults((prev) => Math.min(maxAdults, prev + 1))}
+                onClick={() =>
+                  setAdults((prev) => Math.min(maxAdults, prev + 1))
+                }
+                disabled={adults >= maxAdults}
+                className="flex h-8 w-8 items-center justify-center rounded border border-accent-gold bg-accent-gold/10 text-accent-gold transition-all hover:bg-accent-gold/20 disabled:opacity-40 dark:bg-accent-gold/20"
               >
                 +
               </button>
             </div>
           </div>
+        </div>
 
-          {/* Children Selection */}
-          <div className="flex justify-between items-center mb-6">
-            <span className="text-lg font-medium text-gray-700">Children</span>
-            <div className="flex items-center gap-3">
+        {/* Children */}
+        <div className="mb-5 space-y-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Children
+          </label>
+          <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-slate-600 dark:bg-slate-800/50">
+            <span className="text-lg font-semibold text-gray-900 dark:text-white">
+              {children}
+            </span>
+            <div className="flex gap-2">
               <button
-                className="w-9 h-9 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-xl hover:bg-gray-300 transition"
                 onClick={() => setChildren((prev) => Math.max(0, prev - 1))}
                 disabled={children <= 0}
+                className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 bg-white text-gray-600 transition-all hover:border-accent-gold hover:bg-accent-gold/5 disabled:opacity-50 disabled:cursor-not-allowed dark:border-slate-600 dark:bg-slate-800 dark:text-gray-400"
               >
-                -
+                −
               </button>
-              <span className="text-lg font-semibold">{children}</span>
               <button
-                className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl hover:bg-blue-700 transition"
-                onClick={() => setChildren((prev) => Math.min(maxChildren, prev + 1))}
+                onClick={() =>
+                  setChildren((prev) => Math.min(maxChildren, prev + 1))
+                }
+                disabled={children >= maxChildren}
+                className="flex h-8 w-8 items-center justify-center rounded border border-accent-gold bg-accent-gold/10 text-accent-gold transition-all hover:bg-accent-gold/20 disabled:opacity-40 dark:bg-accent-gold/20"
               >
                 +
               </button>
             </div>
           </div>
-          {/* Room Selection */}
-          <div className="flex justify-between items-center mb-5">
-            <span className="text-lg font-medium text-gray-700">Rooms</span>
-            <div className="flex items-center gap-3">
-              <button
-                className="w-9 h-9 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center text-xl hover:bg-gray-300 transition"
-                onClick={() => setRooms((prev) => Math.max(1, prev - 1))}
-              >
-                -
-              </button>
-              <span className="text-lg font-semibold">{rooms}</span>
-              <button
-                className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl hover:bg-blue-700 transition"
-                onClick={() => setRooms((prev) => prev + 1)}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          {/* Confirm Button */}
-          <button
-            className="w-full bg-blue-600 text-white px-5 py-3 rounded-lg text-lg font-semibold shadow-md transition hover:bg-blue-700"
-            onClick={handleConfirm}
-          >
-            OK
-          </button>
         </div>
-      </div>
-    </div>
+
+        {/* Rooms */}
+        <div className="mb-6 space-y-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Rooms
+          </label>
+          <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-slate-600 dark:bg-slate-800/50">
+            <span className="text-lg font-semibold text-gray-900 dark:text-white">
+              {rooms}
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  const nextRooms = Math.max(1, rooms - 1);
+                  setRooms(nextRooms);
+                  setAdults((prev) => Math.min(prev, nextRooms * 2));
+                  setChildren((prev) => Math.min(prev, nextRooms * 2));
+                }}
+                disabled={rooms <= 1}
+                className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 bg-white text-gray-600 transition-all hover:border-accent-gold hover:bg-accent-gold/5 disabled:opacity-50 disabled:cursor-not-allowed dark:border-slate-600 dark:bg-slate-800 dark:text-gray-400"
+              >
+                −
+              </button>
+              <button
+                onClick={() => setRooms((prev) => prev + 1)}
+                className="flex h-8 w-8 items-center justify-center rounded border border-accent-gold bg-accent-gold/10 text-accent-gold transition-all hover:bg-accent-gold/20 dark:bg-accent-gold/20"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Confirm */}
+        <button
+          onClick={handleConfirm}
+          className="w-full rounded-lg bg-accent-gold px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:bg-accent-gold/90 hover:shadow-xl hover:shadow-accent-gold/40 sm:text-base"
+        >
+          Confirm Selection
+        </button>
+      </motion.div>
+    </motion.div>,
+    document.body
   );
 };
 

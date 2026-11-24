@@ -14,7 +14,14 @@ export default {
     			foreground: 'var(--foreground)',
     			bannerbg: 'var(--bannerbg)',
     			secondrybackground: 'var(--secondrybackground)',
-    			lightGray: 'var(--lightGray)'
+    			lightGray: 'var(--lightGray)',
+    			/* Luxury Color Palette */
+    			'primary-green': 'var(--primary-green)',
+    			'secondary-ivory': 'var(--secondary-ivory)',
+    			'accent-gold': 'var(--accent-gold)',
+    			'text-dark': 'var(--text-dark)',
+    			'text-secondary': 'var(--text-secondary)',
+    			'border-light': 'var(--border-light)',
     		},
     		padding: {
     			mainPading: 'var(--mainPadding)',

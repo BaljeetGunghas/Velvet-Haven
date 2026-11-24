@@ -12,6 +12,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { createPortal } from "react-dom";
 import { HotelIF } from "../../Components/Tabels/HotelTabel";
 import { useHandleGetHotelDetails } from "@/Hooks/hotel";
 import ImageUploader from "../../../../components/UploadMultiImage/ImageUpload";
@@ -26,6 +27,8 @@ import {
 } from "@/components/ui/select";
 import { CityOptions } from "@/components/Form/CityOptions";
 import { FaLocationDot } from "react-icons/fa6";
+import { motion } from "framer-motion";
+import { X, Building2, Mail, Phone, MapPin, FileText, AlertCircle } from "lucide-react";
 
 interface hotelResponseDataIF {
   output: number;
@@ -38,11 +41,13 @@ interface Props {
   handleRefress: () => void;
   selectedHotelId?: string;
 }
+
 const CreateUpdateHotel: React.FC<Props> = ({
   onClose,
   handleRefress,
   selectedHotelId,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [isloading, setIsLoading] = useState<boolean>(false);
   const handleGetHotelDetails = useHandleGetHotelDetails;
 
@@ -50,11 +55,13 @@ const CreateUpdateHotel: React.FC<Props> = ({
   const [status, setStatus] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const handleLogout = useHandleLogout();
-  const [hotelDetailsLoading, setHotelDetailsLoading] =
-    useState<boolean>(false);
-  //   const [hotelDetails, setHotelDetails] = useState<HotelIF | null>(null);
+  const [hotelDetailsLoading, setHotelDetailsLoading] = useState<boolean>(false);
   const [hotelImages, setHotelImages] = useState<string[] | null>(null);
   const [images, setImages] = useState<File[] | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -74,7 +81,7 @@ const CreateUpdateHotel: React.FC<Props> = ({
       const payload = {
         ...values,
         status: status,
-        city: selectedCity
+        city: selectedCity,
       };
       if (!selectedHotelId) {
         const response = await axios.post(
@@ -175,9 +182,8 @@ const CreateUpdateHotel: React.FC<Props> = ({
             status: response.jsonResponse?.status || "",
           });
           setStatus(response.jsonResponse?.status || "");
-          setSelectedCity(response.jsonResponse?.city || '')
+          setSelectedCity(response.jsonResponse?.city || "");
           setHotelDetailsLoading(false);
-          //   setHotelDetails(response.jsonResponse);
           setHotelImages(response.jsonResponse?.hotel_image || null);
         } else if (response.output === -401) {
           handleLogout();
@@ -228,155 +234,193 @@ const CreateUpdateHotel: React.FC<Props> = ({
     }
   };
 
-  return (
-    <div
-      className="fixed inset-0 flex justify-center bg-black bg-opacity-70 z-50 max-sm:items-center"
+  const errorCount = Object.keys(formik.errors).filter((key) => formik.errors[key as keyof typeof formik.errors]).length;
+
+  if (!mounted) return null;
+
+  const portal = document.getElementById("modal-root");
+  if (!portal) return null;
+
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 flex justify-center items-center bg-black/70 z-[9999] p-4"
       onClick={() => onClose()}
+      style={{
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        willChange: "backdrop-filter"
+      }}
     >
-      <div
-        className="relative bg-white dark:bg-gray-800  shadow-lg rounded-md max-sm:px-1 w-full max-w-5xl max-sm:w-11/12 h-4/5 top-8 max-sm:h-fit max-sm:top-0 md:h-fit"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="relative bg-white dark:bg-slate-800 shadow-2xl rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
-        <button
-          className="absolute top-2 right-2 rounded-full size-6 border-[1.5px] border-black dark:border-white dark:text-white max-sm:dark:text-black text-base p-0 m-0 text-gray-500 hover:text-gray-800 dark:hover:text-white max-sm:bg-white scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600"
-          onClick={() => onClose()}
-        >
-          &times;
-        </button>
-        <h2 className="font-semibold text-2xl bg-slate-200 w-full p-2 rounded-md">
-          Create update hotel
-        </h2>
+        {/* Header */}
+        <div className="bg-gradient-to-r from-primary-green to-primary-green/90 dark:from-primary-green dark:to-primary-green/80 p-6 flex items-center justify-between border-b-2 border-accent-gold/20">
+          <div className="flex items-center gap-3">
+            <Building2 className="w-6 h-6 text-accent-gold" />
+            <div>
+              <h2 className="text-2xl font-playfair font-bold text-white">
+                {selectedHotelId ? "Update Hotel" : "Create New Hotel"}
+              </h2>
+              <p className="text-sm text-white/80">
+                {selectedHotelId ? "Modify hotel details and information" : "Add a new property to your portfolio"}
+              </p>
+            </div>
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => onClose()}
+            className="p-2 hover:bg-white/20 rounded-full transition-all"
+            title="Close"
+          >
+            <X className="w-6 h-6 text-white drop-shadow-lg" />
+          </motion.button>
+        </div>
+
+        {/* Error Badge */}
+        {errorCount > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mx-6 mt-4 p-3 rounded-lg bg-red-50/80 dark:bg-red-950/40 border border-red-200/50 dark:border-red-800/50 flex items-center gap-2"
+          >
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />
+            <span className="text-sm font-semibold text-red-700 dark:text-red-300">
+              {errorCount} field{errorCount !== 1 ? "s" : ""} require attention
+            </span>
+          </motion.div>
+        )}
+
+        {/* Content */}
         {hotelDetailsLoading ? (
-          <div className="bg-gray-100 dark:bg-gray-800 flex items-center justify-center h-[90vh]">
+          <div className="flex items-center justify-center h-96">
             <ButtonLoading />
           </div>
         ) : (
           <form
             onSubmit={formik.handleSubmit}
-            className="p-4 bg-gray-100 dark:bg-gray-800 flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 max-h-[90vh]"
+            className="overflow-y-auto max-h-[calc(90vh-140px)] p-8 space-y-6"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-2 ">
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Hotel Name{" "}
-                </label>
-                <Input
-                  type="text"
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Name"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="name"
-                  maxLength={50}
-                  required
-                />
-                {formik.errors.name && formik.touched.name && (
-                  <Error error={formik.errors.name} />
-                )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Hotel Mobile{" "}
-                </label>
-                <Input
-                  type="tel"
-                  className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Number"
-                  value={formik.values.contact_number}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="contact_number"
-                  maxLength={10}
-                  minLength={10}
-                  required
-                />
-                {formik.errors.contact_number &&
-                  formik.touched.contact_number && (
+            {/* Basic Information Section */}
+            <div>
+              <h3 className="text-lg font-bold text-primary-green dark:text-white mb-4 flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-accent-gold" />
+                Basic Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Hotel Name */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Hotel Name *
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Enter hotel name"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="name"
+                    maxLength={50}
+                    required
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  {formik.errors.name && formik.touched.name && (
+                    <Error error={formik.errors.name} />
+                  )}
+                </div>
+
+                {/* Owner Name */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Owner Name *
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Enter owner name"
+                    value={formik.values.owner_name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="owner_name"
+                    maxLength={50}
+                    required
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  {formik.errors.owner_name && formik.touched.owner_name && (
+                    <Error error={formik.errors.owner_name} />
+                  )}
+                </div>
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    Hotel Email *
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="Enter email address"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="email"
+                    required
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  {formik.errors.email && formik.touched.email && (
+                    <Error error={formik.errors.email} />
+                  )}
+                </div>
+
+                {/* Phone */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    Hotel Phone *
+                  </label>
+                  <Input
+                    type="tel"
+                    placeholder="Enter 10-digit phone number"
+                    value={formik.values.contact_number}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="contact_number"
+                    maxLength={10}
+                    minLength={10}
+                    required
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  {formik.errors.contact_number && formik.touched.contact_number && (
                     <Error error={formik.errors.contact_number} />
                   )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Hotel Email{" "}
-                </label>
-                <Input
-                  type="email"
-                  className="text-sm text-gray-900 dark:text-foreground bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="email"
-                  required
-                />
-                {formik.errors.email && formik.touched.email && (
-                  <Error error={formik.errors.email} />
-                )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Hotel Owner Name{" "}
-                </label>
-                <Input
-                  type="text"
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Owner Name"
-                  value={formik.values.owner_name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="owner_name"
-                  required
-                  maxLength={50}
-                />
-                {formik.errors.owner_name && formik.touched.owner_name && (
-                  <Error error={formik.errors.owner_name} />
-                )}
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Postal code{" "}
-                </label>
-                <Input
-                  type="tel"
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter City"
-                  value={formik.values.postal_code}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="postal_code"
-                  maxLength={6}
-                />
-                {formik.errors.postal_code && formik.touched.postal_code && (
-                  <Error error={formik.errors.postal_code} />
-                )}
-              </div>
-              <SingleSelect
-                value={status}
-                setValue={setStatus}
-                option={UserStatusIF}
-                label="Hotel Status"
-              />
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Hotel City{" "}
-                </label>
-                <div className="relative w-full">
+                </div>
+
+                {/* City */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    City *
+                  </label>
                   <Select value={selectedCity} onValueChange={setSelectedCity}>
-                    <SelectTrigger className="text-sm text-left border border-gray-200 text-gray-900 bg-gray-100 rounded-md w-full p-2 shadow-sm">
-                      <SelectValue placeholder="Hotel City">{selectedCity && CityOptions().find(city => city.value === selectedCity)?.label}</SelectValue>
+                    <SelectTrigger className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold">
+                      <SelectValue placeholder="Select city" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white dark:bg-foreground z-50">
+                    <SelectContent className="bg-white dark:bg-slate-800 z-50">
                       <SelectGroup>
                         <SelectLabel>Select City</SelectLabel>
                         {CityOptions().map((city, i) => (
-                          <SelectItem key={city.value + i} value={city.value} className="hover:bg-gray-200 dark:hover:bg-bannerbg cursor-pointer">
-                            <div className="flex gap-2 items-center p-2">
-                              <FaLocationDot className="text-primaryblue h-5 w-5" />
-                              <div className="flex flex-col">
-                                <p className="text-black dark:text-white font-semibold">{city.label}</p>
-                                <p className="font-normal text-gray-600 dark:text-slate-50">India</p>
-                              </div>
+                          <SelectItem key={city.value + i} value={city.value}>
+                            <div className="flex gap-2 items-center">
+                              <FaLocationDot className="text-primary-green h-4 w-4" />
+                              {city.label}
                             </div>
                           </SelectItem>
                         ))}
@@ -384,106 +428,195 @@ const CreateUpdateHotel: React.FC<Props> = ({
                     </SelectContent>
                   </Select>
                 </div>
+
+                {/* Postal Code */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Postal Code
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Enter postal code"
+                    value={formik.values.postal_code}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="postal_code"
+                    maxLength={6}
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  {formik.errors.postal_code && formik.touched.postal_code && (
+                    <Error error={formik.errors.postal_code} />
+                  )}
+                </div>
+
+                {/* Status */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Status
+                  </label>
+                  <SingleSelect
+                    value={status}
+                    setValue={setStatus}
+                    option={UserStatusIF}
+                    label=""
+                  />
+                </div>
               </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Hotel Address{" "}
+            </div>
+
+            {/* Address */}
+            <div>
+              <h3 className="text-lg font-bold text-primary-green dark:text-white mb-4 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-accent-gold" />
+                Location Details
+              </h3>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                  Hotel Address *
                 </label>
                 <Textarea
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Address"
+                  placeholder="Enter complete hotel address"
                   value={formik.values.address}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   name="address"
+                  maxLength={200}
+                  rows={3}
                   required
-                  maxLength={100}
-                  rows={5}
+                  className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
                 />
                 {formik.errors.address && formik.touched.address && (
                   <Error error={formik.errors.address} />
                 )}
               </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Hotel Description
-                </label>
-                <Textarea
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Description"
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="description"
-                  maxLength={2000}
-                  required
-                  rows={5}
-                />
-                {formik.values.description.length >0 && <p className="text-xs font-semibold text-right text-gray-500">Remaingin character {2000-formik.values.description.length}/2000</p>}
-              </div>
-
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Policies
-                </label>
-                <Textarea
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Policies"
-                  value={formik.values.policies}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="policies"
-                  rows={5}
-                />
-                <p className="text-xs my-1 text-gray-500">
-                  Seprate your value with{" "}
-                  <span className="text-xs">new line</span>
-                </p>
-              </div>
-              <div className="flex gap-1 flex-col ">
-                <label className=" text-sm font-semibold text-black dark:text-white ">
-                  Cancelation Policy
-                </label>
-                <Textarea
-                  className="text-sm text-gray-900 bg-gray-100 rounded-md p-3"
-                  placeholder="Enter Cancelation Policy"
-                  value={formik.values.cancellation_policy}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  name="cancellation_policy"
-                  rows={5}
-                />
-                <p className="text-xs my-1 text-gray-500">
-                  Seprate your value with{" "}
-                  <span className="text-xs">new line</span>
-                </p>
-              </div>
-              {selectedHotelId && (
-                <div className="flex gap-1 flex-col ">
-                  <ImageUploader
-                    existingImages={hotelImages || []}
-                    onUpload={handleImageUpload}
-                    onDelete={handleDelteImage}
-                  />
-                </div>
-              )}
             </div>
+
+            {/* Description & Details */}
+            <div>
+              <h3 className="text-lg font-bold text-primary-green dark:text-white mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-accent-gold" />
+                Description & Policies
+              </h3>
+              <div className="space-y-6">
+                {/* Description */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Hotel Description *
+                  </label>
+                  <Textarea
+                    placeholder="Describe your hotel, amenities, and unique features"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="description"
+                    maxLength={2000}
+                    rows={4}
+                    required
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  {formik.values.description.length > 0 && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
+                      {formik.values.description.length} / 2000 characters
+                    </p>
+                  )}
+                </div>
+
+                {/* Policies */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Policies (One per line)
+                  </label>
+                  <Textarea
+                    placeholder="Enter each policy on a new line&#10;Example:&#10;24-hour room service&#10;Free WiFi&#10;Pet friendly"
+                    value={formik.values.policies}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="policies"
+                    rows={3}
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Separate each policy with a new line
+                  </p>
+                </div>
+
+                {/* Cancellation Policy */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Cancellation Policy (One per line)
+                  </label>
+                  <Textarea
+                    placeholder="Enter cancellation terms, one per line&#10;Example:&#10;Free cancellation up to 7 days before&#10;50% refund for 3-7 days before&#10;No refund within 3 days"
+                    value={formik.values.cancellation_policy}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    name="cancellation_policy"
+                    rows={3}
+                    className="text-sm border-2 border-slate-200/50 dark:border-slate-700/50 rounded-lg focus:border-accent-gold"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Separate each policy with a new line
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Images */}
+            {selectedHotelId && (
+              <div>
+                <h3 className="text-lg font-bold text-primary-green dark:text-white mb-4">
+                  Hotel Images
+                </h3>
+                <ImageUploader
+                  existingImages={hotelImages || []}
+                  onUpload={handleImageUpload}
+                  onDelete={handleDelteImage}
+                />
+              </div>
+            )}
+
+            {/* Error Message */}
             {ErrorMessage && (
-              <div className="flex justify-center">
+              <div className="p-4 rounded-lg bg-red-50/80 dark:bg-red-950/40 border border-red-200/50 dark:border-red-800/50">
                 <Error error={ErrorMessage} />
               </div>
             )}
-            <button
-              type="submit"
-              className="bg-primaryblue text-white p-2 rounded-md w-1/2 mx-auto text-center flex justify-center "
-              disabled={isloading}
-            >
-              {isloading ? <ButtonLoading /> : "Submit"}
-            </button>
+
+            {/* Buttons */}
+            <div className="flex gap-4 justify-end pt-6 border-t border-slate-200/50 dark:border-slate-700/50">
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => onClose()}
+                className="px-8 py-3 rounded-lg bg-slate-200/80 dark:bg-slate-700/80 hover:bg-slate-300 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 font-bold transition-all"
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={isloading || errorCount > 0}
+                className="px-8 py-3 rounded-lg bg-gradient-to-r from-accent-gold/80 to-accent-gold/60 hover:from-accent-gold hover:to-accent-gold/80 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+              >
+                {isloading ? (
+                  <>
+                    <ButtonLoading />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <span>
+                    {selectedHotelId ? "Update Hotel" : "Create Hotel"}
+                  </span>
+                )}
+              </motion.button>
+            </div>
           </form>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>,
+    portal
   );
 };
 

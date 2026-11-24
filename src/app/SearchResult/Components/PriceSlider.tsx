@@ -71,18 +71,15 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
   };
 
   return (
-    <div className="w-full p-3 rounded-md bg-gray-100 dark:bg-bannerbg dark:border shadow-md mb-4">
-      <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-white">
-        Price Range
-      </label>
-
+    <div className="w-full space-y-3">
       {/* Slider Track */}
-      <div ref={sliderRef} className="relative w-full h-6 flex items-center">
-        <div className="absolute w-full h-1 bg-gray-300 rounded-md"></div>
+      <div ref={sliderRef} className="relative w-full h-2 flex items-center">
+        {/* Background Track */}
+        <div className="absolute w-full h-2 bg-gray-200 dark:bg-slate-700/50 rounded-full"></div>
 
-        {/* Active Range */}
+        {/* Active Range - Gold Gradient */}
         <div
-          className="absolute h-1 bg-blue-500 rounded-md"
+          className="absolute h-2 bg-gradient-to-r from-accent-gold to-accent-gold/70 rounded-full shadow-md shadow-accent-gold/30"
           style={{
             left: `${getPercent(minValue)}%`,
             width: `${getPercent(maxValue) - getPercent(minValue)}%`,
@@ -91,7 +88,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
 
         {/* Min Handle */}
         <div
-          className="absolute w-5 h-5 bg-blue-500 rounded-full cursor-pointer border-2 border-white shadow-md"
+          className="absolute w-6 h-6 bg-gradient-to-br from-accent-gold to-accent-gold/90 rounded-full cursor-pointer border-2 border-white shadow-lg shadow-accent-gold/40 hover:scale-125 transition-transform"
           style={{ left: `${getPercent(minValue)}%`, transform: "translateX(-50%)" }}
           onMouseDown={(e) => handleStart(e, true)}
           onTouchStart={(e) => handleStart(e, true)}
@@ -99,16 +96,24 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
 
         {/* Max Handle */}
         <div
-          className="absolute w-5 h-5 bg-blue-500 rounded-full cursor-pointer border-2 border-white shadow-md"
+          className="absolute w-6 h-6 bg-gradient-to-br from-accent-gold to-accent-gold/90 rounded-full cursor-pointer border-2 border-white shadow-lg shadow-accent-gold/40 hover:scale-125 transition-transform"
           style={{ left: `${getPercent(maxValue)}%`, transform: "translateX(-50%)" }}
           onMouseDown={(e) => handleStart(e, false)}
           onTouchStart={(e) => handleStart(e, false)}
         ></div>
       </div>
 
-      <div className="flex justify-between text-sm text-gray-600 dark:text-white mt-3 font-semibold">
-        <span>₹{minValue}</span>
-        <span>₹{maxValue}</span>
+      {/* Price Display */}
+      <div className="flex justify-between items-center bg-gradient-to-r from-accent-gold/5 to-accent-gold/10 dark:from-slate-700/30 dark:to-slate-700/20 rounded-lg p-3 border border-accent-gold/20 dark:border-accent-gold/30">
+        <div className="flex flex-col">
+          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Min</span>
+          <span className="text-lg font-playfair font-bold text-accent-gold">₹{minValue.toLocaleString('en-IN')}</span>
+        </div>
+        <div className="text-gray-400 dark:text-gray-500">—</div>
+        <div className="flex flex-col text-right">
+          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Max</span>
+          <span className="text-lg font-playfair font-bold text-accent-gold">₹{maxValue.toLocaleString('en-IN')}</span>
+        </div>
       </div>
     </div>
   );
