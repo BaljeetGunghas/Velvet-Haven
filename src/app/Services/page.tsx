@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,7 +16,7 @@ import serviceImg6 from "@/asset/service/06-curated-experiences.png";
 import serviceImg7 from "@/asset/service/07-business-facilities.png";
 import serviceImg8 from "@/asset/service/08-luxury-transportation.png";
 
-const ServicesPage = () => {
+const ServicesPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedService, setSelectedService] = useState<number | null>(null);
@@ -483,4 +483,10 @@ const ServicesPage = () => {
   );
 };
 
-export default ServicesPage;
+export default function ServicesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading services...</div>}>
+      <ServicesPageContent />
+    </Suspense>
+  );
+}
