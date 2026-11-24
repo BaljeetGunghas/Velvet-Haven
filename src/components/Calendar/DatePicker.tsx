@@ -324,11 +324,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           direction={isMobile ? "vertical" : "horizontal"}
           preventSnapRefocus={true}
           minDate={new Date()}
-          disabledDates={[]}
           rangeColors={["#103F36"]}
-          showSelectionPreview={true}
-          showPreview={true}
-          showDateDisplay={true}
           className="w-full relative z-50"
         />
       </PopoverContent>
