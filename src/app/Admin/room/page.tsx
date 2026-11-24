@@ -213,10 +213,10 @@ const AdminRoomPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsCreateRoomOpen(true)}
-                className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-accent-gold/90 to-accent-gold/70 hover:from-accent-gold hover:to-accent-gold/90 text-white font-bold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                className="flex items-center gap-2 px-6 py-4 rounded-lg bg-gradient-to-r from-accent-gold/80 to-accent-gold/60 hover:from-accent-gold hover:to-accent-gold/80 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <Plus className="w-4 h-4" />
-                <span className="hidden sm:inline">Create</span>
+                <Plus className="w-5 h-5" />
+                <span>Create Room</span>
               </motion.button>
             </div>
           </div>
@@ -246,7 +246,7 @@ const AdminRoomPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsCreateRoomOpen(true)}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-accent-gold/80 to-accent-gold/60 hover:from-accent-gold hover:to-accent-gold/80 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-gradient-to-r from-accent-gold/80 to-accent-gold/60 hover:from-accent-gold hover:to-accent-gold/80 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Plus className="w-5 h-5" />
                 Create Your First Room
