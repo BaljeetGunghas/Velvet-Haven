@@ -140,7 +140,7 @@ const LandingSearchForm = () => {
         {/* Person & Room Selection */}
         <div
           onClick={() => setIsSelectPersonAndRoomModelOpen(true)}
-          className="min-w-0 flex items-center gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 cursor-pointer hover:shadow-md dark:hover:shadow-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]"
+          className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 cursor-pointer hover:shadow-md dark:hover:shadow-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]"
         >
           <Users className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
           <span className="flex-1 min-w-0 overflow-hidden text-xs sm:text-sm font-medium text-gray-700 dark:text-white">
