@@ -96,8 +96,8 @@ const LandingSearchForm = () => {
           <Image
             src={BedIcon}
             alt="bed icon"
-            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
-            style={{ color: '#C9A568' }}
+            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100"
+            style={{ filter: 'invert(70%) sepia(40%) saturate(1.5) hue-rotate(350deg)' }}
           />
           <div className="relative flex-1 min-w-0">
             <Select value={selectedCity} onValueChange={setSelectedCity}>
@@ -151,8 +151,8 @@ const LandingSearchForm = () => {
           <Image
             src={iconuser}
             alt="user icon"
-            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
-            style={{ color: '#C9A568' }}
+            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100"
+            style={{ filter: 'invert(70%) sepia(40%) saturate(1.5) hue-rotate(350deg)' }}
           />
           <span className="flex-1 min-w-0 overflow-hidden text-xs sm:text-sm font-medium text-gray-700 dark:text-white">
             {personDetails.adults + personDetails.children > 0 &&
@@ -163,8 +163,8 @@ const LandingSearchForm = () => {
           <Image
             src={downline}
             alt="dropdown icon"
-            className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 dark:filter dark:invert opacity-100"
-            style={{ color: '#C9A568' }}
+            className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 opacity-100"
+            style={{ filter: 'invert(70%) sepia(40%) saturate(1.5) hue-rotate(350deg)' }}
           />
         </div>
 
