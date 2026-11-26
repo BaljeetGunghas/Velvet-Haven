@@ -97,7 +97,7 @@ const LandingSearchForm = () => {
             src={BedIcon}
             alt="bed icon"
             className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
-            style={{ color: '#103F38' }}
+            style={{ color: '#C9A568' }}
           />
           <div className="relative flex-1 min-w-0">
             <Select value={selectedCity} onValueChange={setSelectedCity}>
@@ -152,7 +152,7 @@ const LandingSearchForm = () => {
             src={iconuser}
             alt="user icon"
             className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
-            style={{ color: '#103F38' }}
+            style={{ color: '#C9A568' }}
           />
           <span className="flex-1 min-w-0 overflow-hidden text-xs sm:text-sm font-medium text-gray-700 dark:text-white">
             {personDetails.adults + personDetails.children > 0 &&
@@ -164,7 +164,7 @@ const LandingSearchForm = () => {
             src={downline}
             alt="dropdown icon"
             className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 dark:filter dark:invert opacity-100"
-            style={{ color: '#103F38' }}
+            style={{ color: '#C9A568' }}
           />
         </div>
 
