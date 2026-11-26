@@ -63,7 +63,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
             "w-full p-2.5 sm:p-3 md:p-4 bg-white dark:bg-slate-700/80 flex items-center gap-2 sm:gap-3 justify-start text-left font-normal text-gray-900 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg sm:rounded-xl hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 transition-all duration-300 cursor-pointer min-h-[44px] sm:min-h-[48px] md:min-h-[52px]"
           )}
         >
-          <Calendar className="w-5 h-5 text-accent-gold flex-shrink-0" />
+          <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-accent-gold flex-shrink-0" />
           <span className="text-sm md:text-base font-medium flex-1">
             {dateRange?.startDate && dateRange?.endDate ? (
               <>

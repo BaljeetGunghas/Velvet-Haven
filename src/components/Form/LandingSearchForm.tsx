@@ -149,7 +149,7 @@ const LandingSearchForm = () => {
             {personDetails.adults + personDetails.children === 0 &&
               "1A, 0C | 1R"}
           </span>
-          <ChevronDown className="w-5 h-5 flex-shrink-0 text-accent-gold" />
+          <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
         </div>
 
         {/* Search Button */}
