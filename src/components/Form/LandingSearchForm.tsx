@@ -95,7 +95,7 @@ const LandingSearchForm = () => {
           <MapPin className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
           <div className="relative flex-1 min-w-0">
             <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="border-none shadow-none outline-none p-0 text-xs sm:text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500">
+              <SelectTrigger className="border-none shadow-none outline-none p-0 text-xs sm:text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500 h-auto w-full">
                 <SelectValue placeholder="Where are you going?">
                   {selectedCity &&
                     CityOptions().find((city) => city.value === selectedCity)
