@@ -85,7 +85,7 @@ interface LandingBannerProps {
 const LandingBanner = ({ userCity }: LandingBannerProps) => {
   const detectedCity = normalizeCityName(userCity);
   return (
-    <section className="relative isolate mt-16 flex w-full min-h-[calc(100svh-4rem)] flex-col pb-16 sm:pb-20 lg:pb-0">
+    <section className="relative isolate mt-16 flex w-full min-h-[calc(100svh-4rem)] flex-col overflow-x-clip pb-16 sm:pb-20 lg:pb-0">
       {/* Background Image with Premium Gradient Overlay */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
