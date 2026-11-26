@@ -1,9 +1,6 @@
 "use client";
 
-import BedIcon from "@/asset/icon/bed-outline.svg";
-import calendar from "@/asset/icon/calendar.svg";
 import downline from "@/asset/icon/down-line.svg";
-import iconuser from "@/asset/icon/icon_user.svg";
 import Image from "next/image";
 import React, { useState, useCallback, useEffect } from "react";
 import { Button } from "../ui/button";
@@ -22,6 +19,7 @@ import { Range } from "react-date-range";
 import dynamic from "next/dynamic";
 import dayjs from "dayjs";
 import { FaLocationDot } from "react-icons/fa6";
+import { MapPin, Users, ChevronDown } from "lucide-react";
 import { CityOptions } from "./CityOptions";
 
 // Lazy loading SelectPersonAndRoom for better performance
@@ -91,18 +89,13 @@ const LandingSearchForm = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col gap-3 sm:gap-3 md:grid md:gap-3 items-stretch md:items-center" style={{ gridTemplateColumns: "1fr 1.2fr 1.1fr 0.75fr" }}>
+      <div className="w-full flex flex-col gap-3 md:grid md:gap-3 items-stretch md:items-center landing-search-form">
         {/* City Selection */}
         <div className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]">
-          <Image
-            src={BedIcon}
-            alt="bed icon"
-            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
-            style={{ color: '#103F38' }}
-          />
-          <div className="relative flex-1 min-w-0">
+          <MapPin className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
+          <div className="relative flex-1 min-w-0 flex items-center">
             <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="border-none shadow-none outline-none p-0 text-xs sm:text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500">
+              <SelectTrigger className="border-none shadow-none outline-none p-0 text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500 h-auto w-full flex-1 [&>svg]:hidden">
                 <SelectValue placeholder="Where are you going?">
                   {selectedCity &&
                     CityOptions().find((city) => city.value === selectedCity)
@@ -136,45 +129,28 @@ const LandingSearchForm = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
+            <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold pointer-events-none" />
           </div>
         </div>
 
         {/* Date Picker */}
-        <div className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]">
-          <Image
-            src={calendar}
-            alt="calendar icon"
-            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
-            style={{ color: '#103F38' }}
-          />
-          <div className="flex-1 min-w-0 overflow-hidden text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
-            <DatePickerWithRange dateRange={date} setDate={setDate} />
-          </div>
+        <div className="min-w-0 flex-1 min-w-0 overflow-hidden">
+          <DatePickerWithRange dateRange={date} setDate={setDate} />
         </div>
 
         {/* Person & Room Selection */}
         <div
           onClick={() => setIsSelectPersonAndRoomModelOpen(true)}
-          className="min-w-0 flex items-center gap-3 bg-white dark:bg-slate-700/80 rounded-xl p-4 sm:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 cursor-pointer hover:shadow-md dark:hover:shadow-accent-gold/20 min-h-[52px]"
+          className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 cursor-pointer hover:shadow-md dark:hover:shadow-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]"
         >
-          <Image
-            src={iconuser}
-            alt="user icon"
-            className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 opacity-100 dark:filter dark:invert"
-            style={{ color: '#103F38' }}
-          />
-          <span className="flex-1 min-w-0 overflow-hidden text-xs sm:text-sm font-medium text-gray-700 dark:text-white">
+          <Users className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
+          <span className="flex-1 min-w-0 overflow-hidden text-sm font-medium text-gray-700 dark:text-white">
             {personDetails.adults + personDetails.children > 0 &&
               `${personDetails.adults}A, ${personDetails.children}C | ${personDetails.rooms}R`}
             {personDetails.adults + personDetails.children === 0 &&
               "1A, 0C | 1R"}
           </span>
-          <Image
-            src={downline}
-            alt="dropdown icon"
-            className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 dark:filter dark:invert opacity-100"
-            style={{ color: '#103F38' }}
-          />
+          <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
         </div>
 
         {/* Search Button */}

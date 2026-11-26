@@ -61,7 +61,7 @@ const Header = () => {
             : "bg-[#103F38] dark:bg-[#103F38] shadow-lg shadow-[#103F38]/20"
         }`}
       >
-        <div className="w-full mx-auto px-28 max-sm:px-3 h-full flex justify-between items-center py-2 sm:py-4">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 h-full flex justify-between items-center py-2 sm:py-4">
           {/* Logo with Brand Color */}
           <Link
             href="/"
@@ -72,11 +72,11 @@ const Header = () => {
               <Image
                 src={logo}
                 alt="Velvet-Haven Logo"
-                width={40}
-                height={40}
-                className="transition-all duration-300 group-hover:scale-125 w-auto h-auto rounded-full shadow-lg group-hover:shadow-xl sm:w-12 sm:h-12"
+                width={48}
+                height={48}
+                className="transition-all duration-300 group-hover:scale-125 w-10 h-10 sm:w-12 sm:h-12 rounded-full shadow-lg group-hover:shadow-xl"
               />
-              <span className={`font-playfair text-sm sm:text-base lg:text-xl font-bold transition-all duration-300 whitespace-nowrap tracking-wide ${
+              <span className={`font-playfair text-xs sm:text-base md:text-lg lg:text-xl font-bold transition-all duration-300 whitespace-nowrap tracking-wide ${
                 isScrolled
                   ? "text-primary-green dark:text-white drop-shadow-sm"
                   : "text-white dark:text-white drop-shadow-lg"

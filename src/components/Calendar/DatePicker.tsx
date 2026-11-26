@@ -11,7 +11,7 @@ import {
 } from "@radix-ui/react-popover";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 interface DateRangePickerProps {
   dateRange: Range;
@@ -60,10 +60,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         <Button
           variant="outline"
           className={cn(
-            "w-full px-4 py-3 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-700/50 flex items-center gap-3 justify-start text-left font-normal text-gray-900 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg hover:border-accent-gold/50 hover:shadow-md hover:shadow-accent-gold/10 transition-all duration-300 cursor-pointer"
+            "w-full p-2.5 sm:p-3 md:p-4 bg-white dark:bg-slate-700/80 flex items-center gap-2 sm:gap-3 justify-start text-left font-normal text-gray-900 dark:text-white border border-gray-200 dark:border-slate-600 rounded-lg sm:rounded-xl hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 transition-all duration-300 cursor-pointer min-h-[44px] sm:min-h-[48px] md:min-h-[52px]"
           )}
         >
-          <CalendarIcon className="w-5 h-5 text-accent-gold flex-shrink-0" />
+          <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-accent-gold flex-shrink-0" />
           <span className="text-sm md:text-base font-medium flex-1">
             {dateRange?.startDate && dateRange?.endDate ? (
               <>
