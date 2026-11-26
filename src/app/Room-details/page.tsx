@@ -152,11 +152,9 @@ const RoomDetailsPage = () => {
     const handleSaveRoomCart = async () => {
         if (user?.id) {
             setIsRoomShortlisted((pre) => !pre)
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/update-room-shortlist`,
-                {
-                    "hotel_id": hotelDetails?.hotelId,
-                    "room_id": roomDetails?._id,
-                },
+            // ✅ UPDATED: New RESTful endpoint
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/${roomDetails?._id}/shortlist`,
+                {},
                 {
                     headers: authHeader()
                 }
@@ -511,7 +509,7 @@ const RoomDetailsPage = () => {
                                         </div>
                                         <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{hotelDetails?.hotelRating?.toFixed(1) || 'N/A'}/5</span>
                                     </div>
-                                    <Link href={''} className="inline-flex items-center gap-2 bg-gradient-to-r from-accent-gold to-accent-gold/90 text-white px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-accent-gold/30 transition-all font-semibold text-sm">
+                                    <Link href={`/Hotel-details?hotel_id=${hotelDetails?.hotelId}`} className="inline-flex items-center gap-2 bg-gradient-to-r from-accent-gold to-accent-gold/90 text-white px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-accent-gold/30 transition-all font-semibold text-sm">
                                         View Hotel Details
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

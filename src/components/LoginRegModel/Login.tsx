@@ -22,9 +22,10 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface ComponentProps {
   onChange: (val: boolean) => void;
+  onForgotPassword?: () => void;
 }
 
-const Login = ({ onChange }: ComponentProps) => {
+const Login = ({ onChange, onForgotPassword }: ComponentProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -154,6 +155,7 @@ const Login = ({ onChange }: ComponentProps) => {
         <div className="flex justify-end">
           <button
             type="button"
+            onClick={onForgotPassword}
             className="text-xs text-accent-gold hover:text-accent-gold/80 font-semibold transition-colors"
           >
             Forgot password?

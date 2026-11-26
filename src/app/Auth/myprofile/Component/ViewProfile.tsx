@@ -96,13 +96,14 @@ const ViewProfile = () => {
             height={130}
           />
           {userDetails?.isVerified && (
-            <div className="absolute bottom-0 right-0 bg-gradient-to-br from-green-400 to-green-500 rounded-full p-2 border-4 border-white dark:border-slate-800 shadow-lg">
-              <Image
-                src={verifiedImage}
-                alt="verified"
-                className="w-5 h-5"
-                loading="lazy"
-              />
+            <div className="group absolute -bottom-1 -right-1 flex items-center justify-center">
+              {/* Main badge */}
+              <div className="relative bg-gradient-to-br from-primary-green to-emerald-600 rounded-full p-2 border-3 border-white dark:border-slate-800 shadow-lg shadow-primary-green/60 hover:shadow-xl hover:shadow-primary-green/80 hover:scale-110 transition-all duration-300 cursor-default">
+                {/* Checkmark Icon */}
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
             </div>
           )}
         </div>
@@ -118,9 +119,17 @@ const ViewProfile = () => {
           </div>
 
           {userDetails?.isVerified ? (
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-green-700 dark:text-green-300 bg-gradient-to-r from-green-50 to-green-50/30 dark:from-green-950/40 dark:to-green-950/20 px-3 py-1.5 rounded-full border border-green-200 dark:border-green-800/50 w-fit mt-1">
-              <span className="w-1.5 h-1.5 bg-green-600 rounded-full"></span>
-              <span>✓ Verified Account</span>
+            <div className="group inline-flex items-center gap-2.5 text-xs md:text-sm font-bold text-white bg-gradient-to-r from-primary-green to-emerald-600 px-5 py-2.5 rounded-full border-2 border-accent-gold/70 w-fit mt-3 shadow-lg shadow-primary-green/50 hover:shadow-xl hover:shadow-primary-green/70 hover:border-accent-gold transition-all duration-300 relative overflow-hidden">
+              {/* Animated shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+              {/* Content */}
+              <div className="relative flex items-center gap-2">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="font-playfair font-bold tracking-wide">Verified Account</span>
+              </div>
             </div>
           ) : (
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-gradient-to-r from-amber-50 to-amber-50/30 dark:from-amber-950/40 dark:to-amber-950/20 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800/50 w-fit mt-1">

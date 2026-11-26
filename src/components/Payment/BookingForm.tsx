@@ -146,8 +146,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ room }) => {
 
                     {/* Check-in / Check-out */}
                     <label className="block text-xs uppercase tracking-widest font-semibold text-gray-600 dark:text-gray-400 mb-3">Check-in / Check-out</label>
-                    <div className="bg-white dark:bg-slate-700 flex items-center border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 sm:py-3 hover:border-accent-gold/50 transition-colors">
-                        <Image src={calendar} alt="calendar icon" className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 dark:invert dark:brightness-110" />
+                    <div className="flex items-center">
                         <DatePickerWithRange dateRange={date} setDate={setDate} />
                     </div>
                     <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold mt-2 block">

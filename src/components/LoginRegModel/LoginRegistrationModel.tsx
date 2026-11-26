@@ -5,13 +5,16 @@ import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import Login from "./Login";
 import Registration from "./Registration";
+import ForgotPassword from "./ForgotPassword";
 
 interface LoginRegistrationModelProps {
   onClose?: () => void;
 }
 
+type ModalView = "login" | "register" | "forgot-password";
+
 const LoginRegistrationModel = ({ onClose }: LoginRegistrationModelProps) => {
-  const [isLoginShow, setIsLoginShow] = useState<boolean>(true);
+  const [currentView, setCurrentView] = useState<ModalView>("login");
 
   // Lock body scroll when modal opens
   useEffect(() => {
@@ -62,10 +65,17 @@ const LoginRegistrationModel = ({ onClose }: LoginRegistrationModelProps) => {
 
         {/* Content */}
         <div className="p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
-          {isLoginShow ? (
-            <Login onChange={setIsLoginShow} />
-          ) : (
-            <Registration onChange={setIsLoginShow} />
+          {currentView === "login" && (
+            <Login
+              onChange={(isRegister) => setCurrentView(isRegister ? "register" : "login")}
+              onForgotPassword={() => setCurrentView("forgot-password")}
+            />
+          )}
+          {currentView === "register" && (
+            <Registration onChange={(isLogin) => setCurrentView(isLogin ? "login" : "register")} />
+          )}
+          {currentView === "forgot-password" && (
+            <ForgotPassword onBack={() => setCurrentView("login")} />
           )}
         </div>
       </motion.div>

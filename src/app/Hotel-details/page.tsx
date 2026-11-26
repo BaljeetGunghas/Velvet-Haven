@@ -7,8 +7,6 @@ import { motion } from "framer-motion";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import ComponentError from "@/components/Error/ComponentError";
 import { authHeader } from "../Auth/AuthHeader/authHeader";
-import { MapPin, Star, Share2, Heart } from "lucide-react";
-import Link from "next/link";
 
 // Component imports (to be created)
 import HotelGallery from "./Components/HotelGallery";
@@ -16,27 +14,32 @@ import HotelHeader from "./Components/HotelHeader";
 import HotelHighlights from "./Components/HotelHighlights";
 import AmenitiesGrid from "./Components/AmenitiesGrid";
 import ReviewsSection from "./Components/ReviewsSection";
-import BookingPanel from "./Components/BookingPanel";
 import RoomsSection from "./Components/RoomsSection";
 
 interface HotelDetails {
   _id: string;
-  hotel_name: string;
-  hotelAddress: string;
-  hotelRating: number;
+  hotel_name?: string;
+  name?: string;
+  hotelAddress?: string;
+  address?: string;
+  hotelRating?: number;
+  rating?: number;
   description: string;
-  room_images: string[];
-  amenities: string[];
+  room_images?: string[];
+  hotel_image?: string[];
+  amenities?: string[];
   reviews?: any[];
   total_rooms?: number;
+  rooms?: number;
   restaurant_count?: number;
   is_shortlisted?: boolean;
   starting_price?: number;
+  hotelId?: string;
 }
 
 interface RoomData {
-  rooms: any[];
-  total_rooms: number;
+  rooms?: any[];
+  total_rooms?: number;
 }
 
 const HotelDetailsPage = () => {
@@ -80,7 +83,14 @@ const HotelDetailsPage = () => {
           );
 
           if (roomsResponse.data.output > 0) {
-            setRoomData(roomsResponse.data.jsonResponse);
+            // API returns array directly, so wrap it in rooms property
+            const roomsArray = Array.isArray(roomsResponse.data.jsonResponse)
+              ? roomsResponse.data.jsonResponse
+              : roomsResponse.data.jsonResponse.rooms || [];
+            setRoomData({
+              rooms: roomsArray,
+              total_rooms: roomsResponse.data.count || roomsArray.length
+            });
           }
         } catch (err) {
           console.error("Error fetching rooms:", err);
@@ -127,7 +137,7 @@ const HotelDetailsPage = () => {
           transition={{ duration: 0.6 }}
           className="w-full max-w-7xl mx-auto"
         >
-          <HotelGallery images={hotelDetails.room_images} />
+          <HotelGallery images={hotelDetails.room_images || hotelDetails.hotel_image || []} />
         </motion.div>
       </section>
 
@@ -148,10 +158,9 @@ const HotelDetailsPage = () => {
             />
           </motion.div>
 
-          {/* Two Column Layout: Left Content + Right Sticky Booking */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-            {/* Left Column: Content */}
-            <div className="lg:col-span-2">
+          {/* Full Width Content */}
+          <div className="w-full">
+            {/* Content */}
               {/* Hotel Highlights */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -169,7 +178,7 @@ const HotelDetailsPage = () => {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="mb-12"
               >
-                <AmenitiesGrid amenities={hotelDetails.amenities} />
+                <AmenitiesGrid amenities={hotelDetails.amenities || []} />
               </motion.div>
 
               {/* About Section */}
@@ -200,30 +209,17 @@ const HotelDetailsPage = () => {
               </motion.div>
 
               {/* Rooms Section */}
-              {roomData && roomData.rooms.length > 0 && (
+              {roomData && roomData.rooms && roomData.rooms.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.6 }}
                   className="mb-12"
                 >
-                  <RoomsSection rooms={roomData.rooms} hotelName={hotelDetails.hotel_name} />
+                  <RoomsSection rooms={roomData.rooms} hotelName={hotelDetails.hotel_name || hotelDetails.name || "Hotel"} />
                 </motion.div>
               )}
             </div>
-
-            {/* Right Column: Sticky Booking Panel */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="lg:col-span-1"
-            >
-              <div className="sticky top-40">
-                <BookingPanel hotel={hotelDetails} />
-              </div>
-            </motion.div>
-          </div>
         </div>
       </section>
     </main>

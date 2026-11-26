@@ -29,9 +29,10 @@ export default function HotelHeader({ hotel, isShortlisted, onShortlistChange }:
 
     setLoading(true);
     try {
+      // ✅ UPDATED: New RESTful endpoint
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel/update-shortlist`,
-        { hotel_id: hotel._id },
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel/${hotel._id}/shortlist`,
+        {},
         { headers: authHeader() }
       );
 
@@ -47,9 +48,11 @@ export default function HotelHeader({ hotel, isShortlisted, onShortlistChange }:
   };
 
   const handleShare = async () => {
-    const text = `Check out ${hotel.hotel_name} - ${hotel.hotelAddress}`;
+    const hotelName = hotel.hotel_name || hotel.name || "Hotel";
+    const hotelAddr = hotel.hotelAddress || hotel.address || "";
+    const text = `Check out ${hotelName} - ${hotelAddr}`;
     if (navigator.share) {
-      navigator.share({ title: hotel.hotel_name, text });
+      navigator.share({ title: hotelName, text });
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success("Link copied to clipboard");
@@ -62,11 +65,11 @@ export default function HotelHeader({ hotel, isShortlisted, onShortlistChange }:
       <div className="flex flex-col md:flex-row justify-between items-start md:items-start gap-6">
         <div className="flex-1">
           <h1 className="text-5xl md:text-6xl font-playfair font-bold text-primary-green dark:text-white mb-3 leading-tight">
-            {hotel.hotel_name}
+            {hotel.hotel_name || hotel.name || "Hotel"}
           </h1>
           <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
             <MapPin size={20} className="flex-shrink-0" />
-            <p className="text-base md:text-lg">{hotel.hotelAddress}</p>
+            <p className="text-base md:text-lg">{hotel.hotelAddress || hotel.address || ""}</p>
           </div>
         </div>
 

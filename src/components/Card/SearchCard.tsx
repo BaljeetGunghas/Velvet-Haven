@@ -31,12 +31,10 @@ const SearchCard: React.FC<ComponentProps> = ({ room }) => {
     const handleSaveRoomCart = async () => {
         if (user?.id) {
             setIsRoomShortlisted((pre) => !pre);
+            // ✅ UPDATED: New RESTful endpoint
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/update-room-shortlist`,
-                {
-                    hotel_id: room?.hotel_id,
-                    room_id: room?._id,
-                },
+                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/hotel-room/${room?._id}/shortlist`,
+                {},
                 { headers: authHeader() }
             );
             const responseData = response.data;

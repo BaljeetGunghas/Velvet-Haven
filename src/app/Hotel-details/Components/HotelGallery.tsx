@@ -55,7 +55,6 @@ const HotelGallery: FC<ComponentProps> = ({ images }) => {
               src={images?.length > 0 ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}` : noImage}
               alt="Hotel Main Image"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out rounded-3xl"
-              loading="lazy"
               priority
             />
           </div>

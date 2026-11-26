@@ -56,7 +56,7 @@ export const userProfile = createAsyncThunk<
       throw new Error("Backend API URL is not defined");
     }
 
-    const response = await axios.post(`${apiUrl}/user/getUserProfile`, data, {
+    const response = await axios.get(`${apiUrl}/user/profile`, {
       headers: authHeader(),
     });
     const responseData = response.data;

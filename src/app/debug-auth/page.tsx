@@ -50,9 +50,8 @@ const DebugAuthPage = () => {
             const headers = authHeader();
             addLog(`Using headers: ${JSON.stringify(headers)}`);
 
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/getUserProfile`,
-                {},
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/profile`,
                 { headers }
             );
 
