@@ -85,7 +85,7 @@ interface LandingBannerProps {
 const LandingBanner = ({ userCity }: LandingBannerProps) => {
   const detectedCity = normalizeCityName(userCity);
   return (
-    <section className="relative isolate mt-16 flex w-screen min-h-[calc(100svh-4rem)] flex-col overflow-x-hidden overflow-y-visible pb-16 sm:pb-20 lg:pb-0">
+    <section className="relative isolate mt-16 flex w-full min-h-[calc(100svh-4rem)] flex-col overflow-hidden pb-16 sm:pb-20 lg:pb-0">
       {/* Background Image with Premium Gradient Overlay */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
@@ -177,10 +177,10 @@ const LandingBanner = ({ userCity }: LandingBannerProps) => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-        className="relative z-20 mx-auto w-full max-w-full px-3 sm:px-4 md:px-6 lg:px-8 flex-shrink-0 lg:absolute lg:bottom-6 lg:left-0 lg:right-0 lg:mx-auto lg:max-w-6xl"
+        className="relative z-20 mx-auto w-full px-3 sm:px-6 flex-shrink-0 lg:absolute lg:bottom-6 lg:left-0 lg:right-0 lg:mx-auto lg:w-full lg:max-w-6xl lg:px-8"
       >
         {/* Search Card */}
-        <div className="relative mx-auto w-full max-w-full lg:max-w-6xl overflow-x-auto sm:overflow-x-visible rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-100 bg-white p-3 sm:p-5 md:p-6 lg:p-7 shadow-2xl shadow-black/15 transition-all duration-500 hover:shadow-black/20 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-primary-green/50 dark:hover:shadow-primary-green/60">
+        <div className="relative mx-auto w-full max-w-6xl overflow-visible rounded-xl sm:rounded-2xl border border-gray-100 bg-white p-3 sm:p-5 md:p-6 lg:p-7 shadow-2xl shadow-black/15 transition-all duration-500 hover:shadow-black/20 dark:border-slate-700/50 dark:bg-slate-800/95 dark:shadow-primary-green/50 dark:hover:shadow-primary-green/60">
           {/* Gradient Effect */}
           <div className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-accent-gold/10 via-transparent to-accent-gold/5" />
 
