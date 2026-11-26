@@ -12,13 +12,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { FaLocationDot } from "react-icons/fa6";
-import BedIcon from "@/asset/icon/bed-outline.svg";
-import iconuser from "@/asset/icon/icon_user.svg";
-import downline from "@/asset/icon/down-line.svg";
+import { MapPin, Users, ChevronDown } from "lucide-react";
 import DatePickerWithRange from "../../../components/Calendar/DatePicker";
 import { Range } from "react-date-range";
 import SelectPersonAndRoom from "@/components/SelectPersonAndRoom/SelectPersonAndRoom";
@@ -97,25 +94,25 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
                 {/* City Selection */}
                 <div className="space-y-2.5">
                     <label className="text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-gray-300">Destination</label>
-                    <div className="bg-gray-50/80 dark:bg-slate-700/40 flex items-center rounded-xl border border-gray-200 dark:border-slate-700/60 focus-within:border-accent-gold/70 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:shadow-md dark:focus-within:shadow-accent-gold/5 transition-all duration-300 min-w-[200px] max-sm:w-full">
-                        <Image src={BedIcon} alt="bed icon" className="ml-3 w-5 h-5 dark:filter dark:invert dark:brightness-0 dark:p-0.5" />
-                        <div className="relative w-full">
+                    <div className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]">
+                        <MapPin className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
+                        <div className="relative flex-1 min-w-0 flex items-center">
                             <Select value={selectedCity} onValueChange={setSelectedCity}>
-                                <SelectTrigger className="sm:min-w-48 font-medium text-sm border-none shadow-none outline-none rounded-lg bg-transparent">
+                                <SelectTrigger className="border-none shadow-none outline-none p-0 text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500 h-auto w-full flex-1 [&>svg]:hidden">
                                     <SelectValue placeholder="Where are you going?">
                                         {selectedCity && CityOptions().find((city) => city.value === selectedCity)?.label}
                                     </SelectValue>
                                 </SelectTrigger>
-                                <SelectContent className="bg-white dark:bg-slate-800 z-50">
+                                <SelectContent className="bg-white dark:bg-slate-900 z-50 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg">
                                     <SelectGroup>
-                                        <SelectLabel>Select City</SelectLabel>
+                                        <SelectLabel className="text-gray-500 dark:text-gray-400 px-4 py-2 text-xs font-semibold uppercase tracking-wider">Select City</SelectLabel>
                                         {CityOptions().map((city, i) => (
-                                            <SelectItem key={city.value + i} value={city.value} className="hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer">
-                                                <div className="flex gap-2 items-center p-2">
-                                                    <FaLocationDot className="text-accent-gold h-4 w-4" />
-                                                    <div className="flex flex-col">
+                                            <SelectItem key={city.value + i} value={city.value} className="hover:bg-accent-gold/10 dark:hover:bg-slate-800 cursor-pointer focus:bg-accent-gold/10 py-3 px-4">
+                                                <div className="flex gap-3 items-center">
+                                                    <FaLocationDot className="text-primary-green h-5 w-5 flex-shrink-0 opacity-100" />
+                                                    <div className="flex flex-col gap-0.5">
                                                         <p className="text-gray-900 dark:text-white font-semibold text-sm">{city.label}</p>
-                                                        <p className="font-normal text-gray-500 dark:text-gray-400 text-xs">India</p>
+                                                        <p className="font-normal text-xs text-gray-500 dark:text-gray-400">India</p>
                                                     </div>
                                                 </div>
                                             </SelectItem>
@@ -123,6 +120,7 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold pointer-events-none" />
                         </div>
                     </div>
                 </div>
@@ -136,14 +134,18 @@ const SearchFilter: React.FC<FiltersProps> = ({ filters, setfilter, fetchRooms }
                 {/* Person & Room Selector */}
                 <div className="space-y-2.5">
                     <label className="text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-gray-300">Guests & Rooms</label>
-                    <div onClick={() => setIsSelectPersonAndRoomModelOpen(true)} className="relative bg-gray-50/80 dark:bg-slate-700/40 border border-gray-200 dark:border-slate-700/60 hover:border-accent-gold/70 dark:hover:border-accent-gold/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md dark:hover:shadow-accent-gold/5 transition-all duration-300 flex items-center gap-3 px-4 py-3 rounded-xl w-full cursor-pointer">
-                        <Image src={iconuser} alt="user icon" className="w-5 h-5 dark:filter dark:invert dark:brightness-0 dark:p-0.5" />
-                        <div className="flex-1">
-                            <span className="font-medium text-sm text-gray-900 dark:text-white">{personDetails.adults} adult{personDetails.adults !== 1 ? 's' : ''}</span>
-                            {personDetails.children > 0 && <span className="font-medium text-sm text-gray-900 dark:text-white ml-2">{personDetails.children} child{personDetails.children !== 1 ? 'ren' : ''}</span>}
-                        </div>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">{personDetails.rooms} room{personDetails.rooms !== 1 ? 's' : ''}</span>
-                        <Image src={downline} alt="dropdown icon" className="w-4 h-4 dark:filter dark:invert dark:brightness-0" />
+                    <div
+                        onClick={() => setIsSelectPersonAndRoomModelOpen(true)}
+                        className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 cursor-pointer hover:shadow-md dark:hover:shadow-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]"
+                    >
+                        <Users className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
+                        <span className="flex-1 min-w-0 overflow-hidden text-sm font-medium text-gray-700 dark:text-white">
+                            {personDetails.adults + personDetails.children > 0 &&
+                                `${personDetails.adults}A, ${personDetails.children}C | ${personDetails.rooms}R`}
+                            {personDetails.adults + personDetails.children === 0 &&
+                                "1A, 0C | 1R"}
+                        </span>
+                        <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
                     </div>
                 </div>
 

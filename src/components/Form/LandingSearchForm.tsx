@@ -93,9 +93,9 @@ const LandingSearchForm = () => {
         {/* City Selection */}
         <div className="min-w-0 flex items-center gap-2 sm:gap-3 bg-white dark:bg-slate-700/80 rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 border border-gray-200 dark:border-slate-600 transition-all duration-300 hover:border-accent-gold/50 dark:hover:border-accent-gold/60 focus-within:border-accent-gold dark:focus-within:border-accent-gold focus-within:ring-2 focus-within:ring-accent-gold/20 min-h-[44px] sm:min-h-[48px] md:min-h-[52px]">
           <MapPin className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold" />
-          <div className="relative flex-1 min-w-0">
+          <div className="relative flex-1 min-w-0 flex items-center">
             <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="border-none shadow-none outline-none p-0 text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500 h-auto w-full">
+              <SelectTrigger className="border-none shadow-none outline-none p-0 text-sm font-medium text-gray-700 dark:text-white placeholder:text-gray-500 h-auto w-full flex-1 [&>svg]:hidden">
                 <SelectValue placeholder="Where are you going?">
                   {selectedCity &&
                     CityOptions().find((city) => city.value === selectedCity)
@@ -129,6 +129,7 @@ const LandingSearchForm = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
+            <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-accent-gold pointer-events-none" />
           </div>
         </div>
 
